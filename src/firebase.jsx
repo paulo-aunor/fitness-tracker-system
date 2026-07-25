@@ -5,15 +5,17 @@ import { getAuth } from "firebase/auth";
 // Pulls the getFirestore function from Firebase's Firestore module - the database service
 import { getFirestore } from "firebase/firestore";
 
+
 // Your Firebase project's configuration values (from the Firebase console)
 const firebaseConfig = {
-  apiKey: "AIzaSyCHGmSsODzFopQHO5N44IQdJiOYRNXeIOA",
-  authDomain: "fatless-468c3.firebaseapp.com",
-  projectId: "fatless-468c3",
-  storageBucket: "fatless-468c3.firebasestorage.app",
-  messagingSenderId: "41947761342",
-  appId: "1:41947761342:web:1c92385c662357f4866cef"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
+console.log(firebaseConfig);
 
 // Initializes the connection to your specific Firebase project using firebaseConfig
 const app = initializeApp(firebaseConfig);
