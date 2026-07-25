@@ -1,19 +1,60 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaLock } from "react-icons/fa6";
+
+import { FaLock } from "react-icons/fa";
+
+import {
+    sendPasswordResetEmail
+} from "firebase/auth";
+
+import { auth } from "../firebase";
 
 function ForgotPassword() {
     const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
 
-    function handleResetPassword(event) {
+    const [successMessage, setSuccessMessage] =
+        useState("");
+
+    const [errorMessage, setErrorMessage] =
+        useState("");
+
+    const [isLoading, setIsLoading] =
+        useState(false);
+
+    async function handleResetPassword(event) {
         event.preventDefault();
 
-        setMessage(
-            "Reset link request submitted."
-        );
+        try {
+            setIsLoading(true);
+            setErrorMessage("");
+            setSuccessMessage("");
 
-        console.log("Reset password email:", email);
+            await sendPasswordResetEmail(
+                auth,
+                email
+            );
+
+            setSuccessMessage(
+                "Password reset instructions have been sent. Please check your email."
+            );
+        } catch (error) {
+            console.error(
+                "Password reset error:",
+                error
+            );
+
+            if (error.code === "auth/invalid-email") {
+                setErrorMessage(
+                    "Please enter a valid email address."
+                );
+            } else {
+                setErrorMessage(
+                    "Unable to send the reset email."
+                );
+            }
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -35,7 +76,7 @@ function ForgotPassword() {
                     <h2>Forgot Password?</h2>
 
                     <p className="subtitle">
-                        Enter your email address and we will send
+                        Enter your email and we will send you
                         instructions to reset your password.
                     </p>
 
@@ -64,19 +105,30 @@ function ForgotPassword() {
                     </div>
 
 
+                    {errorMessage && (
+                        <p className="error-message">
+                            {errorMessage}
+                        </p>
+                    )}
+
+
                     <button
                         type="submit"
                         className="main-button"
+                        disabled={isLoading}
                     >
-                        Send Reset Link
+                        {isLoading
+                            ? "Sending..."
+                            : "Send Reset Link"
+                        }
                     </button>
 
                 </form>
 
 
-                {message && (
+                {successMessage && (
                     <p className="success-message">
-                        {message}
+                        {successMessage}
                     </p>
                 )}
 

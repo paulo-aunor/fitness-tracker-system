@@ -1,9 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
+import {
+    Link,
+    useNavigate
+} from "react-router-dom";
+
+import {
+    createUserWithEmailAndPassword,
+    updateProfile
+} from "firebase/auth";
+
+import { auth } from "../firebase";
 import PasswordInput from "../components/PasswordInput";
 
 function Signup() {
+    const navigate = useNavigate();
+
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -13,17 +25,23 @@ function Signup() {
         setConfirmPassword
     ] = useState("");
 
-    const [
-        errorMessage,
-        setErrorMessage
-    ] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    function handleSignup(event) {
+    async function handleSignup(event) {
         event.preventDefault();
+
+        if (fullName.trim().length < 2) {
+            setErrorMessage(
+                "Please enter your full name."
+            );
+
+            return;
+        }
 
         if (password.length < 6) {
             setErrorMessage(
-                "Password must contain at least 6 characters."
+                "Password must be at least 6 characters."
             );
 
             return;
@@ -37,15 +55,55 @@ function Signup() {
             return;
         }
 
-        setErrorMessage("");
+        try {
+            setIsLoading(true);
+            setErrorMessage("");
 
-        console.log("New account:", {
-            fullName,
-            email,
-            password
-        });
+            const userCredential =
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
 
-        alert("Account form submitted!");
+            await updateProfile(
+                userCredential.user,
+                {
+                    displayName: fullName.trim()
+                }
+            );
+
+            navigate("/home");
+        } catch (error) {
+            console.error("Signup error:", error);
+
+            if (
+                error.code ===
+                "auth/email-already-in-use"
+            ) {
+                setErrorMessage(
+                    "This email already has an account."
+                );
+            } else if (
+                error.code === "auth/invalid-email"
+            ) {
+                setErrorMessage(
+                    "Please enter a valid email address."
+                );
+            } else if (
+                error.code === "auth/weak-password"
+            ) {
+                setErrorMessage(
+                    "Please choose a stronger password."
+                );
+            } else {
+                setErrorMessage(
+                    "Unable to create your account."
+                );
+            }
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -62,8 +120,8 @@ function Signup() {
                     <h2>Create Account</h2>
 
                     <p className="subtitle">
-                        Create your account and start tracking
-                        your fitness progress.
+                        Create an account and begin tracking your
+                        workouts and nutrition.
                     </p>
 
                 </div>
@@ -83,9 +141,7 @@ function Signup() {
                             placeholder="Enter your full name"
                             value={fullName}
                             onChange={(event) =>
-                                setFullName(
-                                    event.target.value
-                                )
+                                setFullName(event.target.value)
                             }
                             required
                         />
@@ -124,9 +180,7 @@ function Signup() {
                             placeholder="Create a password"
                             value={password}
                             onChange={(event) =>
-                                setPassword(
-                                    event.target.value
-                                )
+                                setPassword(event.target.value)
                             }
                         />
 
@@ -153,16 +207,22 @@ function Signup() {
                     </div>
 
 
-                    <p className="error-message">
-                        {errorMessage}
-                    </p>
+                    {errorMessage && (
+                        <p className="error-message">
+                            {errorMessage}
+                        </p>
+                    )}
 
 
                     <button
                         type="submit"
                         className="main-button"
+                        disabled={isLoading}
                     >
-                        Create Account
+                        {isLoading
+                            ? "Creating Account..."
+                            : "Create Account"
+                        }
                     </button>
 
                 </form>

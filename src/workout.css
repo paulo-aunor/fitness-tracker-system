@@ -1,0 +1,1077 @@
+/* =========================================
+   WORKOUT PAGE
+========================================= */
+
+.workout-content {
+    background:
+        radial-gradient(
+            circle at 85% 5%,
+            rgba(166, 255, 63, 0.07),
+            transparent 25%
+        ),
+        #030604;
+}
+
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+
+.workout-page-header {
+    margin-bottom: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.workout-kicker {
+    margin-bottom: 10px;
+
+    color: var(--green);
+
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.8px;
+}
+
+.workout-heading h1 {
+    margin-bottom: 10px;
+
+    font-size: clamp(34px, 5vw, 52px);
+    line-height: 1;
+    letter-spacing: -2.5px;
+}
+
+.workout-heading h1 span {
+    color: var(--green);
+
+    text-shadow:
+        0 0 20px rgba(166, 255, 63, 0.45);
+}
+
+.workout-heading > p:last-child {
+    max-width: 650px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.workout-summary {
+    display: flex;
+    gap: 12px;
+}
+
+.summary-chip {
+    min-width: 105px;
+    padding: 15px 17px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 29, 22, 0.95),
+            rgba(8, 12, 9, 0.95)
+        );
+}
+
+.summary-chip:last-child {
+    min-width: 135px;
+}
+
+.summary-chip strong {
+    color: var(--green);
+
+    font-size: 21px;
+}
+
+.summary-chip span {
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   SECTION HEADING
+========================================= */
+
+.muscle-section {
+    margin-bottom: 32px;
+}
+
+.workout-section-heading {
+    margin-bottom: 18px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.workout-section-heading p {
+    margin-bottom: 6px;
+
+    color: var(--green);
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+}
+
+.workout-section-heading h2 {
+    font-size: 22px;
+    letter-spacing: -0.8px;
+}
+
+.workout-section-heading > span {
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   MUSCLE GROUPS
+========================================= */
+
+.muscle-group-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.muscle-group-card {
+    position: relative;
+    overflow: hidden;
+
+    min-height: 130px;
+    padding: 18px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    color: var(--white);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 29, 22, 0.95),
+            rgba(8, 12, 9, 0.95)
+        );
+
+    text-align: left;
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+}
+
+.muscle-group-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+    height: 110px;
+
+    right: -70px;
+    bottom: -70px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(166, 255, 63, 0.14),
+            transparent 70%
+        );
+}
+
+.muscle-group-card:hover {
+    transform: translateY(-5px);
+
+    border-color: var(--green-border);
+}
+
+.muscle-group-card.active {
+    border-color: rgba(166, 255, 63, 0.45);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(166, 255, 63, 0.13),
+            rgba(8, 12, 9, 0.97)
+        );
+
+    box-shadow:
+        inset 0 0 0 1px
+            rgba(166, 255, 63, 0.08),
+        0 15px 35px
+            rgba(0, 0, 0, 0.22);
+}
+
+.muscle-group-icon {
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border:
+        1px solid
+        rgba(166, 255, 63, 0.18);
+
+    border-radius: 12px;
+
+    color: var(--green);
+    background: rgba(166, 255, 63, 0.08);
+
+    font-size: 17px;
+}
+
+.muscle-group-card.active
+.muscle-group-icon {
+    color: #071004;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green-light),
+            var(--green)
+        );
+}
+
+.muscle-group-card > div:last-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.muscle-group-card strong {
+    margin-bottom: 9px;
+
+    font-size: 15px;
+}
+
+.muscle-group-card small {
+    color: var(--muted);
+
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   EXERCISE AREA
+========================================= */
+
+.workout-exercise-layout {
+    padding-bottom: 40px;
+
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr) 350px;
+
+    gap: 20px;
+    align-items: start;
+}
+
+.workout-exercise-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+}
+
+.workout-exercise-card {
+    padding: 20px;
+
+    border: 1px solid var(--border);
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(19, 28, 21, 0.96),
+            rgba(8, 12, 9, 0.96)
+        );
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+}
+
+.workout-exercise-card:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        rgba(166, 255, 63, 0.25);
+}
+
+.workout-exercise-card.selected {
+    border-color:
+        rgba(166, 255, 63, 0.45);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(166, 255, 63, 0.1),
+            rgba(8, 12, 9, 0.98)
+        );
+}
+
+.workout-exercise-card-header {
+    margin-bottom: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.exercise-number {
+    color: var(--green);
+
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.exercise-level {
+    padding: 5px 8px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.07);
+
+    border-radius: 7px;
+
+    color: var(--muted);
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    font-size: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.workout-exercise-card h3 {
+    margin-bottom: 20px;
+
+    font-size: 18px;
+    letter-spacing: -0.5px;
+}
+
+
+/* =========================================
+   SETS AND REPS SELECT
+========================================= */
+
+.exercise-customize-grid {
+    margin-bottom: 18px;
+
+    display: grid;
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+.exercise-customize-grid label,
+.session-edit-controls label {
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    text-transform: none;
+}
+
+.exercise-customize-grid label > span,
+.session-edit-controls label > span,
+.exercise-rest-box > span {
+    color: var(--muted);
+
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.exercise-customize-grid select,
+.session-edit-controls select {
+    width: 100%;
+    height: 38px;
+
+    padding: 0 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    outline: none;
+
+    color: var(--white);
+    background-color: #111913;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.exercise-customize-grid select:hover,
+.session-edit-controls select:hover {
+    border-color: var(--green-border);
+}
+
+.exercise-customize-grid select:focus,
+.session-edit-controls select:focus {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(166, 255, 63, 0.08);
+}
+
+.exercise-customize-grid option,
+.session-edit-controls option {
+    color: white;
+    background: #111913;
+}
+
+.exercise-rest-box {
+    padding: 7px 9px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.exercise-rest-box strong {
+    font-size: 11px;
+}
+
+
+/* =========================================
+   ADD EXERCISE BUTTON
+========================================= */
+
+.exercise-add-button {
+    width: 100%;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    border: 1px solid
+        var(--green-border);
+
+    border-radius: 11px;
+
+    color: var(--green);
+    background:
+        rgba(166, 255, 63, 0.06);
+
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: 0.22s ease;
+}
+
+.exercise-add-button:hover {
+    color: #071004;
+    background: var(--green);
+}
+
+.exercise-add-button.added {
+    border-color:
+        rgba(255, 112, 112, 0.22);
+
+    color: #ff8585;
+    background:
+        rgba(255, 112, 112, 0.06);
+}
+
+.exercise-add-button.added:hover {
+    color: white;
+    background: #c94d4d;
+}
+
+
+/* =========================================
+   SESSION PANEL
+========================================= */
+
+.session-panel {
+    position: sticky;
+    top: 25px;
+
+    padding: 22px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 29, 22, 0.98),
+            rgba(7, 11, 8, 0.98)
+        );
+
+    box-shadow:
+        0 22px 60px
+        rgba(0, 0, 0, 0.3);
+}
+
+.session-panel-header {
+    margin-bottom: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.session-panel-header p {
+    margin-bottom: 5px;
+
+    color: var(--green);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+}
+
+.session-panel-header h2 {
+    font-size: 19px;
+}
+
+.session-count {
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    color: #071004;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green-light),
+            var(--green)
+        );
+
+    font-size: 13px;
+    font-weight: 900;
+}
+
+
+/* =========================================
+   WORKOUT TIMER
+========================================= */
+
+.workout-timer-card {
+    margin-bottom: 17px;
+    padding: 14px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border:
+        1px solid
+        rgba(166, 255, 63, 0.16);
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(166, 255, 63, 0.08),
+            rgba(255, 255, 255, 0.02)
+        );
+}
+
+.timer-icon {
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    color: var(--green);
+    background:
+        rgba(166, 255, 63, 0.09);
+
+    font-size: 16px;
+}
+
+.timer-information {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.timer-information span {
+    color: var(--muted);
+
+    font-size: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.timer-information strong {
+    font-size: 19px;
+    letter-spacing: 0.8px;
+}
+
+.timer-status {
+    margin-left: auto;
+    padding: 5px 8px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.timer-status.running {
+    color: var(--green);
+    background:
+        rgba(166, 255, 63, 0.1);
+}
+
+.timer-status.paused {
+    color: #ffbf69;
+    background:
+        rgba(255, 191, 105, 0.1);
+}
+
+
+/* =========================================
+   EMPTY SESSION
+========================================= */
+
+.session-empty {
+    min-height: 190px;
+    padding: 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px dashed
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 13px;
+
+    text-align: center;
+}
+
+.session-empty > svg {
+    margin-bottom: 15px;
+
+    color: var(--green);
+
+    font-size: 30px;
+    opacity: 0.7;
+}
+
+.session-empty strong {
+    margin-bottom: 8px;
+
+    font-size: 13px;
+}
+
+.session-empty p {
+    max-width: 210px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   SESSION EXERCISES
+========================================= */
+
+.session-list {
+    max-height: 360px;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.session-list-item {
+    padding: 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.session-item-top {
+    margin-bottom: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.session-item-number {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    color: var(--green);
+    background:
+        rgba(166, 255, 63, 0.08);
+
+    font-size: 9px;
+    font-weight: 900;
+}
+
+.session-item-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.session-item-info strong {
+    overflow: hidden;
+
+    font-size: 11px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.session-item-info span {
+    color: var(--muted);
+
+    font-size: 8px;
+}
+
+.session-remove-button {
+    width: 29px;
+    height: 29px;
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 8px;
+
+    color: #ff8080;
+    background:
+        rgba(255, 112, 112, 0.06);
+
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.session-remove-button:hover {
+    background:
+        rgba(255, 112, 112, 0.15);
+}
+
+.session-edit-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+
+
+/* =========================================
+   SESSION TOTAL
+========================================= */
+
+.session-total {
+    margin: 18px 0;
+    padding: 13px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.session-total > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.session-total svg {
+    color: var(--green);
+}
+
+.session-total strong {
+    font-size: 13px;
+}
+
+
+/* =========================================
+   SESSION BUTTONS
+========================================= */
+
+.session-start-button,
+.session-pause-button,
+.session-reset-button,
+.session-clear-button {
+    width: 100%;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.session-start-button {
+    margin-bottom: 9px;
+
+    border: none;
+
+    color: #071004;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green-light),
+            var(--green)
+        );
+}
+
+.session-start-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.session-pause-button {
+    margin-bottom: 9px;
+
+    border:
+        1px solid
+        rgba(255, 191, 105, 0.25);
+
+    color: #ffbf69;
+    background:
+        rgba(255, 191, 105, 0.08);
+}
+
+.session-pause-button:hover {
+    color: #171006;
+    background: #ffbf69;
+}
+
+.session-reset-button {
+    margin-bottom: 9px;
+
+    border: 1px solid
+        var(--green-border);
+
+    color: var(--green);
+    background:
+        rgba(166, 255, 63, 0.05);
+}
+
+.session-reset-button:hover:not(:disabled) {
+    color: #071004;
+    background: var(--green);
+}
+
+.session-clear-button {
+    border: 1px solid var(--border);
+
+    color: var(--muted);
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.session-clear-button:hover:not(:disabled) {
+    color: #ff8a8a;
+
+    border-color:
+        rgba(255, 112, 112, 0.25);
+
+    background:
+        rgba(255, 112, 112, 0.06);
+}
+
+.session-start-button:disabled,
+.session-reset-button:disabled,
+.session-clear-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media screen and (max-width: 1300px) {
+    .muscle-group-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .workout-exercise-layout {
+        grid-template-columns:
+            1fr 320px;
+    }
+
+    .workout-summary {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    .workout-exercise-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .session-panel {
+        position: static;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .workout-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .workout-summary {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .summary-chip {
+        flex: 1;
+    }
+
+    .muscle-group-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .workout-exercise-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .workout-content {
+        padding: 24px 14px;
+    }
+
+    .workout-heading h1 {
+        font-size: 36px;
+    }
+
+    .workout-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .summary-chip:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .muscle-group-card {
+        min-height: 115px;
+        padding: 15px;
+    }
+
+    .workout-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .exercise-customize-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .exercise-rest-box {
+        grid-column: 1 / -1;
+    }
+}

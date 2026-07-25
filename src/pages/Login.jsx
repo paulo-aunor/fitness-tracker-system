@@ -1,21 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+
+import {
+    Link,
+    useNavigate
+} from "react-router-dom";
 
 import PasswordInput from "../components/PasswordInput";
 
 function Login() {
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     function handleLogin(event) {
         event.preventDefault();
 
-        console.log("Login information:", {
-            email,
-            password
-        });
-
-        alert("Login form submitted!");
+        navigate("/home");
     }
 
     return (
@@ -35,7 +36,7 @@ function Login() {
 
                     <p className="hero-description">
                         Track your workouts, calories, and daily
-                        macros in one simple fitness application.
+                        macros in one powerful fitness application.
                     </p>
 
                     <ul className="features">
@@ -63,8 +64,8 @@ function Login() {
                         <h2>Welcome Back</h2>
 
                         <p className="subtitle">
-                            Log in to continue tracking your
-                            progress.
+                            Demo mode: enter anything to view
+                            the dashboard.
                         </p>
 
                     </div>
@@ -81,7 +82,7 @@ function Login() {
                             <input
                                 type="email"
                                 id="loginEmail"
-                                placeholder="Enter your email"
+                                placeholder="Enter any email"
                                 value={email}
                                 onChange={(event) =>
                                     setEmail(event.target.value)
@@ -100,12 +101,10 @@ function Login() {
 
                             <PasswordInput
                                 id="loginPassword"
-                                placeholder="Enter your password"
+                                placeholder="Enter any password"
                                 value={password}
                                 onChange={(event) =>
-                                    setPassword(
-                                        event.target.value
-                                    )
+                                    setPassword(event.target.value)
                                 }
                             />
 
@@ -125,7 +124,7 @@ function Login() {
                             type="submit"
                             className="main-button"
                         >
-                            Log In
+                            View Dashboard
                         </button>
 
                     </form>

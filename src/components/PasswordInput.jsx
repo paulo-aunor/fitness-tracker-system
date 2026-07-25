@@ -1,8 +1,9 @@
 import { useState } from "react";
+
 import {
     FaEye,
     FaEyeSlash
-} from "react-icons/fa6";
+} from "react-icons/fa";
 
 function PasswordInput({
     id,
@@ -13,12 +14,13 @@ function PasswordInput({
     const [showPassword, setShowPassword] =
         useState(false);
 
-    function handleTogglePassword() {
+    function togglePassword() {
         setShowPassword((currentValue) => !currentValue);
     }
 
     return (
         <div className="password-box">
+
             <input
                 type={showPassword ? "text" : "password"}
                 id={id}
@@ -31,7 +33,7 @@ function PasswordInput({
             <button
                 type="button"
                 className="eye-button"
-                onClick={handleTogglePassword}
+                onClick={togglePassword}
                 aria-label={
                     showPassword
                         ? "Hide password"
@@ -44,6 +46,7 @@ function PasswordInput({
                     <FaEye />
                 )}
             </button>
+
         </div>
     );
 }
