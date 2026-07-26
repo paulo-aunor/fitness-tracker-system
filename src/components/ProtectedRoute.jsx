@@ -1,4 +1,4 @@
-```jsx
+
 import {
     Navigate
 } from "react-router-dom";
@@ -25,4 +25,4 @@ function ProtectedRoute({
 }
 
 export default ProtectedRoute;
-```
+

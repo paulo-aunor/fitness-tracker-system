@@ -2,7 +2,6 @@
    PROGRESS PAGE
 ========================================= */
 
-/* Styles the main progress page background. */
 .progress-content {
     min-width: 0;
 
@@ -20,7 +19,6 @@
    HEADER
 ========================================= */
 
-/* Aligns the progress page heading and goal weight control. */
 .progress-header {
     margin-bottom: 28px;
 
@@ -30,7 +28,6 @@
     gap: 24px;
 }
 
-/* Styles the small label above the progress page title. */
 .progress-kicker {
     margin-bottom: 9px;
 
@@ -41,7 +38,6 @@
     letter-spacing: 1.7px;
 }
 
-/* Styles the main progress page title. */
 .progress-header h1 {
     margin-bottom: 9px;
 
@@ -55,7 +51,6 @@
     letter-spacing: -2.6px;
 }
 
-/* Highlights the period in the progress page title. */
 .progress-header h1 span {
     color: var(--green);
 
@@ -64,7 +59,6 @@
         rgba(166, 255, 63, 0.45);
 }
 
-/* Styles the description below the progress page title. */
 .progress-header > div:first-child > p:last-child {
     max-width: 650px;
 
@@ -74,7 +68,6 @@
     line-height: 1.6;
 }
 
-/* Styles the goal weight input control. */
 .progress-goal-control {
     min-width: 205px;
     padding: 14px;
@@ -93,19 +86,16 @@
         rgba(166, 255, 63, 0.055);
 }
 
-/* Styles the target icon in the goal weight control. */
 .progress-goal-control > svg {
     color: var(--green);
 
     font-size: 20px;
 }
 
-/* Allows the goal weight label to use the remaining space. */
 .progress-goal-control label {
     flex: 1;
 }
 
-/* Styles the goal weight field label. */
 .progress-goal-control label > span {
     display: block;
     margin-bottom: 5px;
@@ -117,13 +107,11 @@
     text-transform: uppercase;
 }
 
-/* Aligns the goal weight input and unit. */
 .progress-goal-control label > div {
     display: flex;
     align-items: center;
 }
 
-/* Styles the goal weight input. */
 .progress-goal-control input {
     width: 75px;
     padding: 0;
@@ -138,7 +126,6 @@
     font-weight: 900;
 }
 
-/* Styles the goal weight unit. */
 .progress-goal-control small {
     color: var(--green);
 
@@ -151,7 +138,6 @@
    SUMMARY
 ========================================= */
 
-/* Creates the progress summary card grid. */
 .progress-summary-grid {
     margin-bottom: 18px;
 
@@ -162,7 +148,6 @@
     gap: 12px;
 }
 
-/* Styles each progress summary card. */
 .progress-summary-card {
     min-height: 175px;
     padding: 18px;
@@ -181,7 +166,6 @@
         );
 }
 
-/* Highlights the main weight summary card. */
 .primary-summary-card {
     border-color:
         rgba(166, 255, 63, 0.38);
@@ -194,7 +178,6 @@
         );
 }
 
-/* Styles icons inside progress summary cards. */
 .progress-summary-icon {
     width: 38px;
     height: 38px;
@@ -211,7 +194,6 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles progress summary labels. */
 .progress-summary-card > span {
     margin-bottom: 6px;
 
@@ -222,7 +204,6 @@
     text-transform: uppercase;
 }
 
-/* Styles the main progress summary values. */
 .progress-summary-card > strong {
     margin-bottom: 10px;
 
@@ -230,14 +211,12 @@
     letter-spacing: -1px;
 }
 
-/* Styles units displayed beside summary values. */
 .progress-summary-card > strong small {
     color: var(--muted);
 
     font-size: 10px;
 }
 
-/* Aligns the progress change icon and message. */
 .progress-change {
     margin-top: auto;
 
@@ -250,12 +229,10 @@
     font-size: 8px;
 }
 
-/* Uses green for a decreasing measurement. */
 .progress-change.decrease {
     color: #88e6b2;
 }
 
-/* Uses orange for an increasing measurement. */
 .progress-change.increase {
     color: #ffbd73;
 }
@@ -265,7 +242,6 @@
    PANELS
 ========================================= */
 
-/* Creates the progress form and goal panel layout. */
 .progress-main-grid {
     margin-bottom: 18px;
 
@@ -278,14 +254,12 @@
     align-items: start;
 }
 
-/* Arranges progress side panels vertically. */
 .progress-side-column {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-/* Styles reusable progress panels. */
 .progress-panel {
     padding: 22px;
 
@@ -304,7 +278,6 @@
         rgba(0, 0, 0, 0.23);
 }
 
-/* Aligns icons and text in progress panel headings. */
 .progress-panel-heading {
     margin-bottom: 20px;
 
@@ -313,7 +286,6 @@
     gap: 12px;
 }
 
-/* Styles icons used in progress panel headings. */
 .progress-panel-icon {
     width: 42px;
     height: 42px;
@@ -335,7 +307,6 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles the small label in progress panel headings. */
 .progress-panel-heading p {
     margin-bottom: 4px;
 
@@ -346,7 +317,6 @@
     letter-spacing: 1.3px;
 }
 
-/* Styles progress panel titles. */
 .progress-panel-heading h2 {
     font-size: 18px;
 }
@@ -356,7 +326,6 @@
    FORM
 ========================================= */
 
-/* Creates the progress entry form grid. */
 .progress-form-grid {
     display: grid;
     grid-template-columns:
@@ -365,12 +334,10 @@
     gap: 13px;
 }
 
-/* Prevents form labels from overflowing the grid. */
 .progress-form-grid label {
     min-width: 0;
 }
 
-/* Styles labels inside the progress form. */
 .progress-form-grid label > span {
     display: block;
     margin-bottom: 7px;
@@ -381,7 +348,6 @@
     font-weight: 800;
 }
 
-/* Applies shared styles to progress form inputs and notes. */
 .progress-form-grid input,
 .progress-form-grid textarea {
     width: 100%;
@@ -398,12 +364,10 @@
     font-size: 11px;
 }
 
-/* Sets the height of progress form inputs. */
 .progress-form-grid input {
     height: 43px;
 }
 
-/* Styles the progress notes area. */
 .progress-form-grid textarea {
     min-height: 92px;
     padding-top: 11px;
@@ -411,7 +375,6 @@
     resize: vertical;
 }
 
-/* Highlights progress form fields when focused. */
 .progress-form-grid input:focus,
 .progress-form-grid textarea:focus {
     border-color: var(--green);
@@ -421,12 +384,10 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Makes the notes field use the full form width. */
 .progress-note-field {
     grid-column: 1 / -1;
 }
 
-/* Styles progress form feedback messages. */
 .progress-form-message {
     margin-top: 14px;
     padding: 10px 12px;
@@ -444,7 +405,6 @@
     font-size: 10px;
 }
 
-/* Aligns the progress form action buttons. */
 .progress-form-actions {
     margin-top: 17px;
 
@@ -453,7 +413,6 @@
     gap: 9px;
 }
 
-/* Applies shared styles to the clear and save buttons. */
 .progress-clear-button,
 .progress-save-button {
     min-width: 135px;
@@ -473,7 +432,6 @@
     cursor: pointer;
 }
 
-/* Styles the progress form clear button. */
 .progress-clear-button {
     border: 1px solid var(--border);
 
@@ -482,7 +440,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles the progress form save button. */
 .progress-save-button {
     border: none;
 
@@ -501,7 +458,6 @@
    GOAL
 ========================================= */
 
-/* Aligns the goal completion value and label. */
 .goal-progress-number {
     margin-bottom: 14px;
 
@@ -510,7 +466,6 @@
     gap: 8px;
 }
 
-/* Styles the goal completion percentage. */
 .goal-progress-number strong {
     color: var(--green);
 
@@ -518,7 +473,6 @@
     letter-spacing: -1px;
 }
 
-/* Styles the goal completion label. */
 .goal-progress-number span {
     padding-bottom: 6px;
 
@@ -527,7 +481,6 @@
     font-size: 9px;
 }
 
-/* Creates the background track for goal progress. */
 .goal-progress-track {
     width: 100%;
     height: 10px;
@@ -541,7 +494,6 @@
         rgba(255, 255, 255, 0.07);
 }
 
-/* Styles the filled portion of the goal progress bar. */
 .goal-progress-fill {
     height: 100%;
 
@@ -557,7 +509,6 @@
     transition: width 0.25s ease;
 }
 
-/* Creates the starting, current and goal weight grid. */
 .goal-weight-details {
     display: grid;
     grid-template-columns:
@@ -566,7 +517,6 @@
     gap: 7px;
 }
 
-/* Styles each goal weight detail box. */
 .goal-weight-details > div {
     padding: 10px 7px;
 
@@ -582,7 +532,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles goal weight detail labels. */
 .goal-weight-details span {
     color: var(--muted);
 
@@ -590,7 +539,6 @@
     text-transform: uppercase;
 }
 
-/* Styles goal weight detail values. */
 .goal-weight-details strong {
     font-size: 10px;
 }
@@ -600,7 +548,6 @@
    MEASUREMENTS
 ========================================= */
 
-/* Creates the body measurement grid. */
 .measurement-list {
     display: grid;
     grid-template-columns:
@@ -609,7 +556,6 @@
     gap: 9px;
 }
 
-/* Styles each body measurement card. */
 .measurement-list > div {
     padding: 13px;
 
@@ -624,7 +570,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles body measurement labels. */
 .measurement-list span {
     color: var(--muted);
 
@@ -632,7 +577,6 @@
     text-transform: uppercase;
 }
 
-/* Styles body measurement values. */
 .measurement-list strong {
     font-size: 13px;
 }
@@ -642,12 +586,10 @@
    CHART
 ========================================= */
 
-/* Adds spacing below the progress chart panel. */
 .chart-panel {
     margin-bottom: 18px;
 }
 
-/* Aligns the chart heading and metric selector. */
 .chart-panel-header {
     display: flex;
     align-items: flex-start;
@@ -655,13 +597,11 @@
     gap: 15px;
 }
 
-/* Aligns the chart metric buttons. */
 .chart-metric-selector {
     display: flex;
     gap: 7px;
 }
 
-/* Styles each chart metric button. */
 .chart-metric-selector button {
     height: 35px;
     padding: 0 13px;
@@ -680,7 +620,6 @@
     cursor: pointer;
 }
 
-/* Highlights the selected chart metric. */
 .chart-metric-selector button.active {
     border-color:
         var(--green-border);
@@ -689,20 +628,17 @@
     background: var(--green);
 }
 
-/* Allows the progress chart to scroll horizontally. */
 .progress-chart-wrapper {
     width: 100%;
 
     overflow-x: auto;
 }
 
-/* Sets the progress chart dimensions. */
 .progress-chart {
     width: 100%;
     min-width: 620px;
 }
 
-/* Styles horizontal chart grid lines. */
 .chart-grid-line {
     stroke:
         rgba(255, 255, 255, 0.07);
@@ -710,7 +646,6 @@
     stroke-width: 1;
 }
 
-/* Styles chart axis and date labels. */
 .chart-axis-label,
 .chart-date-label {
     fill: #738078;
@@ -718,7 +653,6 @@
     font-size: 8px;
 }
 
-/* Styles the values displayed above chart points. */
 .chart-value-label {
     fill: #dbe5dd;
 
@@ -726,7 +660,6 @@
     font-weight: 800;
 }
 
-/* Styles the chart trend line. */
 .chart-trend-line {
     fill: none;
 
@@ -743,7 +676,6 @@
         );
 }
 
-/* Styles each point on the progress chart. */
 .chart-point {
     fill: var(--green);
 
@@ -751,7 +683,6 @@
     stroke-width: 3;
 }
 
-/* Applies shared styles to empty chart and history states. */
 .progress-chart-empty,
 .progress-history-empty {
     min-height: 210px;
@@ -772,7 +703,6 @@
     text-align: center;
 }
 
-/* Styles icons in empty chart and history states. */
 .progress-chart-empty svg,
 .progress-history-empty svg {
     margin-bottom: 12px;
@@ -783,7 +713,6 @@
     opacity: 0.7;
 }
 
-/* Styles titles in empty chart and history states. */
 .progress-chart-empty h3,
 .progress-history-empty h3 {
     margin-bottom: 6px;
@@ -793,7 +722,6 @@
     font-size: 14px;
 }
 
-/* Styles messages in empty chart and history states. */
 .progress-chart-empty p,
 .progress-history-empty p {
     font-size: 9px;
@@ -804,12 +732,10 @@
    RECORDS
 ========================================= */
 
-/* Adds spacing below the personal records panel. */
 .records-panel {
     margin-bottom: 18px;
 }
 
-/* Creates the personal record card grid. */
 .record-card-grid {
     display: grid;
     grid-template-columns:
@@ -818,7 +744,6 @@
     gap: 12px;
 }
 
-/* Styles each personal record card. */
 .record-card {
     padding: 16px;
 
@@ -829,7 +754,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles the medal icon on record cards. */
 .record-medal {
     width: 35px;
     height: 35px;
@@ -846,7 +770,6 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles personal record exercise labels. */
 .record-card > span {
     display: block;
     margin-bottom: 10px;
@@ -858,7 +781,6 @@
     text-transform: uppercase;
 }
 
-/* Styles the personal record input container. */
 .record-input-wrapper {
     display: flex;
     align-items: center;
@@ -869,12 +791,10 @@
     background: #101712;
 }
 
-/* Highlights a record input when focused. */
 .record-input-wrapper:focus-within {
     border-color: var(--green);
 }
 
-/* Styles the numeric personal record input. */
 .record-input-wrapper input {
     width: 100%;
     height: 42px;
@@ -890,7 +810,6 @@
     font-weight: 900;
 }
 
-/* Styles the weight unit inside record inputs. */
 .record-input-wrapper small {
     padding-right: 11px;
 
@@ -899,7 +818,6 @@
     font-size: 9px;
 }
 
-/* Styles the automatic save note. */
 .records-save-note {
     margin-top: 12px;
 
@@ -913,19 +831,16 @@
    HISTORY TABLE
 ========================================= */
 
-/* Adds spacing below the progress history panel. */
 .history-panel {
     margin-bottom: 45px;
 }
 
-/* Allows the progress table to scroll horizontally. */
 .progress-table-wrapper {
     width: 100%;
 
     overflow-x: auto;
 }
 
-/* Sets the progress history table size and layout. */
 .progress-table {
     width: 100%;
     min-width: 850px;
@@ -933,7 +848,6 @@
     border-collapse: collapse;
 }
 
-/* Styles progress history table headings. */
 .progress-table th {
     padding: 11px;
 
@@ -947,7 +861,6 @@
     text-transform: uppercase;
 }
 
-/* Styles progress history table cells. */
 .progress-table td {
     padding: 12px 11px;
 
@@ -960,12 +873,10 @@
     font-size: 9px;
 }
 
-/* Highlights important values inside table cells. */
 .progress-table td strong {
     color: var(--white);
 }
 
-/* Aligns the calendar icon and entry date. */
 .table-date-cell {
     display: flex;
     align-items: center;
@@ -974,12 +885,10 @@
     white-space: nowrap;
 }
 
-/* Styles the calendar icon in the history table. */
 .table-date-cell svg {
     color: var(--green);
 }
 
-/* Prevents long progress notes from overflowing. */
 .progress-note-cell {
     max-width: 230px;
 
@@ -989,13 +898,11 @@
     white-space: nowrap;
 }
 
-/* Aligns edit and delete buttons in the table. */
 .progress-table-actions {
     display: flex;
     gap: 6px;
 }
 
-/* Styles progress history action buttons. */
 .progress-table-actions button {
     width: 31px;
     height: 31px;
@@ -1014,7 +921,6 @@
     cursor: pointer;
 }
 
-/* Highlights a table action button when hovered. */
 .progress-table-actions button:hover {
     border-color:
         var(--green-border);
@@ -1022,7 +928,6 @@
     color: var(--green);
 }
 
-/* Uses a warning color for the delete button on hover. */
 .progress-table-actions
 .progress-delete-button:hover {
     border-color:
@@ -1036,104 +941,84 @@
    RESPONSIVE
 ========================================= */
 
-/* Adjusts summary and record grids for smaller desktops. */
 @media screen and (max-width: 1200px) {
-    /* Displays progress summary cards in two columns. */
     .progress-summary-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-    /* Displays personal record cards in two columns. */
     .record-card-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 }
 
-/* Stacks main progress panels on medium screens. */
 @media screen and (max-width: 1000px) {
-    /* Changes the main progress layout to one column. */
     .progress-main-grid {
         grid-template-columns: 1fr;
     }
 
-    /* Displays progress side panels in two columns. */
     .progress-side-column {
         display: grid;
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-    /* Displays progress form fields in three columns. */
     .progress-form-grid {
         grid-template-columns:
             repeat(3, 1fr);
     }
 }
 
-/* Adjusts the progress page for tablets. */
 @media screen and (max-width: 750px) {
-    /* Stacks the progress header vertically. */
     .progress-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    /* Makes the goal weight control use the full width. */
     .progress-goal-control {
         width: 100%;
     }
 
-    /* Stacks progress side panels vertically. */
     .progress-side-column {
         grid-template-columns: 1fr;
     }
 
-    /* Displays progress form fields in two columns. */
     .progress-form-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-    /* Stacks the chart heading and metric selector. */
     .chart-panel-header {
         align-items: flex-start;
         flex-direction: column;
     }
 }
 
-/* Adjusts the progress page for mobile screens. */
 @media screen and (max-width: 520px) {
-    /* Reduces progress page padding. */
     .progress-content {
         padding: 24px 14px;
     }
 
-    /* Displays summary, form and record grids in one column. */
     .progress-summary-grid,
     .progress-form-grid,
     .record-card-grid {
         grid-template-columns: 1fr;
     }
 
-    /* Returns the notes field to normal grid flow. */
     .progress-note-field {
         grid-column: auto;
     }
 
-    /* Stacks progress form buttons vertically. */
     .progress-form-actions {
         flex-direction: column-reverse;
     }
 
-    /* Makes progress form buttons use the full width. */
     .progress-clear-button,
     .progress-save-button {
         width: 100%;
     }
 
-    /* Displays body measurements in one column. */
     .measurement-list {
         grid-template-columns: 1fr;
     }

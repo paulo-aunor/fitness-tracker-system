@@ -1,4 +1,4 @@
-```jsx
+
 import { useState } from "react";
 
 import {
@@ -71,4 +71,4 @@ function PasswordInput({
 }
 
 export default PasswordInput;
-```
+

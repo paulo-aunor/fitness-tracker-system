@@ -1,4 +1,3 @@
-/* Styles the main food log page background. */
 .food-log-content {
     min-width: 0;
 
@@ -16,7 +15,6 @@
    HEADER
 ========================================= */
 
-/* Aligns the food log heading and date controls. */
 .food-log-header {
     margin-bottom: 28px;
 
@@ -26,7 +24,6 @@
     gap: 24px;
 }
 
-/* Styles the small label above the food log title. */
 .food-log-kicker {
     margin-bottom: 9px;
 
@@ -37,7 +34,6 @@
     letter-spacing: 1.7px;
 }
 
-/* Styles the main food log page title. */
 .food-log-header h1 {
     margin-bottom: 9px;
 
@@ -51,7 +47,6 @@
     letter-spacing: -2.5px;
 }
 
-/* Highlights the period in the page title. */
 .food-log-header h1 span {
     color: var(--green);
 
@@ -60,7 +55,6 @@
         rgba(166, 255, 63, 0.45);
 }
 
-/* Styles the description below the page title. */
 .food-log-header > div:first-child > p:last-child {
     max-width: 630px;
 
@@ -70,14 +64,12 @@
     line-height: 1.6;
 }
 
-/* Aligns the date navigation controls. */
 .date-controller {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-/* Styles buttons inside the date controller. */
 .date-controller > button {
     height: 42px;
     min-width: 42px;
@@ -95,7 +87,6 @@
     cursor: pointer;
 }
 
-/* Highlights date controller buttons when hovered. */
 .date-controller > button:hover {
     border-color:
         var(--green-border);
@@ -103,7 +94,6 @@
     color: var(--green);
 }
 
-/* Styles the date input container. */
 .date-controller > div {
     height: 42px;
     padding: 0 12px;
@@ -118,12 +108,10 @@
     background: #101712;
 }
 
-/* Styles the calendar icon in the date controller. */
 .date-controller svg {
     color: var(--green);
 }
 
-/* Styles the date input field. */
 .date-controller input {
     border: none;
     outline: none;
@@ -134,7 +122,6 @@
     font-size: 11px;
 }
 
-/* Highlights the button that returns to today's date. */
 .date-controller .today-button {
     min-width: 72px;
 
@@ -147,7 +134,6 @@
    SUMMARY
 ========================================= */
 
-/* Creates the daily nutrition summary grid. */
 .food-summary-grid {
     margin-bottom: 20px;
 
@@ -158,7 +144,6 @@
     gap: 12px;
 }
 
-/* Styles each nutrition summary card. */
 .food-summary-card {
     min-height: 145px;
     padding: 17px;
@@ -179,7 +164,6 @@
         );
 }
 
-/* Styles summary card labels. */
 .food-summary-card > span {
     color: var(--muted);
 
@@ -188,26 +172,22 @@
     text-transform: uppercase;
 }
 
-/* Styles the main value in each summary card. */
 .food-summary-card strong {
     font-size: 23px;
 }
 
-/* Styles the target value beside a summary result. */
 .food-summary-card strong small {
     color: var(--muted);
 
     font-size: 10px;
 }
 
-/* Styles supporting text inside summary cards. */
 .food-summary-card p {
     color: var(--muted);
 
     font-size: 9px;
 }
 
-/* Highlights the calorie summary card. */
 .calories-summary {
     border-color:
         rgba(166, 255, 63, 0.35);
@@ -220,12 +200,10 @@
         );
 }
 
-/* Highlights the calorie summary value. */
 .calories-summary strong {
     color: var(--green);
 }
 
-/* Creates the background track for food progress bars. */
 .food-progress-track {
     width: 100%;
     height: 7px;
@@ -238,7 +216,6 @@
         rgba(255, 255, 255, 0.07);
 }
 
-/* Styles the filled portion of food progress bars. */
 .food-progress-fill {
     height: 100%;
 
@@ -255,7 +232,6 @@
         width 0.25s ease;
 }
 
-/* Increases the height of large progress bars. */
 .large-progress {
     height: 10px;
 }
@@ -265,7 +241,6 @@
    LAYOUT
 ========================================= */
 
-/* Creates the main food form and side panel layout. */
 .food-log-main-grid {
     margin-bottom: 20px;
 
@@ -279,14 +254,12 @@
     align-items: start;
 }
 
-/* Arranges side panels vertically. */
 .food-log-side-column {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-/* Styles reusable food log panels. */
 .food-log-panel {
     padding: 22px;
 
@@ -305,7 +278,6 @@
         rgba(0, 0, 0, 0.23);
 }
 
-/* Aligns food panel icons and titles. */
 .food-panel-heading {
     margin-bottom: 20px;
 
@@ -314,7 +286,6 @@
     gap: 12px;
 }
 
-/* Styles icons used in food panel headings. */
 .food-panel-icon {
     width: 42px;
     height: 42px;
@@ -336,7 +307,6 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles the small label in food panel headings. */
 .food-panel-heading p {
     margin-bottom: 4px;
 
@@ -347,7 +317,6 @@
     letter-spacing: 1.3px;
 }
 
-/* Styles food panel titles. */
 .food-panel-heading h2 {
     font-size: 18px;
 }
@@ -357,12 +326,10 @@
    FOOD FORM
 ========================================= */
 
-/* Displays the add food form as a block element. */
 .add-food-form {
     display: block;
 }
 
-/* Creates the add food form field grid. */
 .food-form-grid {
     display: grid;
     grid-template-columns:
@@ -371,12 +338,10 @@
     gap: 13px;
 }
 
-/* Makes the food name field use two columns. */
 .food-name-field {
     grid-column: span 2;
 }
 
-/* Styles labels inside food form fields. */
 .food-form-field label {
     margin-bottom: 7px;
 
@@ -386,7 +351,6 @@
     font-weight: 800;
 }
 
-/* Applies shared styles to food form inputs and dropdowns. */
 .food-form-field input,
 .food-form-field select,
 .quick-add-form input,
@@ -406,7 +370,6 @@
     font-size: 11px;
 }
 
-/* Highlights food form fields when focused. */
 .food-form-field input:focus,
 .food-form-field select:focus,
 .quick-add-form input:focus,
@@ -419,14 +382,12 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles options inside food form dropdowns. */
 .food-form-field option,
 .quick-add-form option {
     color: white;
     background: #101712;
 }
 
-/* Styles food form feedback messages. */
 .food-form-message {
     margin-top: 14px;
     padding: 10px 12px;
@@ -444,7 +405,6 @@
     font-size: 10px;
 }
 
-/* Aligns the food form action buttons. */
 .food-form-actions {
     margin-top: 18px;
 
@@ -453,7 +413,6 @@
     gap: 9px;
 }
 
-/* Applies shared styles to the clear and save buttons. */
 .food-cancel-button,
 .food-save-button {
     min-width: 135px;
@@ -473,7 +432,6 @@
     cursor: pointer;
 }
 
-/* Styles the food form clear button. */
 .food-cancel-button {
     border: 1px solid var(--border);
 
@@ -482,7 +440,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles the food form save button. */
 .food-save-button {
     border: none;
 
@@ -500,7 +457,6 @@
    WATER
 ========================================= */
 
-/* Aligns the current water amount and daily target. */
 .water-total {
     margin-bottom: 14px;
 
@@ -509,14 +465,12 @@
     gap: 7px;
 }
 
-/* Styles the current water intake value. */
 .water-total strong {
     color: var(--green);
 
     font-size: 31px;
 }
 
-/* Styles the daily water target. */
 .water-total span {
     padding-bottom: 5px;
 
@@ -525,7 +479,6 @@
     font-size: 11px;
 }
 
-/* Creates the water action button grid. */
 .water-actions {
     margin-top: 15px;
 
@@ -536,7 +489,6 @@
     gap: 7px;
 }
 
-/* Styles buttons used to add or reset water. */
 .water-actions button {
     height: 38px;
 
@@ -553,7 +505,6 @@
     cursor: pointer;
 }
 
-/* Highlights water action buttons when hovered. */
 .water-actions button:hover {
     border-color:
         var(--green-border);
@@ -566,13 +517,11 @@
    QUICK ADD
 ========================================= */
 
-/* Arranges quick calorie entry fields vertically. */
 .quick-add-form {
     display: grid;
     gap: 9px;
 }
 
-/* Styles the quick add submission button. */
 .quick-add-form button {
     height: 42px;
 
@@ -599,14 +548,12 @@
    STATUS
 ========================================= */
 
-/* Arranges daily nutrition status messages vertically. */
 .nutrition-message-list {
     display: flex;
     flex-direction: column;
     gap: 9px;
 }
 
-/* Styles daily nutrition status messages. */
 .nutrition-message-list p {
     padding: 10px 11px;
 
@@ -623,7 +570,6 @@
     font-size: 10px;
 }
 
-/* Highlights nutrition warning messages. */
 .nutrition-message-list p.warning {
     border-color:
         rgba(255, 120, 120, 0.18);
@@ -638,12 +584,10 @@
    TARGETS
 ========================================= */
 
-/* Adds spacing below the nutrition targets panel. */
 .targets-panel {
     margin-bottom: 20px;
 }
 
-/* Creates the nutrition target input grid. */
 .target-input-grid {
     display: grid;
 
@@ -655,14 +599,12 @@
     align-items: end;
 }
 
-/* Arranges each nutrition target label and input vertically. */
 .target-input-grid label {
     display: flex;
     flex-direction: column;
     gap: 7px;
 }
 
-/* Styles nutrition target labels. */
 .target-input-grid span {
     color: var(--muted);
 
@@ -671,7 +613,6 @@
     text-transform: uppercase;
 }
 
-/* Styles the button used to reset nutrition targets. */
 .target-input-grid button {
     height: 43px;
     padding: 0 14px;
@@ -695,7 +636,6 @@
    MEALS
 ========================================= */
 
-/* Creates the meal card grid. */
 .meal-section-grid {
     padding-bottom: 45px;
 
@@ -706,7 +646,6 @@
     gap: 16px;
 }
 
-/* Styles each meal card. */
 .meal-card {
     padding: 20px;
 
@@ -721,7 +660,6 @@
         );
 }
 
-/* Aligns the meal title and calorie total. */
 .meal-card-header {
     margin-bottom: 16px;
 
@@ -731,7 +669,6 @@
     gap: 15px;
 }
 
-/* Styles meal descriptions. */
 .meal-card-header p {
     margin-bottom: 5px;
 
@@ -742,19 +679,16 @@
     text-transform: uppercase;
 }
 
-/* Styles meal titles. */
 .meal-card-header h2 {
     font-size: 19px;
 }
 
-/* Styles the meal calorie total. */
 .meal-card-header > strong {
     color: var(--green);
 
     font-size: 13px;
 }
 
-/* Styles the empty meal placeholder. */
 .empty-meal {
     min-height: 125px;
 
@@ -772,7 +706,6 @@
     color: var(--muted);
 }
 
-/* Styles the icon inside an empty meal placeholder. */
 .empty-meal svg {
     margin-bottom: 10px;
 
@@ -782,19 +715,16 @@
     opacity: 0.6;
 }
 
-/* Styles empty meal placeholder text. */
 .empty-meal p {
     font-size: 10px;
 }
 
-/* Arranges saved food items vertically. */
 .meal-food-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* Styles each saved food item. */
 .meal-food-item {
     padding: 12px;
 
@@ -810,7 +740,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Arranges the main food information vertically. */
 .meal-food-main {
     min-width: 0;
 
@@ -819,7 +748,6 @@
     gap: 4px;
 }
 
-/* Prevents long food names from overflowing. */
 .meal-food-main strong {
     overflow: hidden;
 
@@ -829,7 +757,6 @@
     white-space: nowrap;
 }
 
-/* Styles serving and macronutrient details. */
 .meal-food-main span,
 .meal-food-main small {
     color: var(--muted);
@@ -837,14 +764,12 @@
     font-size: 8px;
 }
 
-/* Aligns calories and food action buttons. */
 .meal-food-actions {
     display: flex;
     align-items: center;
     gap: 7px;
 }
 
-/* Styles the calorie value for a saved food item. */
 .meal-food-actions > strong {
     margin-right: 4px;
 
@@ -854,7 +779,6 @@
     white-space: nowrap;
 }
 
-/* Styles edit and delete buttons for saved foods. */
 .meal-food-actions button {
     width: 31px;
     height: 31px;
@@ -873,7 +797,6 @@
     cursor: pointer;
 }
 
-/* Highlights food action buttons when hovered. */
 .meal-food-actions button:hover {
     color: var(--green);
 
@@ -881,7 +804,6 @@
         var(--green-border);
 }
 
-/* Highlights the delete button with a warning color. */
 .meal-food-actions
 .delete-food-button:hover {
     color: #ff8585;
@@ -890,7 +812,6 @@
         rgba(255, 120, 120, 0.2);
 }
 
-/* Styles the button used to add food to a meal. */
 .meal-add-button {
     width: 100%;
     height: 40px;
@@ -918,7 +839,6 @@
     cursor: pointer;
 }
 
-/* Highlights the add food button when hovered. */
 .meal-add-button:hover {
     color: #071004;
     background: var(--green);
@@ -929,127 +849,100 @@
    RESPONSIVE
 ========================================= */
 
-/* Adjusts summary and target grids for smaller desktops. */
 @media screen and (max-width: 1250px) {
-
-    /* Displays summary cards in three columns. */
     .food-summary-grid {
         grid-template-columns:
             repeat(3, 1fr);
     }
 
-    /* Displays target inputs in three columns. */
     .target-input-grid {
         grid-template-columns:
             repeat(3, 1fr);
     }
 }
 
-/* Stacks the main food log layout on medium screens. */
 @media screen and (max-width: 1050px) {
-
-    /* Changes the main food log layout to one column. */
     .food-log-main-grid {
         grid-template-columns: 1fr;
     }
 
-    /* Displays side panels in three columns. */
     .food-log-side-column {
         display: grid;
         grid-template-columns:
             repeat(3, 1fr);
     }
 
-    /* Displays food form fields in three columns. */
     .food-form-grid {
         grid-template-columns:
             repeat(3, 1fr);
     }
 }
 
-/* Adjusts the food log layout for tablets. */
 @media screen and (max-width: 800px) {
-
-    /* Stacks the food log header vertically. */
     .food-log-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    /* Displays summary cards in two columns. */
     .food-summary-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-    /* Stacks side panels and meal cards vertically. */
     .food-log-side-column,
     .meal-section-grid {
         grid-template-columns: 1fr;
     }
 
-    /* Displays food form fields in two columns. */
     .food-form-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-    /* Displays target inputs in two columns. */
     .target-input-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 }
 
-/* Adjusts the food log interface for mobile screens. */
 @media screen and (max-width: 520px) {
-
-    /* Reduces the food log page padding. */
     .food-log-content {
         padding: 24px 14px;
     }
 
-    /* Displays summary, form and target grids in one column. */
     .food-summary-grid,
     .food-form-grid,
     .target-input-grid {
         grid-template-columns: 1fr;
     }
 
-    /* Returns the food name field to normal grid flow. */
     .food-name-field {
         grid-column: auto;
     }
 
-    /* Allows date controls to wrap on small screens. */
     .date-controller {
         width: 100%;
         flex-wrap: wrap;
     }
 
-    /* Allows the date input container to fill available space. */
     .date-controller > div {
         flex: 1;
     }
 
-    /* Stacks food form buttons vertically. */
     .food-form-actions {
         flex-direction: column-reverse;
     }
 
-    /* Makes food form action buttons use the full width. */
     .food-cancel-button,
     .food-save-button {
         width: 100%;
     }
 
-    /* Stacks food item details and actions vertically. */
     .meal-food-item {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    /* Moves food action buttons to the right. */
     .meal-food-actions {
         width: 100%;
         justify-content: flex-end;

@@ -1,4 +1,3 @@
-/* Styles the main calories page background. */
 .calories-content {
     min-width: 0;
 
@@ -11,7 +10,6 @@
         #030604;
 }
 
-/* Aligns the calories page heading and reset button. */
 .calories-header {
     margin-bottom: 30px;
 
@@ -21,7 +19,6 @@
     gap: 25px;
 }
 
-/* Styles the small heading above the page title. */
 .calories-kicker {
     margin-bottom: 9px;
 
@@ -32,7 +29,6 @@
     letter-spacing: 1.7px;
 }
 
-/* Styles the main calories page title. */
 .calories-header h1 {
     margin-bottom: 9px;
 
@@ -46,7 +42,6 @@
     letter-spacing: -2.6px;
 }
 
-/* Highlights the period in the page title. */
 .calories-header h1 span {
     color: var(--green);
 
@@ -55,7 +50,6 @@
         rgba(166, 255, 63, 0.45);
 }
 
-/* Styles the description below the page title. */
 .calories-header > div > p:last-child {
     max-width: 680px;
 
@@ -65,7 +59,6 @@
     line-height: 1.6;
 }
 
-/* Styles the calculator reset button. */
 .calories-reset-button {
     min-width: 155px;
     height: 45px;
@@ -89,13 +82,11 @@
     cursor: pointer;
 }
 
-/* Changes the reset button appearance on hover. */
 .calories-reset-button:hover {
     color: #071004;
     background: var(--green);
 }
 
-/* Creates the main calculator and result column layout. */
 .calculator-layout {
     padding-bottom: 45px;
 
@@ -109,7 +100,6 @@
     align-items: start;
 }
 
-/* Styles each calculator content panel. */
 .calculator-panel {
     padding: 25px;
 
@@ -128,7 +118,6 @@
         rgba(0, 0, 0, 0.25);
 }
 
-/* Aligns the icon and text in panel headings. */
 .calculator-panel-heading {
     margin-bottom: 23px;
 
@@ -137,7 +126,6 @@
     gap: 12px;
 }
 
-/* Styles the icon displayed in calculator headings. */
 .calculator-heading-icon {
     width: 43px;
     height: 43px;
@@ -162,7 +150,6 @@
     font-size: 17px;
 }
 
-/* Styles the small labels used in section headings. */
 .calculator-panel-heading p,
 .goal-section-heading p,
 .nutrition-section-heading p {
@@ -175,13 +162,11 @@
     letter-spacing: 1.4px;
 }
 
-/* Styles calculator panel titles. */
 .calculator-panel-heading h2 {
     font-size: 20px;
     letter-spacing: -0.7px;
 }
 
-/* Creates the calculator form field grid. */
 .calculator-form-grid {
     display: grid;
 
@@ -191,12 +176,10 @@
     gap: 15px;
 }
 
-/* Makes a form field use the full grid width. */
 .full-width-field {
     grid-column: 1 / -1;
 }
 
-/* Styles labels in the calculator form. */
 .calculator-field label {
     margin-bottom: 8px;
 
@@ -207,14 +190,12 @@
     letter-spacing: 0.7px;
 }
 
-/* Creates the two-column gender selector. */
 .gender-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 9px;
 }
 
-/* Styles each gender selection button. */
 .gender-button {
     height: 44px;
 
@@ -232,7 +213,6 @@
     cursor: pointer;
 }
 
-/* Highlights hovered and selected gender buttons. */
 .gender-button:hover,
 .gender-button.active {
     border-color:
@@ -244,7 +224,6 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles input containers with icons and units. */
 .calculator-input-box {
     height: 46px;
     padding: 0 12px;
@@ -259,7 +238,6 @@
     background: #111913;
 }
 
-/* Highlights an input container when its input is focused. */
 .calculator-input-box:focus-within {
     border-color: var(--green);
 
@@ -268,7 +246,6 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles icons inside calculator input containers. */
 .calculator-input-box > svg {
     flex-shrink: 0;
 
@@ -277,7 +254,6 @@
     font-size: 12px;
 }
 
-/* Removes default input styles inside custom input containers. */
 .calculator-input-box input {
     height: 100%;
     padding: 0;
@@ -292,14 +268,12 @@
     font-weight: 800;
 }
 
-/* Keeps focused inputs visually integrated with their container. */
 .calculator-input-box input:focus {
     border: none;
     background: transparent;
     box-shadow: none;
 }
 
-/* Styles unit labels inside calculator input containers. */
 .calculator-input-box span {
     margin-left: auto;
 
@@ -310,7 +284,6 @@
     text-transform: uppercase;
 }
 
-/* Styles dropdown fields in the calculator form. */
 .calculator-field select {
     width: 100%;
     height: 46px;
@@ -329,7 +302,6 @@
     cursor: pointer;
 }
 
-/* Highlights dropdown fields when focused. */
 .calculator-field select:focus {
     border-color: var(--green);
 
@@ -338,13 +310,11 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles options inside calculator dropdowns. */
 .calculator-field option {
     color: white;
     background: #111913;
 }
 
-/* Styles the selected activity level description. */
 .activity-description {
     padding: 11px 13px;
 
@@ -367,13 +337,11 @@
     line-height: 1.5;
 }
 
-/* Styles the icon in the activity description. */
 .activity-description svg {
     flex-shrink: 0;
     color: var(--green);
 }
 
-/* Separates the fitness goal section from the form. */
 .goal-section {
     margin-top: 27px;
     padding-top: 24px;
@@ -382,7 +350,6 @@
         1px solid var(--border);
 }
 
-/* Aligns the fitness goal section heading. */
 .goal-section-heading {
     margin-bottom: 16px;
 
@@ -391,18 +358,15 @@
     gap: 10px;
 }
 
-/* Styles the icon in the fitness goal heading. */
 .goal-section-heading > svg {
     color: var(--green);
 }
 
-/* Styles goal and nutrition section titles. */
 .goal-section-heading h3,
 .nutrition-section-heading h3 {
     font-size: 16px;
 }
 
-/* Creates the fitness goal card grid. */
 .goal-grid {
     display: grid;
 
@@ -412,7 +376,6 @@
     gap: 10px;
 }
 
-/* Styles each fitness goal card. */
 .goal-card {
     min-height: 105px;
     padding: 14px;
@@ -436,7 +399,6 @@
     transition: 0.22s ease;
 }
 
-/* Moves a goal card upward when hovered. */
 .goal-card:hover {
     transform: translateY(-3px);
 
@@ -444,7 +406,6 @@
         var(--green-border);
 }
 
-/* Highlights the currently selected fitness goal. */
 .goal-card.active {
     border-color:
         rgba(166, 255, 63, 0.5);
@@ -457,12 +418,10 @@
         );
 }
 
-/* Styles the main goal card label. */
 .goal-card strong {
     font-size: 12px;
 }
 
-/* Styles the calorie adjustment shown on a goal card. */
 .goal-card span {
     color: var(--green);
 
@@ -470,7 +429,6 @@
     font-weight: 800;
 }
 
-/* Styles the goal card description. */
 .goal-card small {
     margin-top: auto;
 
@@ -479,7 +437,6 @@
     font-size: 9px;
 }
 
-/* Creates the energy result card grid. */
 .energy-result-grid {
     display: grid;
 
@@ -489,7 +446,6 @@
     gap: 11px;
 }
 
-/* Styles each energy calculation result card. */
 .energy-result-card {
     min-height: 125px;
     padding: 17px;
@@ -506,7 +462,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles energy result labels. */
 .energy-result-card > span {
     color: var(--muted);
 
@@ -515,19 +470,16 @@
     letter-spacing: 1px;
 }
 
-/* Styles the main energy result number. */
 .energy-result-card strong {
     font-size: 27px;
     letter-spacing: -1px;
 }
 
-/* Styles supporting text in energy result cards. */
 .energy-result-card small {
     color: var(--muted);
     font-size: 9px;
 }
 
-/* Highlights the target calorie result card. */
 .energy-result-card.target-card {
     border-color:
         rgba(166, 255, 63, 0.4);
@@ -540,12 +492,10 @@
         );
 }
 
-/* Highlights the target calorie number. */
 .energy-result-card.target-card strong {
     color: var(--green);
 }
 
-/* Styles the selected fitness goal summary. */
 .selected-goal-summary {
     margin-top: 15px;
     padding: 17px;
@@ -564,7 +514,6 @@
         rgba(166, 255, 63, 0.045);
 }
 
-/* Styles the selected goal summary label. */
 .selected-goal-summary span {
     color: var(--green);
 
@@ -573,13 +522,11 @@
     text-transform: uppercase;
 }
 
-/* Styles the selected goal title. */
 .selected-goal-summary h3 {
     margin-top: 5px;
     font-size: 16px;
 }
 
-/* Styles the selected goal description. */
 .selected-goal-summary p {
     color: var(--muted);
 
@@ -587,13 +534,11 @@
     line-height: 1.6;
 }
 
-/* Adds spacing above the nutrition results heading. */
 .nutrition-section-heading {
     margin-top: 25px;
     margin-bottom: 14px;
 }
 
-/* Creates the macronutrient result card grid. */
 .macro-result-grid {
     display: grid;
 
@@ -603,7 +548,6 @@
     gap: 11px;
 }
 
-/* Styles each macronutrient result card. */
 .macro-result-card {
     min-height: 145px;
     padding: 16px;
@@ -619,7 +563,6 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles icons inside macronutrient result cards. */
 .macro-result-icon {
     width: 37px;
     height: 37px;
@@ -637,7 +580,6 @@
         rgba(166, 255, 63, 0.08);
 }
 
-/* Styles macronutrient result labels. */
 .macro-result-card > span {
     color: var(--muted);
 
@@ -645,18 +587,15 @@
     font-weight: 800;
 }
 
-/* Styles macronutrient result values. */
 .macro-result-card strong {
     font-size: 24px;
 }
 
-/* Styles supporting macronutrient text. */
 .macro-result-card small {
     color: var(--muted);
     font-size: 9px;
 }
 
-/* Creates the essential nutrition information grid. */
 .essential-grid {
     display: grid;
 
@@ -666,7 +605,6 @@
     gap: 10px;
 }
 
-/* Styles each essential nutrition card. */
 .essential-card {
     padding: 14px;
 
@@ -681,31 +619,26 @@
         rgba(255, 255, 255, 0.025);
 }
 
-/* Styles icons inside essential nutrition cards. */
 .essential-card > svg {
     color: var(--green);
     font-size: 18px;
 }
 
-/* Arranges essential nutrition text vertically. */
 .essential-card div {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-/* Styles essential nutrition labels. */
 .essential-card span {
     color: var(--muted);
     font-size: 9px;
 }
 
-/* Styles essential nutrition values. */
 .essential-card strong {
     font-size: 14px;
 }
 
-/* Styles the informational calculator note. */
 .calculator-note {
     margin-top: 16px;
     padding: 13px;
@@ -729,13 +662,11 @@
     line-height: 1.6;
 }
 
-/* Aligns the icon at the top of the calculator note. */
 .calculator-note svg {
     flex-shrink: 0;
     margin-top: 2px;
 }
 
-/* Centers the invalid result placeholder. */
 .invalid-result {
     min-height: 350px;
 
@@ -747,7 +678,6 @@
     text-align: center;
 }
 
-/* Styles the invalid result icon. */
 .invalid-result > svg {
     margin-bottom: 17px;
 
@@ -756,25 +686,21 @@
     font-size: 38px;
 }
 
-/* Adds spacing below the invalid result title. */
 .invalid-result h3 {
     margin-bottom: 8px;
 }
 
-/* Styles the invalid result description. */
 .invalid-result p {
     color: var(--muted);
     font-size: 11px;
 }
 
-/* Stacks calculator panels on medium-sized screens. */
 @media screen and (max-width: 1150px) {
     .calculator-layout {
         grid-template-columns: 1fr;
     }
 }
 
-/* Adjusts the calculator layout for tablets and small screens. */
 @media screen and (max-width: 750px) {
     .calories-header {
         align-items: flex-start;
@@ -795,7 +721,6 @@
     }
 }
 
-/* Adjusts calculator spacing and grids for mobile screens. */
 @media screen and (max-width: 550px) {
     .calories-content {
         padding: 24px 14px;
