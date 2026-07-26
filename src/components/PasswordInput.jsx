@@ -1,3 +1,4 @@
+```jsx
 import { useState } from "react";
 
 import {
@@ -5,24 +6,39 @@ import {
     FaEyeSlash
 } from "react-icons/fa";
 
+
+// Displays a password input with a show and hide button.
 function PasswordInput({
     id,
     placeholder,
     value,
     onChange
 }) {
+    // Stores whether the password is visible.
     const [showPassword, setShowPassword] =
         useState(false);
 
+
+    // Shows or hides the password text.
     function togglePassword() {
-        setShowPassword((currentValue) => !currentValue);
+        setShowPassword(
+            (currentValue) =>
+                !currentValue
+        );
     }
 
+
+    // Displays the password field and visibility button.
     return (
         <div className="password-box">
 
+            {/* Displays the password input field. */}
             <input
-                type={showPassword ? "text" : "password"}
+                type={
+                    showPassword
+                        ? "text"
+                        : "password"
+                }
                 id={id}
                 placeholder={placeholder}
                 value={value}
@@ -30,6 +46,8 @@ function PasswordInput({
                 required
             />
 
+
+            {/* Changes the password visibility. */}
             <button
                 type="button"
                 className="eye-button"
@@ -40,6 +58,7 @@ function PasswordInput({
                         : "Show password"
                 }
             >
+                {/* Displays the correct visibility icon. */}
                 {showPassword ? (
                     <FaEyeSlash />
                 ) : (
@@ -52,3 +71,4 @@ function PasswordInput({
 }
 
 export default PasswordInput;
+```

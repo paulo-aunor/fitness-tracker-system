@@ -7,21 +7,42 @@ import {
 
 import PasswordInput from "../components/PasswordInput";
 
+
+// Displays the login page and manages demo login data.
 function Login() {
-    const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    // Allows navigation between application pages.
+    const navigate =
+        useNavigate();
 
+
+    // Stores the email entered by the user.
+    const [
+        email,
+        setEmail
+    ] = useState("");
+
+
+    // Stores the password entered by the user.
+    const [
+        password,
+        setPassword
+    ] = useState("");
+
+
+    // Opens the dashboard after the login form is submitted.
     function handleLogin(event) {
         event.preventDefault();
 
         navigate("/home");
     }
 
+
+    // Displays the login page interface.
     return (
         <main className="login-page">
 
+            {/* Displays the fitness application introduction. */}
             <section className="hero-section">
 
                 <div className="hero-content">
@@ -39,6 +60,8 @@ function Login() {
                         macros in one powerful fitness application.
                     </p>
 
+
+                    {/* Displays the main application features. */}
                     <ul className="features">
                         <li>Log your daily workouts</li>
                         <li>Track calories and meals</li>
@@ -51,10 +74,12 @@ function Login() {
             </section>
 
 
+            {/* Displays the member login form. */}
             <section className="form-section">
 
                 <div className="form-card">
 
+                    {/* Displays the login form heading. */}
                     <div className="form-header">
 
                         <p className="form-tag">
@@ -71,8 +96,10 @@ function Login() {
                     </div>
 
 
+                    {/* Submits the entered login information. */}
                     <form onSubmit={handleLogin}>
 
+                        {/* Collects the user's email address. */}
                         <div className="input-group">
 
                             <label htmlFor="loginEmail">
@@ -85,7 +112,9 @@ function Login() {
                                 placeholder="Enter any email"
                                 value={email}
                                 onChange={(event) =>
-                                    setEmail(event.target.value)
+                                    setEmail(
+                                        event.target.value
+                                    )
                                 }
                                 required
                             />
@@ -93,6 +122,7 @@ function Login() {
                         </div>
 
 
+                        {/* Collects the user's password. */}
                         <div className="input-group">
 
                             <label htmlFor="loginPassword">
@@ -104,13 +134,16 @@ function Login() {
                                 placeholder="Enter any password"
                                 value={password}
                                 onChange={(event) =>
-                                    setPassword(event.target.value)
+                                    setPassword(
+                                        event.target.value
+                                    )
                                 }
                             />
 
                         </div>
 
 
+                        {/* Opens the password recovery page. */}
                         <div className="forgot-password">
 
                             <Link to="/forgot-password">
@@ -120,6 +153,7 @@ function Login() {
                         </div>
 
 
+                        {/* Submits the login form. */}
                         <button
                             type="submit"
                             className="main-button"
@@ -130,6 +164,7 @@ function Login() {
                     </form>
 
 
+                    {/* Opens the account registration page. */}
                     <p className="switch-text">
                         Do not have an account?
 

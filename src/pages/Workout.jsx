@@ -34,9 +34,11 @@ import {
 import "../workout.css";
 import "../customExercise.css";
 
+// Stores the localStorage key for custom exercises.
 const STORAGE_KEY =
     "fittrack-custom-exercises";
 
+// Defines the available set options.
 const setOptions = [
     1,
     2,
@@ -46,6 +48,7 @@ const setOptions = [
     6
 ];
 
+// Defines the available repetition options.
 const repOptions = [
     5,
     6,
@@ -56,6 +59,7 @@ const repOptions = [
     20
 ];
 
+// Defines the available rest time options in seconds.
 const restOptions = [
     30,
     45,
@@ -66,12 +70,14 @@ const restOptions = [
     180
 ];
 
+// Defines the available exercise difficulty levels.
 const difficultyOptions = [
     "Beginner",
     "Intermediate",
     "Advanced"
 ];
 
+// Defines the muscle groups displayed in the workout library.
 const muscleGroups = [
     {
         id: "chest",
@@ -131,6 +137,7 @@ const muscleGroups = [
     }
 ];
 
+// Creates a standard built-in exercise object.
 function createExercise(
     id,
     name,
@@ -150,6 +157,7 @@ function createExercise(
     };
 }
 
+// Stores the built-in exercises for each muscle group.
 const defaultExercises = {
     chest: [
         createExercise(
@@ -432,6 +440,7 @@ const defaultExercises = {
     ]
 };
 
+// Loads saved custom exercises from localStorage.
 function loadCustomExercises() {
     try {
         const saved =
@@ -459,6 +468,7 @@ function loadCustomExercises() {
     }
 }
 
+// Creates a unique ID for a custom exercise.
 function generateExerciseId() {
     if (
         window.crypto &&
@@ -471,39 +481,48 @@ function generateExerciseId() {
     return `custom-${Date.now()}`;
 }
 
+// Displays the workout builder and manages workout session data.
 function Workout({ user }) {
+    // Allows navigation between application pages.
     const navigate = useNavigate();
 
+    // Stores the currently selected muscle group.
     const [
         selectedGroup,
         setSelectedGroup
     ] = useState("chest");
 
+    // Stores the exercises added to the current workout session.
     const [
         selectedExercises,
         setSelectedExercises
     ] = useState([]);
 
+    // Stores custom exercises created by the user.
     const [
         customExercises,
         setCustomExercises
     ] = useState(loadCustomExercises);
 
+    // Stores temporary set and repetition settings for library exercises.
     const [
         exerciseSettings,
         setExerciseSettings
     ] = useState({});
 
+    // Stores the elapsed workout time in seconds.
     const [
         elapsedSeconds,
         setElapsedSeconds
     ] = useState(0);
 
+    // Tracks whether the workout timer is running.
     const [
         isTimerRunning,
         setIsTimerRunning
     ] = useState(false);
 
+    // Stores the custom exercise form values.
     const [
         customForm,
         setCustomForm
@@ -516,28 +535,34 @@ function Workout({ user }) {
         difficulty: "Beginner"
     });
 
+    // Stores the custom exercise success message.
     const [
         formMessage,
         setFormMessage
     ] = useState("");
 
+    // Stores validation errors for the custom exercise form.
     const [
         formError,
         setFormError
     ] = useState("");
 
+    // Gets the user display name or uses a demo name.
     const memberName =
         user?.displayName || "Demo User";
 
+    // Gets the user email or uses a demo email.
     const memberEmail =
         user?.email || "demo@fitness.com";
 
+    // Finds the currently selected muscle group.
     const activeGroup =
         muscleGroups.find(
             (group) =>
                 group.id === selectedGroup
         );
 
+    // Combines built-in and custom exercises for the selected group.
     const activeExercises =
         useMemo(() => {
             const builtIn =
@@ -561,6 +586,7 @@ function Workout({ user }) {
             customExercises
         ]);
 
+    // Calculates the total number of sets in the current session.
     const totalSets =
         useMemo(() => {
             return selectedExercises.reduce(
@@ -571,6 +597,7 @@ function Workout({ user }) {
             );
         }, [selectedExercises]);
 
+    // Saves custom exercises whenever they change.
     useEffect(() => {
         localStorage.setItem(
             STORAGE_KEY,
@@ -580,6 +607,7 @@ function Workout({ user }) {
         );
     }, [customExercises]);
 
+    // Starts or stops the workout timer.
     useEffect(() => {
         if (!isTimerRunning) {
             return undefined;
@@ -593,6 +621,7 @@ function Workout({ user }) {
                 );
             }, 1000);
 
+        // Clears the timer when the effect stops or the component unmounts.
         return () => {
             window.clearInterval(
                 timerId
@@ -600,6 +629,7 @@ function Workout({ user }) {
         };
     }, [isTimerRunning]);
 
+    // Formats elapsed seconds as hours, minutes and seconds.
     function formatTime(seconds) {
         const hours =
             Math.floor(
@@ -629,6 +659,7 @@ function Workout({ user }) {
             .join(":");
     }
 
+    // Creates a unique key for an exercise and muscle group.
     function createExerciseKey(
         exercise,
         groupId = selectedGroup
@@ -636,6 +667,7 @@ function Workout({ user }) {
         return `${groupId}-${exercise.id}`;
     }
 
+    // Gets the selected sets and reps for an exercise.
     function getExerciseSettings(
         exercise
     ) {
@@ -654,6 +686,7 @@ function Workout({ user }) {
         );
     }
 
+    // Updates sets or reps for an exercise in the library.
     function updateExerciseSetting(
         exercise,
         field,
@@ -682,6 +715,7 @@ function Workout({ user }) {
         );
     }
 
+    // Adds an exercise to the session or removes it when already selected.
     function addOrRemoveExercise(
         exercise
     ) {
@@ -734,6 +768,7 @@ function Workout({ user }) {
         );
     }
 
+    // Updates sets or reps for an exercise in the current session.
     function updateSessionExercise(
         key,
         field,
@@ -756,6 +791,7 @@ function Workout({ user }) {
         );
     }
 
+    // Updates one field in the custom exercise form.
     function updateCustomForm(
         field,
         value
@@ -768,6 +804,7 @@ function Workout({ user }) {
         );
     }
 
+    // Validates and saves a new custom exercise.
     function addCustomExercise(
         event
     ) {
@@ -862,6 +899,7 @@ function Workout({ user }) {
         );
     }
 
+    // Deletes a custom exercise and removes it from the current session.
     function deleteCustomExercise(
         exercise
     ) {
@@ -889,16 +927,22 @@ function Workout({ user }) {
         );
     }
 
+    // Clears all selected exercises and resets the timer.
     function clearSession() {
         setSelectedExercises([]);
         setIsTimerRunning(false);
         setElapsedSeconds(0);
     }
 
+    // Displays the complete workout builder interface.
     return (
         <main className="dashboard-page">
+
+            {/* Displays the sidebar navigation and user profile. */}
             <aside className="dashboard-sidebar">
+
                 <div className="dashboard-logo">
+
                     <div className="dashboard-logo-icon">
                         <FaDumbbell />
                     </div>
@@ -907,9 +951,12 @@ function Workout({ user }) {
                         <h2>FITTRACK</h2>
                         <span>Fitness System</span>
                     </div>
+
                 </div>
 
+
                 <nav className="sidebar-navigation">
+
                     <button
                         type="button"
                         className="sidebar-link"
@@ -920,6 +967,7 @@ function Workout({ user }) {
                         <FaHome />
                         <span>Dashboard</span>
                     </button>
+
 
                     <button
                         type="button"
@@ -932,6 +980,7 @@ function Workout({ user }) {
                         <span>Workouts</span>
                     </button>
 
+
                     <button
                         type="button"
                         className="sidebar-link"
@@ -939,6 +988,7 @@ function Workout({ user }) {
                         <FaUtensils />
                         <span>Food Log</span>
                     </button>
+
 
                     <button
                         type="button"
@@ -951,6 +1001,7 @@ function Workout({ user }) {
                         <span>Calories</span>
                     </button>
 
+
                     <button
                         type="button"
                         className="sidebar-link"
@@ -958,13 +1009,18 @@ function Workout({ user }) {
                         <FaChartLine />
                         <span>Progress</span>
                     </button>
+
                 </nav>
 
+
                 <div className="sidebar-bottom">
+
                     <div className="sidebar-user">
+
                         <FaUserCircle />
 
                         <div>
+
                             <strong>
                                 {memberName}
                             </strong>
@@ -972,8 +1028,11 @@ function Workout({ user }) {
                             <span>
                                 {memberEmail}
                             </span>
+
                         </div>
+
                     </div>
+
 
                     <button
                         type="button"
@@ -985,12 +1044,20 @@ function Workout({ user }) {
                         <FaSignOutAlt />
                         <span>Log Out</span>
                     </button>
+
                 </div>
+
             </aside>
 
+
+            {/* Contains all workout builder content. */}
             <section className="dashboard-content workout-content">
+
+                {/* Displays the page heading and workout summary. */}
                 <header className="workout-page-header">
+
                     <div className="workout-heading">
+
                         <p className="workout-kicker">
                             TRAINING LIBRARY
                         </p>
@@ -1005,10 +1072,14 @@ function Workout({ user }) {
                             select sets and reps,
                             and track workout time.
                         </p>
+
                     </div>
 
+
                     <div className="workout-summary">
+
                         <div className="summary-chip">
+
                             <strong>
                                 {
                                     selectedExercises
@@ -1017,17 +1088,23 @@ function Workout({ user }) {
                             </strong>
 
                             <span>Exercises</span>
+
                         </div>
 
+
                         <div className="summary-chip">
+
                             <strong>
                                 {totalSets}
                             </strong>
 
                             <span>Total Sets</span>
+
                         </div>
 
+
                         <div className="summary-chip">
+
                             <strong>
                                 {
                                     formatTime(
@@ -1037,13 +1114,21 @@ function Workout({ user }) {
                             </strong>
 
                             <span>Elapsed Time</span>
+
                         </div>
+
                     </div>
+
                 </header>
 
+
+                {/* Displays the form for creating custom exercises. */}
                 <section className="custom-exercise-section">
+
                     <div className="custom-exercise-heading">
+
                         <div>
+
                             <p>CUSTOM EXERCISE</p>
 
                             <h2>
@@ -1054,10 +1139,13 @@ function Workout({ user }) {
                                 Enter your exercise
                                 information below.
                             </span>
+
                         </div>
 
                         <FaPlus />
+
                     </div>
+
 
                     <form
                         className="custom-exercise-form"
@@ -1065,8 +1153,11 @@ function Workout({ user }) {
                             addCustomExercise
                         }
                     >
+
                         <div className="custom-form-grid">
+
                             <div className="custom-form-field exercise-name-field">
+
                                 <label htmlFor="customName">
                                     Exercise Name
                                 </label>
@@ -1087,9 +1178,12 @@ function Workout({ user }) {
                                         )
                                     }
                                 />
+
                             </div>
 
+
                             <div className="custom-form-field">
+
                                 <label htmlFor="customGroup">
                                     Muscle Group
                                 </label>
@@ -1125,9 +1219,12 @@ function Workout({ user }) {
                                         )
                                     )}
                                 </select>
+
                             </div>
 
+
                             <div className="custom-form-field">
+
                                 <label htmlFor="customSets">
                                     Default Sets
                                 </label>
@@ -1163,9 +1260,12 @@ function Workout({ user }) {
                                         )
                                     )}
                                 </select>
+
                             </div>
 
+
                             <div className="custom-form-field">
+
                                 <label htmlFor="customReps">
                                     Default Reps
                                 </label>
@@ -1201,9 +1301,12 @@ function Workout({ user }) {
                                         )
                                     )}
                                 </select>
+
                             </div>
 
+
                             <div className="custom-form-field">
+
                                 <label htmlFor="customRest">
                                     Rest Time
                                 </label>
@@ -1240,9 +1343,12 @@ function Workout({ user }) {
                                         )
                                     )}
                                 </select>
+
                             </div>
 
+
                             <div className="custom-form-field">
+
                                 <label htmlFor="customDifficulty">
                                     Difficulty
                                 </label>
@@ -1277,8 +1383,11 @@ function Workout({ user }) {
                                         )
                                     )}
                                 </select>
+
                             </div>
+
                         </div>
+
 
                         {formError && (
                             <p className="custom-form-error">
@@ -1286,13 +1395,16 @@ function Workout({ user }) {
                             </p>
                         )}
 
+
                         {formMessage && (
                             <p className="custom-form-success">
                                 {formMessage}
                             </p>
                         )}
 
+
                         <div className="custom-form-actions">
+
                             <button
                                 type="button"
                                 className="cancel-custom-button"
@@ -1312,6 +1424,7 @@ function Workout({ user }) {
                                 Clear Form
                             </button>
 
+
                             <button
                                 type="submit"
                                 className="save-custom-button"
@@ -1319,28 +1432,41 @@ function Workout({ user }) {
                                 <FaSave />
                                 Add Exercise
                             </button>
+
                         </div>
+
                     </form>
+
                 </section>
 
+
+                {/* Allows the user to select a muscle group. */}
                 <section className="muscle-section">
+
                     <div className="workout-section-heading">
+
                         <div>
+
                             <p>STEP 01</p>
 
                             <h2>
                                 Select a Muscle Group
                             </h2>
+
                         </div>
+
 
                         <span>
                             {muscleGroups.length}
                             {" "}
                             muscle groups
                         </span>
+
                     </div>
 
+
                     <div className="muscle-group-grid">
+
                         {muscleGroups.map(
                             (group) => {
                                 const Icon =
@@ -1372,11 +1498,14 @@ function Workout({ user }) {
                                             )
                                         }
                                     >
+
                                         <div className="muscle-group-icon">
                                             <Icon />
                                         </div>
 
+
                                         <div>
+
                                             <strong>
                                                 {
                                                     group.name
@@ -1399,18 +1528,29 @@ function Workout({ user }) {
                                                     custom
                                                 </span>
                                             )}
+
                                         </div>
+
                                     </button>
                                 );
                             }
                         )}
+
                     </div>
+
                 </section>
 
+
+                {/* Displays the exercise library and current workout session. */}
                 <section className="workout-exercise-layout">
+
+                    {/* Displays exercises for the selected muscle group. */}
                     <div className="exercise-library">
+
                         <div className="workout-section-heading">
+
                             <div>
+
                                 <p>STEP 02</p>
 
                                 <h2>
@@ -1420,7 +1560,9 @@ function Workout({ user }) {
                                     {" "}
                                     Exercises
                                 </h2>
+
                             </div>
+
 
                             <span>
                                 {
@@ -1430,9 +1572,12 @@ function Workout({ user }) {
                                 {" "}
                                 exercises
                             </span>
+
                         </div>
 
+
                         <div className="workout-exercise-grid">
+
                             {activeExercises.map(
                                 (
                                     exercise,
@@ -1466,7 +1611,9 @@ function Workout({ user }) {
                                                     : "workout-exercise-card"
                                             }
                                         >
+
                                             <div className="workout-exercise-card-header">
+
                                                 <span className="exercise-number">
                                                     {
                                                         String(
@@ -1479,12 +1626,15 @@ function Workout({ user }) {
                                                     }
                                                 </span>
 
+
                                                 <div className="exercise-card-actions">
+
                                                     {exercise.isCustom && (
                                                         <span className="custom-exercise-badge">
                                                             Custom
                                                         </span>
                                                     )}
+
 
                                                     <span className="exercise-level">
                                                         {
@@ -1492,6 +1642,7 @@ function Workout({ user }) {
                                                                 .difficulty
                                                         }
                                                     </span>
+
 
                                                     {exercise.isCustom && (
                                                         <button
@@ -1506,8 +1657,11 @@ function Workout({ user }) {
                                                             <FaTrash />
                                                         </button>
                                                     )}
+
                                                 </div>
+
                                             </div>
+
 
                                             <h3>
                                                 {
@@ -1515,8 +1669,11 @@ function Workout({ user }) {
                                                 }
                                             </h3>
 
+
                                             <div className="exercise-customize-grid">
+
                                                 <label>
+
                                                     <span>
                                                         Sets
                                                     </span>
@@ -1556,9 +1713,12 @@ function Workout({ user }) {
                                                             )
                                                         )}
                                                     </select>
+
                                                 </label>
 
+
                                                 <label>
+
                                                     <span>
                                                         Reps
                                                     </span>
@@ -1598,9 +1758,12 @@ function Workout({ user }) {
                                                             )
                                                         )}
                                                     </select>
+
                                                 </label>
 
+
                                                 <div className="exercise-rest-box">
+
                                                     <span>
                                                         Rest
                                                     </span>
@@ -1613,8 +1776,11 @@ function Workout({ user }) {
                                                         {" "}
                                                         sec
                                                     </strong>
+
                                                 </div>
+
                                             </div>
+
 
                                             <button
                                                 type="button"
@@ -1641,15 +1807,22 @@ function Workout({ user }) {
                                                     </>
                                                 )}
                                             </button>
+
                                         </article>
                                     );
                                 }
                             )}
+
                         </div>
+
                     </div>
 
+
+                    {/* Displays selected exercises and workout timer controls. */}
                     <aside className="session-panel">
+
                         <div className="session-panel-header">
+
                             <div>
                                 <p>YOUR SESSION</p>
                                 <h2>Workout Plan</h2>
@@ -1661,14 +1834,19 @@ function Workout({ user }) {
                                         .length
                                 }
                             </div>
+
                         </div>
 
+
                         <div className="workout-timer-card">
+
                             <div className="timer-icon">
                                 <FaStopwatch />
                             </div>
 
+
                             <div className="timer-information">
+
                                 <span>
                                     Workout Time
                                 </span>
@@ -1680,7 +1858,9 @@ function Workout({ user }) {
                                         )
                                     }
                                 </strong>
+
                             </div>
+
 
                             <div
                                 className={
@@ -1693,11 +1873,14 @@ function Workout({ user }) {
                                     ? "Running"
                                     : "Paused"}
                             </div>
+
                         </div>
+
 
                         {selectedExercises.length ===
                         0 ? (
                             <div className="session-empty">
+
                                 <FaDumbbell />
 
                                 <strong>
@@ -1708,9 +1891,11 @@ function Workout({ user }) {
                                     Add exercises to
                                     create your workout.
                                 </p>
+
                             </div>
                         ) : (
                             <div className="session-list">
+
                                 {selectedExercises.map(
                                     (
                                         exercise,
@@ -1722,7 +1907,9 @@ function Workout({ user }) {
                                                 exercise.key
                                             }
                                         >
+
                                             <div className="session-item-top">
+
                                                 <div className="session-item-number">
                                                     {
                                                         index +
@@ -1730,7 +1917,9 @@ function Workout({ user }) {
                                                     }
                                                 </div>
 
+
                                                 <div className="session-item-info">
+
                                                     <strong>
                                                         {
                                                             exercise
@@ -1744,7 +1933,9 @@ function Workout({ user }) {
                                                                 .groupName
                                                         }
                                                     </span>
+
                                                 </div>
+
 
                                                 <button
                                                     type="button"
@@ -1766,10 +1957,14 @@ function Workout({ user }) {
                                                 >
                                                     <FaTimes />
                                                 </button>
+
                                             </div>
 
+
                                             <div className="session-edit-controls">
+
                                                 <label>
+
                                                     <span>
                                                         Sets
                                                     </span>
@@ -1809,9 +2004,12 @@ function Workout({ user }) {
                                                             )
                                                         )}
                                                     </select>
+
                                                 </label>
 
+
                                                 <label>
+
                                                     <span>
                                                         Reps
                                                     </span>
@@ -1851,21 +2049,29 @@ function Workout({ user }) {
                                                             )
                                                         )}
                                                     </select>
+
                                                 </label>
+
                                             </div>
+
                                         </div>
                                     )
                                 )}
+
                             </div>
                         )}
 
+
                         <div className="session-total">
+
                             <div>
+
                                 <FaClock />
 
                                 <span>
                                     Estimated workout
                                 </span>
+
                             </div>
 
                             <strong>
@@ -1873,7 +2079,9 @@ function Workout({ user }) {
                                 {" "}
                                 min
                             </strong>
+
                         </div>
+
 
                         {isTimerRunning ? (
                             <button
@@ -1910,6 +2118,7 @@ function Workout({ user }) {
                             </button>
                         )}
 
+
                         <button
                             type="button"
                             className="session-reset-button"
@@ -1930,6 +2139,7 @@ function Workout({ user }) {
                             Reset Timer
                         </button>
 
+
                         <button
                             type="button"
                             className="session-clear-button"
@@ -1944,9 +2154,13 @@ function Workout({ user }) {
                             <FaTimes />
                             Clear Session
                         </button>
+
                     </aside>
+
                 </section>
+
             </section>
+
         </main>
     );
 }

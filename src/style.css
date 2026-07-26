@@ -1,3 +1,4 @@
+/* Defines global color variables used throughout the application. */
 :root {
     --background: #020403;
     --panel: #0d140f;
@@ -16,16 +17,19 @@
     --danger: #ff7070;
 }
 
+/* Removes default spacing and uses border-box sizing for all elements. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Enables smooth scrolling for the page. */
 html {
     scroll-behavior: smooth;
 }
 
+/* Sets the global page size, colors and font family. */
 body {
     min-height: 100vh;
     overflow-x: hidden;
@@ -40,17 +44,20 @@ body {
         sans-serif;
 }
 
+/* Uses the inherited font for buttons and input fields. */
 button,
 input {
     font-family: inherit;
 }
 
+/* Styles disabled buttons and prevents hover movement. */
 button:disabled {
     opacity: 0.65;
     cursor: not-allowed;
     transform: none;
 }
 
+/* Defines the fade-up entrance animation. */
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -68,6 +75,7 @@ button:disabled {
    LOADING
 ================================= */
 
+/* Centers the loading message on a full-screen background. */
 .loading-page {
     min-height: 100vh;
 
@@ -94,6 +102,7 @@ button:disabled {
    LOGIN
 ================================= */
 
+/* Creates the two-column login page layout. */
 .login-page {
     min-height: 100vh;
 
@@ -101,6 +110,7 @@ button:disabled {
     grid-template-columns: 1.15fr 0.85fr;
 }
 
+/* Styles the promotional hero section on the login page. */
 .hero-section {
     position: relative;
     overflow: hidden;
@@ -124,6 +134,7 @@ button:disabled {
         );
 }
 
+/* Adds a decorative grid pattern over the hero background. */
 .hero-section::before {
     content: "";
 
@@ -146,6 +157,7 @@ button:disabled {
     background-size: 50px 50px;
 }
 
+/* Positions and animates the main hero content. */
 .hero-content {
     position: relative;
     z-index: 2;
@@ -156,6 +168,7 @@ button:disabled {
     animation: fadeUp 0.7s ease;
 }
 
+/* Adds a glowing vertical line beside the hero content. */
 .hero-content::before {
     content: "";
 
@@ -180,6 +193,7 @@ button:disabled {
         0 0 18px rgba(166, 255, 63, 0.45);
 }
 
+/* Styles the small promotional label in the hero section. */
 .small-title {
     width: fit-content;
 
@@ -197,6 +211,7 @@ button:disabled {
     letter-spacing: 2px;
 }
 
+/* Styles the main hero heading. */
 .hero-content h1 {
     margin-bottom: 26px;
 
@@ -207,6 +222,7 @@ button:disabled {
     text-transform: uppercase;
 }
 
+/* Highlights part of the hero heading in green. */
 .hero-content h1 span {
     color: var(--green);
 
@@ -215,6 +231,7 @@ button:disabled {
         0 0 50px rgba(166, 255, 63, 0.25);
 }
 
+/* Styles the description below the hero heading. */
 .hero-description {
     max-width: 580px;
     margin-bottom: 40px;
@@ -225,6 +242,7 @@ button:disabled {
     line-height: 1.8;
 }
 
+/* Creates the grid of application feature items. */
 .features {
     max-width: 620px;
 
@@ -235,6 +253,7 @@ button:disabled {
     list-style: none;
 }
 
+/* Styles each feature item. */
 .features li {
     min-height: 65px;
     padding: 14px;
@@ -255,6 +274,7 @@ button:disabled {
     transition: 0.25s;
 }
 
+/* Adds the checkmark icon before each feature item. */
 .features li::before {
     content: "✓";
 
@@ -281,11 +301,13 @@ button:disabled {
     font-weight: 900;
 }
 
+/* Raises and highlights a feature item on hover. */
 .features li:hover {
     transform: translateY(-4px);
     border-color: var(--green-border);
 }
 
+/* Centers the authentication form beside the hero section. */
 .form-section {
     min-height: 100vh;
     padding: 50px 30px;
@@ -308,6 +330,7 @@ button:disabled {
    AUTH CARD
 ================================= */
 
+/* Styles the main authentication card. */
 .form-card {
     position: relative;
     overflow: hidden;
@@ -335,6 +358,7 @@ button:disabled {
     animation: fadeUp 0.7s ease;
 }
 
+/* Adds a glowing line across the top of the form card. */
 .form-card::before {
     content: "";
 
@@ -355,10 +379,12 @@ button:disabled {
         );
 }
 
+/* Adds spacing below the authentication form heading. */
 .form-header {
     margin-bottom: 30px;
 }
 
+/* Styles the small label above the form title. */
 .form-tag {
     margin-bottom: 13px;
 
@@ -369,6 +395,7 @@ button:disabled {
     letter-spacing: 2px;
 }
 
+/* Styles authentication form titles. */
 .form-card h2 {
     margin-bottom: 11px;
 
@@ -376,6 +403,7 @@ button:disabled {
     letter-spacing: -2px;
 }
 
+/* Styles supporting text below form titles. */
 .subtitle {
     color: var(--muted);
 
@@ -383,6 +411,7 @@ button:disabled {
     line-height: 1.7;
 }
 
+/* Arranges form controls vertically. */
 form {
     width: 100%;
 
@@ -390,11 +419,13 @@ form {
     flex-direction: column;
 }
 
+/* Adds spacing between form input groups. */
 .input-group {
     width: 100%;
     margin-bottom: 20px;
 }
 
+/* Styles form field labels. */
 label {
     display: block;
 
@@ -409,6 +440,7 @@ label {
     text-transform: uppercase;
 }
 
+/* Styles general application input fields. */
 input {
     width: 100%;
     height: 55px;
@@ -427,14 +459,17 @@ input {
     transition: 0.25s;
 }
 
+/* Styles placeholder text inside inputs. */
 input::placeholder {
     color: #606a63;
 }
 
+/* Highlights an input when hovered. */
 input:hover {
     border-color: rgba(166, 255, 63, 0.28);
 }
 
+/* Highlights an input when focused. */
 input:focus {
     border-color: var(--green);
 
@@ -445,15 +480,18 @@ input:focus {
         0 0 25px rgba(166, 255, 63, 0.1);
 }
 
+/* Positions the password input and visibility button. */
 .password-box {
     position: relative;
     width: 100%;
 }
 
+/* Adds space for the password visibility button. */
 .password-box input {
     padding-right: 62px;
 }
 
+/* Styles the password visibility button. */
 .eye-button {
     position: absolute;
 
@@ -479,11 +517,13 @@ input:focus {
     cursor: pointer;
 }
 
+/* Highlights the password visibility button on hover. */
 .eye-button:hover {
     color: var(--green-light);
     background: rgba(166, 255, 63, 0.09);
 }
 
+/* Positions the forgot-password link. */
 .forgot-password {
     margin-top: -7px;
     margin-bottom: 23px;
@@ -491,6 +531,7 @@ input:focus {
     text-align: right;
 }
 
+/* Applies shared styles to authentication links. */
 .forgot-password a,
 .switch-text a {
     color: var(--green);
@@ -499,16 +540,19 @@ input:focus {
     text-decoration: none;
 }
 
+/* Sets the font size of the forgot-password link. */
 .forgot-password a {
     font-size: 13px;
 }
 
+/* Highlights authentication links on hover. */
 .forgot-password a:hover,
 .switch-text a:hover {
     color: var(--green-light);
     text-decoration: underline;
 }
 
+/* Styles the text used to switch authentication pages. */
 .switch-text {
     margin-top: 27px;
 
@@ -518,10 +562,12 @@ input:focus {
     font-size: 13px;
 }
 
+/* Adds spacing before the authentication page link. */
 .switch-text a {
     margin-left: 5px;
 }
 
+/* Styles the main form submission button. */
 .main-button {
     width: 100%;
     height: 56px;
@@ -552,6 +598,7 @@ input:focus {
     transition: 0.25s;
 }
 
+/* Raises the main button when it is hovered and enabled. */
 .main-button:hover:not(:disabled) {
     transform: translateY(-4px);
 
@@ -559,6 +606,7 @@ input:focus {
         0 22px 48px rgba(166, 255, 63, 0.35);
 }
 
+/* Styles authentication error messages. */
 .error-message {
     margin-top: -7px;
     margin-bottom: 15px;
@@ -575,6 +623,7 @@ input:focus {
     line-height: 1.5;
 }
 
+/* Styles authentication success messages. */
 .success-message {
     margin-top: 18px;
     padding: 12px 14px;
@@ -596,6 +645,7 @@ input:focus {
    SIGNUP / RESET
 ================================= */
 
+/* Centers signup and password reset cards on the page. */
 .account-page {
     min-height: 100vh;
     padding: 50px 20px;
@@ -622,14 +672,17 @@ input:focus {
         );
 }
 
+/* Sets the maximum width of the signup card. */
 .signup-card {
     max-width: 520px;
 }
 
+/* Sets the maximum width of the password reset card. */
 .reset-card {
     max-width: 480px;
 }
 
+/* Styles the icon displayed on the password reset card. */
 .reset-icon {
     width: 65px;
     height: 65px;
@@ -654,6 +707,7 @@ input:focus {
    DASHBOARD
 ================================= */
 
+/* Creates the dashboard sidebar and content layout. */
 .dashboard-page {
     min-height: 100vh;
 
@@ -671,6 +725,7 @@ input:focus {
         #030604;
 }
 
+/* Styles the fixed dashboard sidebar. */
 .dashboard-sidebar {
     position: sticky;
     top: 0;
@@ -691,6 +746,7 @@ input:focus {
         );
 }
 
+/* Aligns the dashboard logo and application name. */
 .dashboard-logo {
     padding: 0 9px 28px;
 
@@ -701,6 +757,7 @@ input:focus {
     border-bottom: 1px solid var(--border);
 }
 
+/* Styles the highlighted dashboard logo icon. */
 .dashboard-logo-icon {
     width: 43px;
     height: 43px;
@@ -723,16 +780,19 @@ input:focus {
     font-size: 19px;
 }
 
+/* Styles the dashboard logo title. */
 .dashboard-logo h2 {
     font-size: 18px;
     letter-spacing: 1px;
 }
 
+/* Styles the dashboard logo subtitle. */
 .dashboard-logo span {
     color: var(--muted);
     font-size: 11px;
 }
 
+/* Arranges sidebar navigation links vertically. */
 .sidebar-navigation {
     margin-top: 27px;
 
@@ -741,6 +801,7 @@ input:focus {
     gap: 8px;
 }
 
+/* Styles each sidebar navigation button. */
 .sidebar-link {
     width: 100%;
     height: 48px;
@@ -766,11 +827,13 @@ input:focus {
     transition: 0.22s;
 }
 
+/* Highlights a sidebar link on hover. */
 .sidebar-link:hover {
     color: white;
     background: rgba(255, 255, 255, 0.04);
 }
 
+/* Highlights the currently active sidebar link. */
 .sidebar-link.active {
     border-color: rgba(166, 255, 63, 0.18);
 
@@ -787,10 +850,12 @@ input:focus {
         inset 3px 0 0 var(--green);
 }
 
+/* Keeps user information at the bottom of the sidebar. */
 .sidebar-bottom {
     margin-top: auto;
 }
 
+/* Styles the signed-in user information area. */
 .sidebar-user {
     margin-bottom: 14px;
     padding: 16px 9px;
@@ -803,6 +868,7 @@ input:focus {
     border-bottom: 1px solid var(--border);
 }
 
+/* Styles the user profile icon. */
 .sidebar-user > svg {
     flex-shrink: 0;
 
@@ -810,6 +876,7 @@ input:focus {
     font-size: 34px;
 }
 
+/* Arranges the user name and email vertically. */
 .sidebar-user div {
     min-width: 0;
 
@@ -818,6 +885,7 @@ input:focus {
     gap: 3px;
 }
 
+/* Prevents long user details from overflowing. */
 .sidebar-user strong,
 .sidebar-user span {
     overflow: hidden;
@@ -825,15 +893,18 @@ input:focus {
     white-space: nowrap;
 }
 
+/* Styles the user display name. */
 .sidebar-user strong {
     font-size: 13px;
 }
 
+/* Styles the user email address. */
 .sidebar-user span {
     color: var(--muted);
     font-size: 10px;
 }
 
+/* Styles the dashboard logout button. */
 .logout-button {
     width: 100%;
     height: 45px;
@@ -856,15 +927,18 @@ input:focus {
     cursor: pointer;
 }
 
+/* Highlights the logout button on hover. */
 .logout-button:hover {
     background: rgba(255, 100, 100, 0.1);
 }
 
+/* Adds spacing around the main dashboard content. */
 .dashboard-content {
     min-width: 0;
     padding: 37px;
 }
 
+/* Aligns the dashboard heading and quick action button. */
 .dashboard-header {
     margin-bottom: 32px;
 
@@ -874,6 +948,7 @@ input:focus {
     gap: 24px;
 }
 
+/* Applies shared styles to dashboard section labels. */
 .dashboard-label,
 .panel-header p,
 .section-title p {
@@ -886,6 +961,7 @@ input:focus {
     letter-spacing: 1.6px;
 }
 
+/* Styles the main dashboard heading. */
 .dashboard-header h1 {
     margin-bottom: 8px;
 
@@ -894,15 +970,18 @@ input:focus {
     letter-spacing: -2px;
 }
 
+/* Highlights part of the dashboard heading. */
 .dashboard-header h1 span {
     color: var(--green);
 }
 
+/* Styles the dashboard header description. */
 .dashboard-header > div > p:last-child {
     color: var(--muted);
     font-size: 14px;
 }
 
+/* Styles the dashboard quick-add button. */
 .quick-add-button {
     height: 48px;
     padding: 0 20px;
@@ -929,6 +1008,7 @@ input:focus {
     cursor: pointer;
 }
 
+/* Creates the dashboard statistics grid. */
 .stats-grid {
     margin-bottom: 24px;
 
@@ -937,6 +1017,7 @@ input:focus {
     gap: 16px;
 }
 
+/* Applies the shared dark panel background and border. */
 .stat-card,
 .dashboard-panel,
 .action-card {
@@ -950,6 +1031,7 @@ input:focus {
         );
 }
 
+/* Styles each dashboard statistic card. */
 .stat-card {
     padding: 21px;
 
@@ -958,11 +1040,13 @@ input:focus {
     transition: 0.24s;
 }
 
+/* Raises and highlights a statistic card on hover. */
 .stat-card:hover {
     transform: translateY(-5px);
     border-color: var(--green-border);
 }
 
+/* Aligns the statistic label and icon. */
 .stat-card-top {
     margin-bottom: 19px;
 
@@ -971,6 +1055,7 @@ input:focus {
     justify-content: space-between;
 }
 
+/* Styles statistic card labels. */
 .stat-card-top > span {
     color: var(--muted);
 
@@ -979,6 +1064,7 @@ input:focus {
     letter-spacing: 1.1px;
 }
 
+/* Applies shared alignment and colors to dashboard icons. */
 .stat-icon,
 .panel-icon,
 .action-icon {
@@ -990,6 +1076,7 @@ input:focus {
     background: rgba(166, 255, 63, 0.08);
 }
 
+/* Sets the size and shape of statistic icons. */
 .stat-icon {
     width: 37px;
     height: 37px;
@@ -997,6 +1084,7 @@ input:focus {
     border-radius: 10px;
 }
 
+/* Styles the main statistic values. */
 .stat-card h2 {
     margin-bottom: 14px;
 
@@ -1004,6 +1092,7 @@ input:focus {
     letter-spacing: -1px;
 }
 
+/* Styles units and targets beside statistic values. */
 .stat-card h2 small {
     color: var(--muted);
 
@@ -1011,6 +1100,7 @@ input:focus {
     font-weight: 600;
 }
 
+/* Creates the background track for progress bars. */
 .progress-track {
     width: 100%;
     height: 5px;
@@ -1022,6 +1112,7 @@ input:focus {
     background: rgba(255, 255, 255, 0.07);
 }
 
+/* Styles the filled portion of progress bars. */
 .progress-fill {
     height: 100%;
 
@@ -1035,6 +1126,7 @@ input:focus {
         );
 }
 
+/* Styles supporting text in statistic cards. */
 .stat-card > p {
     margin-top: 10px;
 
@@ -1042,6 +1134,7 @@ input:focus {
     font-size: 11px;
 }
 
+/* Styles the displayed weight change. */
 .weight-change {
     width: fit-content;
     padding: 5px 8px;
@@ -1055,6 +1148,7 @@ input:focus {
     font-weight: 800;
 }
 
+/* Creates the main dashboard panel grid. */
 .dashboard-main-grid {
     margin-bottom: 27px;
 
@@ -1063,12 +1157,14 @@ input:focus {
     gap: 18px;
 }
 
+/* Adds padding and rounded corners to dashboard panels. */
 .dashboard-panel {
     padding: 25px;
 
     border-radius: 19px;
 }
 
+/* Aligns panel titles and actions. */
 .panel-header {
     margin-bottom: 26px;
 
@@ -1077,12 +1173,14 @@ input:focus {
     justify-content: space-between;
 }
 
+/* Applies shared styles to dashboard section titles. */
 .panel-header h2,
 .section-title h2 {
     font-size: 21px;
     letter-spacing: -0.7px;
 }
 
+/* Styles small text action buttons inside panels. */
 .text-button {
     border: none;
 
@@ -1095,6 +1193,7 @@ input:focus {
     cursor: pointer;
 }
 
+/* Aligns the calorie ring and macronutrient list. */
 .calorie-content {
     min-height: 235px;
 
@@ -1104,6 +1203,7 @@ input:focus {
     gap: 30px;
 }
 
+/* Creates the circular calorie progress indicator. */
 .calorie-ring {
     width: 175px;
     height: 175px;
@@ -1128,21 +1228,25 @@ input:focus {
         );
 }
 
+/* Centers information inside the calorie ring. */
 .calorie-ring-center {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+/* Styles the calorie completion value. */
 .calorie-ring-center strong {
     font-size: 31px;
 }
 
+/* Styles the calorie ring status label. */
 .calorie-ring-center span {
     color: var(--muted);
     font-size: 10px;
 }
 
+/* Arranges macronutrient values vertically. */
 .macro-list {
     min-width: 225px;
 
@@ -1151,6 +1255,7 @@ input:focus {
     gap: 16px;
 }
 
+/* Aligns each macronutrient label and value. */
 .macro-item {
     padding-bottom: 14px;
 
@@ -1162,21 +1267,25 @@ input:focus {
     border-bottom: 1px solid var(--border);
 }
 
+/* Aligns a macronutrient color dot with its label. */
 .macro-item > div {
     display: flex;
     align-items: center;
     gap: 9px;
 }
 
+/* Sets the font size of macronutrient labels and values. */
 .macro-item p,
 .macro-item strong {
     font-size: 12px;
 }
 
+/* Styles macronutrient names. */
 .macro-item p {
     color: #bdc7c0;
 }
 
+/* Creates the circular macronutrient color marker. */
 .macro-dot {
     width: 9px;
     height: 9px;
@@ -1186,18 +1295,22 @@ input:focus {
     border-radius: 50%;
 }
 
+/* Uses green to represent protein. */
 .macro-dot.protein {
     background: var(--green);
 }
 
+/* Uses blue to represent carbohydrates. */
 .macro-dot.carbs {
     background: #59a9ff;
 }
 
+/* Uses orange to represent fat. */
 .macro-dot.fat {
     background: #ffbb55;
 }
 
+/* Sets the size and shape of panel icons. */
 .panel-icon {
     width: 39px;
     height: 39px;
@@ -1205,6 +1318,7 @@ input:focus {
     border-radius: 10px;
 }
 
+/* Styles the upcoming workout time box. */
 .workout-time {
     margin-bottom: 19px;
     padding: 14px;
@@ -1219,29 +1333,35 @@ input:focus {
     background: rgba(166, 255, 63, 0.045);
 }
 
+/* Highlights the workout time icon. */
 .workout-time > svg {
     color: var(--green);
 }
 
+/* Arranges workout time details vertically. */
 .workout-time div {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
+/* Styles the scheduled workout time. */
 .workout-time strong {
     font-size: 12px;
 }
 
+/* Styles the workout duration text. */
 .workout-time span {
     color: var(--muted);
     font-size: 10px;
 }
 
+/* Adds spacing below the exercise list. */
 .exercise-list {
     margin-bottom: 19px;
 }
 
+/* Styles each exercise in the workout list. */
 .exercise-item {
     padding: 13px 0;
 
@@ -1252,6 +1372,7 @@ input:focus {
     border-bottom: 1px solid var(--border);
 }
 
+/* Styles the exercise order number. */
 .exercise-item > span {
     color: var(--green);
 
@@ -1259,21 +1380,25 @@ input:focus {
     font-weight: 900;
 }
 
+/* Arranges exercise information vertically. */
 .exercise-item div {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
+/* Styles exercise names. */
 .exercise-item strong {
     font-size: 12px;
 }
 
+/* Styles exercise set and repetition details. */
 .exercise-item p {
     color: var(--muted);
     font-size: 10px;
 }
 
+/* Styles secondary dashboard action buttons. */
 .secondary-button {
     width: 100%;
     height: 45px;
@@ -1295,25 +1420,30 @@ input:focus {
     cursor: pointer;
 }
 
+/* Highlights a secondary button on hover. */
 .secondary-button:hover {
     color: #071004;
     background: var(--green);
 }
 
+/* Adds spacing below the quick actions section. */
 .quick-actions-section {
     padding-bottom: 30px;
 }
 
+/* Adds spacing below dashboard section headings. */
 .section-title {
     margin-bottom: 16px;
 }
 
+/* Creates the quick actions card grid. */
 .quick-actions-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
 }
 
+/* Styles each quick action card. */
 .action-card {
     min-height: 92px;
     padding: 16px;
@@ -1332,11 +1462,13 @@ input:focus {
     transition: 0.24s;
 }
 
+/* Raises and highlights a quick action card on hover. */
 .action-card:hover {
     transform: translateY(-4px);
     border-color: var(--green-border);
 }
 
+/* Sets the size and shape of quick action icons. */
 .action-icon {
     width: 42px;
     height: 42px;
@@ -1346,21 +1478,25 @@ input:focus {
     border-radius: 11px;
 }
 
+/* Arranges quick action text vertically. */
 .action-card > div:nth-child(2) {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
+/* Styles quick action titles. */
 .action-card strong {
     font-size: 12px;
 }
 
+/* Styles quick action descriptions. */
 .action-card span {
     color: var(--muted);
     font-size: 10px;
 }
 
+/* Positions and styles the plus icon. */
 .action-plus {
     margin-left: auto;
 
@@ -1373,36 +1509,46 @@ input:focus {
    RESPONSIVE
 ================================= */
 
+/* Adjusts dashboard grids for smaller desktop screens. */
 @media screen and (max-width: 1100px) {
+    /* Displays statistic cards in two columns. */
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    /* Stacks the main dashboard panels vertically. */
     .dashboard-main-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* Stacks the login page sections on medium screens. */
 @media screen and (max-width: 950px) {
+    /* Changes the login page to a single-column layout. */
     .login-page {
         grid-template-columns: 1fr;
     }
 
+    /* Reduces the hero section height and padding. */
     .hero-section {
         min-height: 560px;
         padding: 65px 40px;
     }
 
+    /* Adjusts the authentication form section height. */
     .form-section {
         min-height: 700px;
     }
 }
 
+/* Changes the dashboard sidebar into a top navigation area. */
 @media screen and (max-width: 850px) {
+    /* Changes the dashboard from a grid to a block layout. */
     .dashboard-page {
         display: block;
     }
 
+    /* Changes the sidebar into a full-width top section. */
     .dashboard-sidebar {
         position: relative;
 
@@ -1413,11 +1559,13 @@ input:focus {
         border-bottom: 1px solid var(--border);
     }
 
+    /* Displays navigation links in a five-column grid. */
     .sidebar-navigation {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
     }
 
+    /* Stacks each navigation icon above its label. */
     .sidebar-link {
         height: 60px;
         padding: 7px;
@@ -1429,79 +1577,97 @@ input:focus {
         font-size: 9px;
     }
 
+    /* Hides the desktop user and logout section. */
     .sidebar-bottom {
         display: none;
     }
 
+    /* Reduces dashboard content padding. */
     .dashboard-content {
         padding: 25px 18px;
     }
 
+    /* Stacks quick action cards vertically. */
     .quick-actions-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* Adjusts authentication and dashboard layouts for mobile screens. */
 @media screen and (max-width: 600px) {
+    /* Reduces hero section spacing on mobile screens. */
     .hero-section {
         min-height: auto;
         padding: 50px 22px;
     }
 
+    /* Reduces the left spacing of hero content. */
     .hero-content {
         padding-left: 18px;
     }
 
+    /* Reduces the hero heading size and letter spacing. */
     .hero-content h1 {
         font-size: 49px;
         letter-spacing: -4px;
     }
 
+    /* Reduces the hero description font size. */
     .hero-description {
         font-size: 15px;
     }
 
+    /* Displays feature items in one column. */
     .features {
         grid-template-columns: 1fr;
     }
 
+    /* Adjusts the authentication form section for mobile screens. */
     .form-section {
         min-height: 660px;
         padding: 40px 13px;
     }
 
+    /* Reduces form card padding and corner size. */
     .form-card {
         padding: 37px 23px;
         border-radius: 22px;
     }
 
+    /* Reduces authentication form title size. */
     .form-card h2 {
         font-size: 31px;
     }
 
+    /* Stacks dashboard header content vertically. */
     .dashboard-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /* Makes the quick-add button use the full width. */
     .quick-add-button {
         width: 100%;
         justify-content: center;
     }
 
+    /* Displays statistic cards in one column. */
     .stats-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Stacks the calorie ring and macro list vertically. */
     .calorie-content {
         flex-direction: column;
     }
 
+    /* Makes the macro list use the full available width. */
     .macro-list {
         width: 100%;
         min-width: 0;
     }
 
+    /* Allows sidebar navigation to scroll horizontally. */
     .sidebar-navigation {
         overflow-x: auto;
         grid-template-columns: repeat(5, 85px);

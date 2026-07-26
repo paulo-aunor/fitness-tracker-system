@@ -1,9 +1,4 @@
-import {
-    useEffect,
-    useMemo,
-    useState
-} from "react";
-
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -28,12 +23,18 @@ import {
 import "../foodLog.css";
 import "../gymFoodLibrary.css";
 
+
+// Stores the localStorage key for daily food log data.
 const FOOD_STORAGE_KEY =
     "fittrack-food-log";
 
+
+// Stores the localStorage key for nutrition targets.
 const TARGET_STORAGE_KEY =
     "fittrack-food-targets";
 
+
+// Defines the meal sections used throughout the food log.
 const mealTypes = [
     {
         id: "breakfast",
@@ -61,6 +62,8 @@ const mealTypes = [
     }
 ];
 
+
+// Provides the default daily nutrition and water targets.
 const defaultTargets = {
     calories: 2100,
     protein: 170,
@@ -70,6 +73,8 @@ const defaultTargets = {
     waterMl: 2700
 };
 
+
+// Defines the available food library categories.
 const foodCategories = [
     "All",
     "Protein",
@@ -80,6 +85,8 @@ const foodCategories = [
     "Vegetables"
 ];
 
+
+// Provides suggested foods with nutrition values per serving.
 const suggestedFoods = [
     {
         id: "chicken-breast",
@@ -347,6 +354,8 @@ const suggestedFoods = [
     }
 ];
 
+
+// Provides the default values for the food entry form.
 const emptyFoodForm = {
     name: "",
     meal: "breakfast",
@@ -359,6 +368,8 @@ const emptyFoodForm = {
     fiber: ""
 };
 
+
+// Creates an empty food log for a new date.
 function createEmptyDay() {
     return {
         meals: {
@@ -371,6 +382,8 @@ function createEmptyDay() {
     };
 }
 
+
+// Converts a Date object into a local YYYY-MM-DD value.
 function createLocalDateValue(
     date = new Date()
 ) {
@@ -390,6 +403,8 @@ function createLocalDateValue(
     return `${year}-${month}-${day}`;
 }
 
+
+// Loads all saved food log days from localStorage.
 function loadFoodDays() {
     try {
         const saved =
@@ -418,6 +433,8 @@ function loadFoodDays() {
     }
 }
 
+
+// Loads saved nutrition targets from localStorage.
 function loadTargets() {
     try {
         const saved =
@@ -446,6 +463,8 @@ function loadTargets() {
     }
 }
 
+
+// Creates a unique ID for a food entry.
 function createId() {
     if (
         window.crypto &&
@@ -458,6 +477,8 @@ function createId() {
     return `food-${Date.now()}`;
 }
 
+
+// Converts a value into a valid number.
 function toNumber(value) {
     const number =
         Number(value);
@@ -467,6 +488,8 @@ function toNumber(value) {
         : 0;
 }
 
+
+// Formats nutrition values with a maximum of one decimal place.
 function formatValue(value) {
     const rounded =
         Math.round(value * 10) / 10;
@@ -476,6 +499,8 @@ function formatValue(value) {
         : rounded.toFixed(1);
 }
 
+
+// Calculates total nutrition based on the number of servings.
 function calculateFoodNutrition(food) {
     const servings =
         toNumber(food.servings);
@@ -503,6 +528,8 @@ function calculateFoodNutrition(food) {
     };
 }
 
+
+// Calculates the combined nutrition totals for one meal.
 function calculateMealTotals(foods) {
     return foods.reduce(
         (totals, food) => {
@@ -543,6 +570,8 @@ function calculateMealTotals(foods) {
     );
 }
 
+
+// Calculates progress toward a target as a percentage.
 function calculateProgress(
     current,
     target
@@ -559,10 +588,16 @@ function calculateProgress(
     );
 }
 
+
+// Displays the food log page and manages all food tracking data.
 function FoodLog({ user }) {
+
+    // Allows navigation between application pages.
     const navigate =
         useNavigate();
 
+
+    // Stores the date currently displayed in the food log.
     const [
         selectedDate,
         setSelectedDate
@@ -570,26 +605,36 @@ function FoodLog({ user }) {
         createLocalDateValue()
     );
 
+
+    // Stores all food log entries grouped by date.
     const [
         foodDays,
         setFoodDays
     ] = useState(loadFoodDays);
 
+
+    // Stores the user's daily nutrition targets.
     const [
         targets,
         setTargets
     ] = useState(loadTargets);
 
+
+    // Stores the values entered in the food form.
     const [
         foodForm,
         setFoodForm
     ] = useState(emptyFoodForm);
 
+
+    // Stores the food entry currently being edited.
     const [
         editingFood,
         setEditingFood
     ] = useState(null);
 
+
+    // Stores values for the quick calorie entry form.
     const [
         quickAdd,
         setQuickAdd
@@ -599,33 +644,47 @@ function FoodLog({ user }) {
         calories: ""
     });
 
+
+    // Stores validation and success messages for the food form.
     const [
         formMessage,
         setFormMessage
     ] = useState("");
 
+
+    // Stores the current food library search text.
     const [
         searchTerm,
         setSearchTerm
     ] = useState("");
 
+
+    // Stores the selected food library category.
     const [
         selectedCategory,
         setSelectedCategory
     ] = useState("All");
 
+
+    // Gets the user's display name or uses a demo name.
     const memberName =
         user?.displayName ||
         "Demo User";
 
+
+    // Gets the user's email or uses a demo email.
     const memberEmail =
         user?.email ||
         "demo@fitness.com";
 
+
+    // Gets the food and water data for the selected date.
     const dayData =
         foodDays[selectedDate] ||
         createEmptyDay();
 
+
+    // Filters suggested foods by search text and category.
     const filteredFoods =
         useMemo(() => {
             const cleanedSearch =
@@ -660,6 +719,8 @@ function FoodLog({ user }) {
             selectedCategory
         ]);
 
+
+    // Calculates nutrition totals for every meal.
     const mealTotals =
         useMemo(() => {
             const result = {};
@@ -678,6 +739,8 @@ function FoodLog({ user }) {
             return result;
         }, [dayData]);
 
+
+    // Calculates the combined nutrition totals for the entire day.
     const dailyTotals =
         useMemo(() => {
             return mealTypes.reduce(
@@ -719,6 +782,8 @@ function FoodLog({ user }) {
             );
         }, [mealTotals]);
 
+
+    // Saves food log data whenever it changes.
     useEffect(() => {
         localStorage.setItem(
             FOOD_STORAGE_KEY,
@@ -726,6 +791,8 @@ function FoodLog({ user }) {
         );
     }, [foodDays]);
 
+
+    // Saves nutrition targets whenever they change.
     useEffect(() => {
         localStorage.setItem(
             TARGET_STORAGE_KEY,
@@ -733,6 +800,8 @@ function FoodLog({ user }) {
         );
     }, [targets]);
 
+
+    // Updates the food log for the currently selected date.
     function updateDay(updater) {
         setFoodDays(
             (currentDays) => {
@@ -752,6 +821,8 @@ function FoodLog({ user }) {
         );
     }
 
+
+    // Updates one field in the food entry form.
     function updateFoodForm(
         field,
         value
@@ -764,6 +835,8 @@ function FoodLog({ user }) {
         );
     }
 
+
+    // Loads a suggested food into the food entry form.
     function loadSuggestedFood(food) {
         setEditingFood(null);
 
@@ -803,6 +876,8 @@ function FoodLog({ user }) {
         }, 50);
     }
 
+
+    // Clears the food form and selects the requested meal.
     function resetFoodForm(
         meal = "breakfast"
     ) {
@@ -815,6 +890,8 @@ function FoodLog({ user }) {
         setFormMessage("");
     }
 
+
+    // Validates and saves a new or edited food entry.
     function handleSaveFood(event) {
         event.preventDefault();
 
@@ -966,6 +1043,8 @@ function FoodLog({ user }) {
         setEditingFood(null);
     }
 
+
+    // Loads an existing food entry into the edit form.
     function handleEditFood(food) {
         setEditingFood(food);
 
@@ -1002,6 +1081,8 @@ function FoodLog({ user }) {
             });
     }
 
+
+    // Removes a food entry from the selected meal.
     function handleDeleteFood(
         mealId,
         foodId
@@ -1032,6 +1113,8 @@ function FoodLog({ user }) {
         }
     }
 
+
+    // Adds a calorie-only entry to the selected meal.
     function handleQuickAdd(event) {
         event.preventDefault();
 
@@ -1093,6 +1176,8 @@ function FoodLog({ user }) {
         });
     }
 
+
+    // Adds water to the selected day.
     function addWater(amount) {
         updateDay(
             (currentDay) => ({
@@ -1105,6 +1190,8 @@ function FoodLog({ user }) {
         );
     }
 
+
+    // Resets the selected day's water intake.
     function resetWater() {
         updateDay(
             (currentDay) => ({
@@ -1114,6 +1201,8 @@ function FoodLog({ user }) {
         );
     }
 
+
+    // Updates one daily nutrition target.
     function updateTarget(
         field,
         value
@@ -1131,6 +1220,8 @@ function FoodLog({ user }) {
         );
     }
 
+
+    // Moves the food log forward or backward by a number of days.
     function changeDate(days) {
         const currentDate =
             new Date(
@@ -1149,21 +1240,30 @@ function FoodLog({ user }) {
         );
     }
 
+
+    // Calculates calories remaining for the selected day.
     const calorieRemaining =
         targets.calories -
         dailyTotals.calories;
 
+
+    // Calculates protein remaining for the selected day.
     const proteinRemaining =
         targets.protein -
         dailyTotals.protein;
 
+
+    // Calculates fiber remaining for the selected day.
     const fiberRemaining =
         targets.fiber -
         dailyTotals.fiber;
 
+
+    // Displays the complete food log interface.
     return (
         <main className="dashboard-page">
 
+            {/* Displays the sidebar navigation. */}
             <aside className="dashboard-sidebar">
 
                 <div className="dashboard-logo">
@@ -1280,8 +1380,10 @@ function FoodLog({ user }) {
             </aside>
 
 
+            {/* Contains the main food log content. */}
             <section className="dashboard-content food-log-content">
 
+                {/* Displays the page heading and date controls. */}
                 <header className="food-log-header">
 
                     <div>
@@ -1356,6 +1458,7 @@ function FoodLog({ user }) {
                 </header>
 
 
+                {/* Displays searchable suggested fitness foods. */}
                 <section className="gym-food-library">
 
                     <div className="gym-food-library-header">
@@ -1535,6 +1638,7 @@ function FoodLog({ user }) {
                 </section>
 
 
+                {/* Displays daily nutrition progress cards. */}
                 <section className="food-summary-grid">
 
                     {[
@@ -1630,6 +1734,7 @@ function FoodLog({ user }) {
                 </section>
 
 
+                {/* Displays the food form, water tracker and quick add tools. */}
                 <section className="food-log-main-grid">
 
                     <article
@@ -2180,6 +2285,7 @@ function FoodLog({ user }) {
                 </section>
 
 
+                {/* Displays editable daily nutrition targets. */}
                 <section className="food-log-panel targets-panel">
 
                     <div className="food-panel-heading">
@@ -2269,6 +2375,7 @@ function FoodLog({ user }) {
                 </section>
 
 
+                {/* Displays all meals and their saved food entries. */}
                 <section className="meal-section-grid">
 
                     {mealTypes.map(

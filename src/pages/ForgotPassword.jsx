@@ -1,3 +1,4 @@
+```jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -9,31 +10,55 @@ import {
 
 import { auth } from "../firebase";
 
+
+// Displays the password recovery page.
 function ForgotPassword() {
-    const [email, setEmail] = useState("");
 
-    const [successMessage, setSuccessMessage] =
+    // Stores the email entered by the user.
+    const [email, setEmail] =
         useState("");
 
-    const [errorMessage, setErrorMessage] =
-        useState("");
 
-    const [isLoading, setIsLoading] =
-        useState(false);
+    // Stores the password reset success message.
+    const [
+        successMessage,
+        setSuccessMessage
+    ] = useState("");
 
+
+    // Stores any password reset error message.
+    const [
+        errorMessage,
+        setErrorMessage
+    ] = useState("");
+
+
+    // Tracks whether the reset request is being processed.
+    const [
+        isLoading,
+        setIsLoading
+    ] = useState(false);
+
+
+    // Sends a password reset email through Firebase.
     async function handleResetPassword(event) {
         event.preventDefault();
 
         try {
+            // Starts the loading state and clears old messages.
             setIsLoading(true);
             setErrorMessage("");
             setSuccessMessage("");
 
+
+            // Requests a password reset email from Firebase.
             await sendPasswordResetEmail(
                 auth,
                 email
             );
 
+
+            // Displays a success message after the email is sent.
             setSuccessMessage(
                 "Password reset instructions have been sent. Please check your email."
             );
@@ -43,30 +68,42 @@ function ForgotPassword() {
                 error
             );
 
-            if (error.code === "auth/invalid-email") {
+
+            // Displays a message when the email format is invalid.
+            if (
+                error.code ===
+                "auth/invalid-email"
+            ) {
                 setErrorMessage(
                     "Please enter a valid email address."
                 );
             } else {
+                // Displays a general error for other failures.
                 setErrorMessage(
                     "Unable to send the reset email."
                 );
             }
         } finally {
+            // Stops the loading state after the request finishes.
             setIsLoading(false);
         }
     }
 
+
+    // Displays the password recovery form.
     return (
         <main className="account-page">
 
+            {/* Displays the password recovery card. */}
             <div className="form-card reset-card">
 
+                {/* Displays the password recovery icon. */}
                 <div className="reset-icon">
                     <FaLock />
                 </div>
 
 
+                {/* Displays the form title and instructions. */}
                 <div className="form-header">
 
                     <p className="form-tag">
@@ -83,8 +120,10 @@ function ForgotPassword() {
                 </div>
 
 
+                {/* Submits the password reset request. */}
                 <form onSubmit={handleResetPassword}>
 
+                    {/* Collects the user's email address. */}
                     <div className="input-group">
 
                         <label htmlFor="resetEmail">
@@ -97,7 +136,9 @@ function ForgotPassword() {
                             placeholder="Enter your email"
                             value={email}
                             onChange={(event) =>
-                                setEmail(event.target.value)
+                                setEmail(
+                                    event.target.value
+                                )
                             }
                             required
                         />
@@ -105,6 +146,7 @@ function ForgotPassword() {
                     </div>
 
 
+                    {/* Displays an error when the request fails. */}
                     {errorMessage && (
                         <p className="error-message">
                             {errorMessage}
@@ -112,6 +154,7 @@ function ForgotPassword() {
                     )}
 
 
+                    {/* Sends the password reset request. */}
                     <button
                         type="submit"
                         className="main-button"
@@ -126,6 +169,7 @@ function ForgotPassword() {
                 </form>
 
 
+                {/* Displays confirmation after the email is sent. */}
                 {successMessage && (
                     <p className="success-message">
                         {successMessage}
@@ -133,6 +177,7 @@ function ForgotPassword() {
                 )}
 
 
+                {/* Returns the user to the login page. */}
                 <p className="switch-text">
                     Remember your password?
 
@@ -148,3 +193,4 @@ function ForgotPassword() {
 }
 
 export default ForgotPassword;
+```

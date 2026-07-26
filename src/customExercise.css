@@ -2,10 +2,12 @@
    CUSTOM EXERCISE SECTION
 ========================================= */
 
+/* Adds spacing below the custom exercise section. */
 .custom-exercise-section {
     margin-bottom: 34px;
 }
 
+/* Styles the custom exercise section heading. */
 .custom-exercise-heading {
     padding: 22px 24px;
 
@@ -25,6 +27,7 @@
         );
 }
 
+/* Styles the small labels in the custom exercise headings. */
 .custom-exercise-heading p,
 .custom-form-top p {
     margin-bottom: 6px;
@@ -36,6 +39,7 @@
     letter-spacing: 1.5px;
 }
 
+/* Styles the custom exercise section title. */
 .custom-exercise-heading h2 {
     margin-bottom: 7px;
 
@@ -43,6 +47,7 @@
     letter-spacing: -0.7px;
 }
 
+/* Styles the custom exercise section description. */
 .custom-exercise-heading span {
     color: var(--muted);
 
@@ -50,6 +55,7 @@
     line-height: 1.5;
 }
 
+/* Styles the button used to open the custom exercise form. */
 .open-custom-form-button {
     min-width: 155px;
     height: 45px;
@@ -79,6 +85,7 @@
     cursor: pointer;
 }
 
+/* Adds movement and shadow when the open button is hovered. */
 .open-custom-form-button:hover {
     transform: translateY(-2px);
 
@@ -92,6 +99,7 @@
    CUSTOM EXERCISE FORM
 ========================================= */
 
+/* Styles the custom exercise form container. */
 .custom-exercise-form {
     margin-top: 15px;
     padding: 23px;
@@ -109,6 +117,7 @@
         );
 }
 
+/* Aligns the form title and close button. */
 .custom-form-top {
     margin-bottom: 21px;
 
@@ -117,10 +126,12 @@
     justify-content: space-between;
 }
 
+/* Styles the custom form title. */
 .custom-form-top h3 {
     font-size: 18px;
 }
 
+/* Styles the button used to close the custom form. */
 .close-custom-form-button {
     width: 38px;
     height: 38px;
@@ -141,11 +152,13 @@
     cursor: pointer;
 }
 
+/* Changes the close button appearance on hover. */
 .close-custom-form-button:hover {
     color: white;
     background: #b94747;
 }
 
+/* Creates the custom exercise form field grid. */
 .custom-form-grid {
     display: grid;
     grid-template-columns:
@@ -154,14 +167,17 @@
     gap: 14px;
 }
 
+/* Prevents form fields from overflowing the grid. */
 .custom-form-field {
     min-width: 0;
 }
 
+/* Makes the exercise name field use two columns. */
 .exercise-name-field {
     grid-column: span 2;
 }
 
+/* Styles labels inside custom form fields. */
 .custom-form-field label {
     margin-bottom: 8px;
 
@@ -172,6 +188,7 @@
     letter-spacing: 0.7px;
 }
 
+/* Styles custom form inputs and dropdowns. */
 .custom-form-field input,
 .custom-form-field select {
     width: 100%;
@@ -189,6 +206,7 @@
     font-size: 11px;
 }
 
+/* Highlights custom form fields when focused. */
 .custom-form-field input:focus,
 .custom-form-field select:focus {
     border-color: var(--green);
@@ -198,11 +216,13 @@
         rgba(166, 255, 63, 0.08);
 }
 
+/* Styles options inside custom form dropdowns. */
 .custom-form-field option {
     color: white;
     background: #111913;
 }
 
+/* Applies shared styles to form feedback messages. */
 .custom-form-error,
 .custom-form-success {
     margin-top: 16px;
@@ -214,6 +234,7 @@
     font-weight: 700;
 }
 
+/* Styles custom form error messages. */
 .custom-form-error {
     border: 1px solid
         rgba(255, 112, 112, 0.2);
@@ -223,6 +244,7 @@
         rgba(255, 112, 112, 0.06);
 }
 
+/* Styles custom form success messages. */
 .custom-form-success {
     border: 1px solid
         rgba(166, 255, 63, 0.2);
@@ -232,6 +254,7 @@
         rgba(166, 255, 63, 0.06);
 }
 
+/* Aligns the custom form action buttons. */
 .custom-form-actions {
     margin-top: 20px;
 
@@ -240,6 +263,7 @@
     gap: 10px;
 }
 
+/* Applies shared styles to the form action buttons. */
 .cancel-custom-button,
 .save-custom-button {
     min-width: 145px;
@@ -260,6 +284,7 @@
     cursor: pointer;
 }
 
+/* Styles the form cancel button. */
 .cancel-custom-button {
     border: 1px solid var(--border);
 
@@ -268,6 +293,7 @@
         rgba(255, 255, 255, 0.025);
 }
 
+/* Highlights the cancel button when hovered. */
 .cancel-custom-button:hover {
     color: #ff8585;
 
@@ -275,6 +301,7 @@
         rgba(255, 112, 112, 0.2);
 }
 
+/* Styles the form save button. */
 .save-custom-button {
     border: none;
 
@@ -288,6 +315,7 @@
         );
 }
 
+/* Moves the save button upward when hovered. */
 .save-custom-button:hover {
     transform: translateY(-2px);
 }
@@ -297,12 +325,14 @@
    CUSTOM EXERCISE CARD
 ========================================= */
 
+/* Aligns badges and buttons inside an exercise card. */
 .exercise-card-actions {
     display: flex;
     align-items: center;
     gap: 7px;
 }
 
+/* Styles the badge used to identify custom exercises. */
 .custom-exercise-badge {
     padding: 5px 7px;
 
@@ -320,6 +350,7 @@
     text-transform: uppercase;
 }
 
+/* Styles the button used to delete a custom exercise. */
 .delete-custom-exercise-button {
     width: 27px;
     height: 27px;
@@ -341,11 +372,13 @@
     cursor: pointer;
 }
 
+/* Changes the delete button appearance on hover. */
 .delete-custom-exercise-button:hover {
     color: white;
     background: #b94747;
 }
 
+/* Styles the custom exercise count shown on muscle cards. */
 .muscle-custom-count {
     width: fit-content;
     margin-top: 9px;
@@ -367,60 +400,72 @@
    RESPONSIVE
 ========================================= */
 
+/* Reduces the form grid to three columns on smaller desktops. */
 @media screen and (max-width: 1200px) {
     .custom-form-grid {
         grid-template-columns:
             repeat(3, 1fr);
     }
 
+    /* Keeps the exercise name field wider than other fields. */
     .exercise-name-field {
         grid-column: span 2;
     }
 }
 
+/* Adjusts the custom exercise section for tablets. */
 @media screen and (max-width: 750px) {
     .custom-exercise-heading {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /* Makes the open form button use the full width. */
     .open-custom-form-button {
         width: 100%;
     }
 
+    /* Reduces the form grid to two columns. */
     .custom-form-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
+    /* Makes the exercise name field use the full row. */
     .exercise-name-field {
         grid-column: 1 / -1;
     }
 }
 
+/* Adjusts the custom exercise section for mobile screens. */
 @media screen and (max-width: 500px) {
     .custom-exercise-heading,
     .custom-exercise-form {
         padding: 17px;
     }
 
+    /* Displays all form fields in one column. */
     .custom-form-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Returns the exercise name field to normal grid flow. */
     .exercise-name-field {
         grid-column: auto;
     }
 
+    /* Stacks form buttons vertically. */
     .custom-form-actions {
         flex-direction: column-reverse;
     }
 
+    /* Makes form action buttons use the full width. */
     .cancel-custom-button,
     .save-custom-button {
         width: 100%;
     }
 
+    /* Allows exercise card actions to wrap when needed. */
     .exercise-card-actions {
         flex-wrap: wrap;
         justify-content: flex-end;

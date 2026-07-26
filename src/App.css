@@ -1,3 +1,4 @@
+/* Styles the counter button. */
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -8,18 +9,24 @@
   transition: border-color 0.3s;
   margin-bottom: 24px;
 
+  /* Changes the border color when hovering. */
   &:hover {
     border-color: var(--accent-border);
   }
+
+  /* Displays a visible outline for keyboard focus. */
   &:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 }
 
+
+/* Positions the hero images on top of each other. */
 .hero {
   position: relative;
 
+  /* Centers all hero image elements. */
   .base,
   .framework,
   .vite {
@@ -27,17 +34,20 @@
     margin: 0 auto;
   }
 
+  /* Styles the main base image. */
   .base {
     width: 170px;
     position: relative;
     z-index: 0;
   }
 
+  /* Positions the framework and Vite images absolutely. */
   .framework,
   .vite {
     position: absolute;
   }
 
+  /* Positions and rotates the framework image. */
   .framework {
     z-index: 1;
     top: 34px;
@@ -46,6 +56,7 @@
       scale(1.4);
   }
 
+  /* Positions and rotates the Vite image. */
   .vite {
     z-index: 0;
     top: 107px;
@@ -56,6 +67,8 @@
   }
 }
 
+
+/* Centers the main page content. */
 #center {
   display: flex;
   flex-direction: column;
@@ -64,46 +77,59 @@
   place-items: center;
   flex-grow: 1;
 
+  /* Adjusts spacing on smaller screens. */
   @media (max-width: 1024px) {
     padding: 32px 20px 24px;
     gap: 18px;
   }
 }
 
+
+/* Displays the next-step sections beside each other. */
 #next-steps {
   display: flex;
   border-top: 1px solid var(--border);
   text-align: left;
 
+  /* Gives each direct child equal space. */
   & > div {
     flex: 1 1 0;
     padding: 32px;
+
+    /* Reduces section padding on smaller screens. */
     @media (max-width: 1024px) {
       padding: 24px 20px;
     }
   }
 
+  /* Styles icons inside the next-step sections. */
   .icon {
     margin-bottom: 16px;
     width: 22px;
     height: 22px;
   }
 
+  /* Stacks sections vertically on smaller screens. */
   @media (max-width: 1024px) {
     flex-direction: column;
     text-align: center;
   }
 }
 
+
+/* Adds a divider beside the documentation section. */
 #docs {
   border-right: 1px solid var(--border);
 
+  /* Moves the divider below the section on smaller screens. */
   @media (max-width: 1024px) {
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
 }
 
+
+/* Styles the next-step link list. */
 #next-steps ul {
   list-style: none;
   padding: 0;
@@ -111,10 +137,12 @@
   gap: 8px;
   margin: 32px 0 0;
 
+  /* Sets the size of logos inside the list. */
   .logo {
     height: 18px;
   }
 
+  /* Styles links as buttons. */
   a {
     color: var(--text-h);
     font-size: 16px;
@@ -127,24 +155,30 @@
     text-decoration: none;
     transition: box-shadow 0.3s;
 
+    /* Adds a shadow when hovering over a link. */
     &:hover {
       box-shadow: var(--shadow);
     }
+
+    /* Sets the size of icons inside link buttons. */
     .button-icon {
       height: 18px;
       width: 18px;
     }
   }
 
+  /* Makes the link list responsive on smaller screens. */
   @media (max-width: 1024px) {
     margin-top: 20px;
     flex-wrap: wrap;
     justify-content: center;
 
+    /* Displays two list items per row when possible. */
     li {
       flex: 1 1 calc(50% - 8px);
     }
 
+    /* Makes each link fill its list item. */
     a {
       width: 100%;
       justify-content: center;
@@ -153,18 +187,25 @@
   }
 }
 
+
+/* Adds empty space above the bottom border. */
 #spacer {
   height: 88px;
   border-top: 1px solid var(--border);
+
+  /* Reduces spacer height on smaller screens. */
   @media (max-width: 1024px) {
     height: 48px;
   }
 }
 
+
+/* Creates decorative tick marks at both ends. */
 .ticks {
   position: relative;
   width: 100%;
 
+  /* Creates the left and right tick shapes. */
   &::before,
   &::after {
     content: '';
@@ -173,10 +214,13 @@
     border: 5px solid transparent;
   }
 
+  /* Positions the left tick mark. */
   &::before {
     left: 0;
     border-left-color: var(--border);
   }
+
+  /* Positions the right tick mark. */
   &::after {
     right: 0;
     border-right-color: var(--border);

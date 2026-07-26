@@ -27,6 +27,8 @@ import {
 
 import "../calories.css";
 
+
+// Stores the available activity levels and their calorie multipliers.
 const activityLevels = [
     {
         value: 1.2,
@@ -60,6 +62,8 @@ const activityLevels = [
     }
 ];
 
+
+// Stores calorie and macro settings for each fitness goal.
 const goalProfiles = {
     maintenance: {
         name: "Maintenance",
@@ -102,57 +106,84 @@ const goalProfiles = {
     }
 };
 
+
+// Rounds a calorie value to the nearest ten.
 function roundToNearestTen(value) {
     return Math.round(
         value / 10
     ) * 10;
 }
 
+
+// Formats a number with thousands separators.
 function formatNumber(value) {
     return new Intl.NumberFormat(
         "en-US"
     ).format(value);
 }
 
-function Calories({ user }) {
-    const navigate = useNavigate();
 
+// Displays the calorie calculator and manages its data.
+function Calories({ user }) {
+
+    // Allows navigation between application pages.
+    const navigate =
+        useNavigate();
+
+
+    // Stores the selected gender.
     const [
         gender,
         setGender
     ] = useState("male");
 
+
+    // Stores the user's age.
     const [
         age,
         setAge
     ] = useState(22);
 
+
+    // Stores the user's height in centimetres.
     const [
         height,
         setHeight
     ] = useState(176);
 
+
+    // Stores the user's weight in kilograms.
     const [
         weight,
         setWeight
     ] = useState(77);
 
+
+    // Stores the selected activity multiplier.
     const [
         activity,
         setActivity
     ] = useState(1.55);
 
+
+    // Stores the selected fitness goal.
     const [
         goal,
         setGoal
     ] = useState("cutting");
 
+
+    // Gets the user's display name or uses a demo name.
     const memberName =
         user?.displayName || "Demo User";
 
+
+    // Gets the user's email or uses a demo email.
     const memberEmail =
         user?.email || "demo@fitness.com";
 
+
+    // Finds the description for the selected activity level.
     const selectedActivity =
         activityLevels.find(
             (item) =>
@@ -160,142 +191,181 @@ function Calories({ user }) {
                 Number(activity)
         );
 
-    const results = useMemo(() => {
-        const numericAge =
-            Number(age);
 
-        const numericHeight =
-            Number(height);
+    // Calculates and caches all calorie and nutrition results.
+    const results =
+        useMemo(() => {
 
-        const numericWeight =
-            Number(weight);
+            // Converts the form values into numbers.
+            const numericAge =
+                Number(age);
 
-        const numericActivity =
-            Number(activity);
+            const numericHeight =
+                Number(height);
 
-        if (
-            numericAge <= 0 ||
-            numericHeight <= 0 ||
-            numericWeight <= 0 ||
-            numericActivity <= 0
-        ) {
-            return null;
-        }
+            const numericWeight =
+                Number(weight);
 
-        const genderConstant =
-            gender === "male"
-                ? 5
-                : -161;
+            const numericActivity =
+                Number(activity);
 
-        const bmr =
-            10 * numericWeight +
-            6.25 * numericHeight -
-            5 * numericAge +
-            genderConstant;
 
-        const tdee =
-            bmr * numericActivity;
+            // Stops the calculation when an input is invalid.
+            if (
+                numericAge <= 0 ||
+                numericHeight <= 0 ||
+                numericWeight <= 0 ||
+                numericActivity <= 0
+            ) {
+                return null;
+            }
 
-        const selectedGoal =
-            goalProfiles[goal];
 
-        const targetCalories =
-            roundToNearestTen(
-                tdee *
-                    (
-                        1 +
-                        selectedGoal.adjustment
-                    )
-            );
+            // Selects the gender value used in the BMR formula.
+            const genderConstant =
+                gender === "male"
+                    ? 5
+                    : -161;
 
-        const protein =
-            Math.round(
-                numericWeight *
-                    selectedGoal.proteinPerKg
-            );
 
-        const fat =
-            Math.round(
-                (
-                    targetCalories *
-                    selectedGoal.fatPercentage
-                ) / 9
-            );
+            // Calculates basal metabolic rate.
+            const bmr =
+                10 * numericWeight +
+                6.25 * numericHeight -
+                5 * numericAge +
+                genderConstant;
 
-        const proteinCalories =
-            protein * 4;
 
-        const fatCalories =
-            fat * 9;
+            // Calculates maintenance calories using the activity level.
+            const tdee =
+                bmr * numericActivity;
 
-        const remainingCalories =
-            Math.max(
-                0,
-                targetCalories -
-                    proteinCalories -
-                    fatCalories
-            );
 
-        const carbs =
-            Math.round(
-                remainingCalories / 4
-            );
+            // Gets the settings for the selected fitness goal.
+            const selectedGoal =
+                goalProfiles[goal];
 
-        const fiber =
-            Math.round(
-                (
-                    targetCalories /
-                    1000
-                ) * 14
-            );
 
-        const waterLitres =
-            Number(
-                (
-                    (
-                        numericWeight *
-                        35
-                    ) / 1000
-                ).toFixed(1)
-            );
-
-        const calorieDifference =
-            Math.round(
-                targetCalories -
-                    tdee
-            );
-
-        return {
-            bmr:
-                Math.round(bmr),
-
-            tdee:
+            // Applies the goal adjustment to the maintenance calories.
+            const targetCalories =
                 roundToNearestTen(
-                    tdee
-                ),
+                    tdee *
+                        (
+                            1 +
+                            selectedGoal.adjustment
+                        )
+                );
 
-            targetCalories,
-            protein,
-            carbs,
-            fat,
-            fiber,
-            waterLitres,
 
-            sodium: 2300,
-            potassium: 3400,
+            // Calculates the daily protein target.
+            const protein =
+                Math.round(
+                    numericWeight *
+                        selectedGoal.proteinPerKg
+                );
 
-            calorieDifference,
-            selectedGoal
-        };
-    }, [
-        age,
-        height,
-        weight,
-        activity,
-        gender,
-        goal
-    ]);
 
+            // Calculates the daily fat target.
+            const fat =
+                Math.round(
+                    (
+                        targetCalories *
+                        selectedGoal.fatPercentage
+                    ) / 9
+                );
+
+
+            // Converts the protein target into calories.
+            const proteinCalories =
+                protein * 4;
+
+
+            // Converts the fat target into calories.
+            const fatCalories =
+                fat * 9;
+
+
+            // Finds the calories remaining for carbohydrates.
+            const remainingCalories =
+                Math.max(
+                    0,
+                    targetCalories -
+                        proteinCalories -
+                        fatCalories
+                );
+
+
+            // Converts the remaining calories into carbohydrates.
+            const carbs =
+                Math.round(
+                    remainingCalories / 4
+                );
+
+
+            // Estimates the daily fiber target.
+            const fiber =
+                Math.round(
+                    (
+                        targetCalories /
+                        1000
+                    ) * 14
+                );
+
+
+            // Estimates daily water intake using body weight.
+            const waterLitres =
+                Number(
+                    (
+                        (
+                            numericWeight *
+                            35
+                        ) / 1000
+                    ).toFixed(1)
+                );
+
+
+            // Compares the target with maintenance calories.
+            const calorieDifference =
+                Math.round(
+                    targetCalories -
+                        tdee
+                );
+
+
+            // Returns all values used by the results panel.
+            return {
+                bmr:
+                    Math.round(bmr),
+
+                tdee:
+                    roundToNearestTen(
+                        tdee
+                    ),
+
+                targetCalories,
+                protein,
+                carbs,
+                fat,
+                fiber,
+                waterLitres,
+
+                sodium: 2300,
+                potassium: 3400,
+
+                calorieDifference,
+                selectedGoal
+            };
+        }, [
+            age,
+            height,
+            weight,
+            activity,
+            gender,
+            goal
+        ]);
+
+
+    // Restores the calculator inputs to their default values.
     function resetCalculator() {
         setGender("male");
         setAge(22);
@@ -305,11 +375,15 @@ function Calories({ user }) {
         setGoal("cutting");
     }
 
+
+    // Displays the calorie calculator page.
     return (
         <main className="dashboard-page">
 
+            {/* Displays the sidebar navigation. */}
             <aside className="dashboard-sidebar">
 
+                {/* Displays the FitTrack logo. */}
                 <div className="dashboard-logo">
 
                     <div className="dashboard-logo-icon">
@@ -324,8 +398,10 @@ function Calories({ user }) {
                 </div>
 
 
+                {/* Displays links to the main application pages. */}
                 <nav className="sidebar-navigation">
 
+                    {/* Opens the dashboard page. */}
                     <button
                         type="button"
                         className="sidebar-link"
@@ -338,6 +414,7 @@ function Calories({ user }) {
                     </button>
 
 
+                    {/* Opens the workouts page. */}
                     <button
                         type="button"
                         className="sidebar-link"
@@ -350,6 +427,7 @@ function Calories({ user }) {
                     </button>
 
 
+                    {/* Displays the food log navigation option. */}
                     <button
                         type="button"
                         className="sidebar-link"
@@ -359,6 +437,7 @@ function Calories({ user }) {
                     </button>
 
 
+                    {/* Shows the current calories page as active. */}
                     <button
                         type="button"
                         className="sidebar-link active"
@@ -371,6 +450,7 @@ function Calories({ user }) {
                     </button>
 
 
+                    {/* Displays the progress navigation option. */}
                     <button
                         type="button"
                         className="sidebar-link"
@@ -382,8 +462,10 @@ function Calories({ user }) {
                 </nav>
 
 
+                {/* Displays the user profile and logout button. */}
                 <div className="sidebar-bottom">
 
+                    {/* Displays the current user's information. */}
                     <div className="sidebar-user">
 
                         <FaUserCircle />
@@ -401,6 +483,7 @@ function Calories({ user }) {
                     </div>
 
 
+                    {/* Returns the user to the login page. */}
                     <button
                         type="button"
                         className="logout-button"
@@ -417,8 +500,10 @@ function Calories({ user }) {
             </aside>
 
 
+            {/* Contains the calorie calculator content. */}
             <section className="dashboard-content calories-content">
 
+                {/* Displays the page title and reset button. */}
                 <header className="calories-header">
 
                     <div>
@@ -442,6 +527,7 @@ function Calories({ user }) {
                     </div>
 
 
+                    {/* Resets all calculator values. */}
                     <button
                         type="button"
                         className="calories-reset-button"
@@ -453,10 +539,13 @@ function Calories({ user }) {
                 </header>
 
 
+                {/* Places the input and results panels beside each other. */}
                 <section className="calculator-layout">
 
+                    {/* Collects personal details and the fitness goal. */}
                     <article className="calculator-panel">
 
+                        {/* Displays the personal details heading. */}
                         <div className="calculator-panel-heading">
 
                             <div className="calculator-heading-icon">
@@ -476,8 +565,10 @@ function Calories({ user }) {
                         </div>
 
 
+                        {/* Contains the calculator input fields. */}
                         <div className="calculator-form-grid">
 
+                            {/* Allows the user to select a gender. */}
                             <div className="calculator-field full-width-field">
 
                                 <label>
@@ -486,6 +577,7 @@ function Calories({ user }) {
 
                                 <div className="gender-selector">
 
+                                    {/* Selects the male BMR formula. */}
                                     <button
                                         type="button"
                                         className={
@@ -500,6 +592,8 @@ function Calories({ user }) {
                                         Male
                                     </button>
 
+
+                                    {/* Selects the female BMR formula. */}
                                     <button
                                         type="button"
                                         className={
@@ -519,6 +613,7 @@ function Calories({ user }) {
                             </div>
 
 
+                            {/* Collects the user's age. */}
                             <div className="calculator-field">
 
                                 <label htmlFor="age">
@@ -549,6 +644,7 @@ function Calories({ user }) {
                             </div>
 
 
+                            {/* Collects the user's body weight. */}
                             <div className="calculator-field">
 
                                 <label htmlFor="weight">
@@ -580,6 +676,7 @@ function Calories({ user }) {
                             </div>
 
 
+                            {/* Collects the user's height. */}
                             <div className="calculator-field full-width-field">
 
                                 <label htmlFor="height">
@@ -610,6 +707,7 @@ function Calories({ user }) {
                             </div>
 
 
+                            {/* Allows the user to select an activity level. */}
                             <div className="calculator-field full-width-field">
 
                                 <label htmlFor="activity">
@@ -627,6 +725,7 @@ function Calories({ user }) {
                                         )
                                     }
                                 >
+                                    {/* Creates one option for each activity level. */}
                                     {activityLevels.map(
                                         (item) => (
                                             <option
@@ -642,6 +741,7 @@ function Calories({ user }) {
                             </div>
 
 
+                            {/* Explains the selected activity level. */}
                             <div className="activity-description full-width-field">
 
                                 <FaRunning />
@@ -658,8 +758,10 @@ function Calories({ user }) {
                         </div>
 
 
+                        {/* Allows the user to choose a fitness goal. */}
                         <div className="goal-section">
 
+                            {/* Displays the fitness goal heading. */}
                             <div className="goal-section-heading">
 
                                 <FaBullseye />
@@ -675,6 +777,7 @@ function Calories({ user }) {
                             </div>
 
 
+                            {/* Creates a selectable card for every goal. */}
                             <div className="goal-grid">
 
                                 {Object.entries(
@@ -731,8 +834,10 @@ function Calories({ user }) {
                     </article>
 
 
+                    {/* Displays calculated energy and nutrition targets. */}
                     <article className="calculator-panel">
 
+                        {/* Displays the results panel heading. */}
                         <div className="calculator-panel-heading">
 
                             <div className="calculator-heading-icon">
@@ -750,11 +855,14 @@ function Calories({ user }) {
                         </div>
 
 
+                        {/* Shows the results only when all inputs are valid. */}
                         {results ? (
                             <>
 
+                                {/* Displays BMR, TDEE and target calories. */}
                                 <div className="energy-result-grid">
 
+                                    {/* Displays the basal metabolic rate. */}
                                     <div className="energy-result-card">
 
                                         <span>BMR</span>
@@ -774,6 +882,7 @@ function Calories({ user }) {
                                     </div>
 
 
+                                    {/* Displays maintenance calories. */}
                                     <div className="energy-result-card">
 
                                         <span>TDEE</span>
@@ -793,6 +902,7 @@ function Calories({ user }) {
                                     </div>
 
 
+                                    {/* Displays the selected daily calorie target. */}
                                     <div className="energy-result-card target-card">
 
                                         <span>
@@ -832,6 +942,7 @@ function Calories({ user }) {
                                 </div>
 
 
+                                {/* Explains the selected fitness goal. */}
                                 <div className="selected-goal-summary">
 
                                     <div>
@@ -865,6 +976,7 @@ function Calories({ user }) {
                                 </div>
 
 
+                                {/* Introduces the macronutrient targets. */}
                                 <div className="nutrition-section-heading">
 
                                     <div>
@@ -880,8 +992,10 @@ function Calories({ user }) {
                                 </div>
 
 
+                                {/* Displays all macronutrient targets. */}
                                 <div className="macro-result-grid">
 
+                                    {/* Displays the daily protein target. */}
                                     <div className="macro-result-card">
 
                                         <div className="macro-result-icon">
@@ -909,6 +1023,7 @@ function Calories({ user }) {
                                     </div>
 
 
+                                    {/* Displays the daily carbohydrate target. */}
                                     <div className="macro-result-card">
 
                                         <div className="macro-result-icon">
@@ -930,6 +1045,7 @@ function Calories({ user }) {
                                     </div>
 
 
+                                    {/* Displays the daily fat target. */}
                                     <div className="macro-result-card">
 
                                         <div className="macro-result-icon">
@@ -951,6 +1067,7 @@ function Calories({ user }) {
                                 </div>
 
 
+                                {/* Introduces the daily nutrition essentials. */}
                                 <div className="nutrition-section-heading">
 
                                     <div>
@@ -966,8 +1083,10 @@ function Calories({ user }) {
                                 </div>
 
 
+                                {/* Displays fiber, water and mineral targets. */}
                                 <div className="essential-grid">
 
+                                    {/* Displays the daily fiber target. */}
                                     <div className="essential-card">
 
                                         <FaLeaf />
@@ -985,6 +1104,7 @@ function Calories({ user }) {
                                     </div>
 
 
+                                    {/* Displays the daily water target. */}
                                     <div className="essential-card">
 
                                         <FaTint />
@@ -1006,6 +1126,7 @@ function Calories({ user }) {
                                     </div>
 
 
+                                    {/* Displays the recommended sodium limit. */}
                                     <div className="essential-card">
 
                                         <FaInfoCircle />
@@ -1029,6 +1150,7 @@ function Calories({ user }) {
                                     </div>
 
 
+                                    {/* Displays the daily potassium target. */}
                                     <div className="essential-card">
 
                                         <FaHeartbeat />
@@ -1054,6 +1176,7 @@ function Calories({ user }) {
                                 </div>
 
 
+                                {/* Reminds the user that the values are estimates. */}
                                 <div className="calculator-note">
 
                                     <FaInfoCircle />
@@ -1073,6 +1196,7 @@ function Calories({ user }) {
                         ) : (
                             <div className="invalid-result">
 
+                                {/* Displays an error for invalid inputs. */}
                                 <FaCalculator />
 
                                 <h3>

@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
+// Stores the Firebase configuration for this project.
 const firebaseConfig = {
     apiKey: "PASTE_YOUR_API_KEY",
     authDomain: "PASTE_YOUR_AUTH_DOMAIN",
@@ -10,6 +11,8 @@ const firebaseConfig = {
     appId: "PASTE_YOUR_APP_ID"
 };
 
+// Connects the application to the Firebase project.
 const app = initializeApp(firebaseConfig);
 
+// Creates and exports the Firebase Authentication service.
 export const auth = getAuth(app);

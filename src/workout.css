@@ -2,6 +2,7 @@
    WORKOUT PAGE
 ========================================= */
 
+/* Styles the main workout page background. */
 .workout-content {
     background:
         radial-gradient(
@@ -17,6 +18,7 @@
    PAGE HEADER
 ========================================= */
 
+/* Aligns the workout heading and summary information. */
 .workout-page-header {
     margin-bottom: 35px;
 
@@ -26,6 +28,7 @@
     gap: 30px;
 }
 
+/* Styles the small label above the workout title. */
 .workout-kicker {
     margin-bottom: 10px;
 
@@ -36,6 +39,7 @@
     letter-spacing: 1.8px;
 }
 
+/* Styles the main workout page title. */
 .workout-heading h1 {
     margin-bottom: 10px;
 
@@ -44,6 +48,7 @@
     letter-spacing: -2.5px;
 }
 
+/* Highlights part of the workout title in green. */
 .workout-heading h1 span {
     color: var(--green);
 
@@ -51,6 +56,7 @@
         0 0 20px rgba(166, 255, 63, 0.45);
 }
 
+/* Styles the description below the workout title. */
 .workout-heading > p:last-child {
     max-width: 650px;
 
@@ -60,11 +66,13 @@
     line-height: 1.6;
 }
 
+/* Arranges workout summary cards horizontally. */
 .workout-summary {
     display: flex;
     gap: 12px;
 }
 
+/* Styles each workout summary card. */
 .summary-chip {
     min-width: 105px;
     padding: 15px 17px;
@@ -85,16 +93,19 @@
         );
 }
 
+/* Gives the timer summary card extra width. */
 .summary-chip:last-child {
     min-width: 135px;
 }
 
+/* Styles the main value inside a summary card. */
 .summary-chip strong {
     color: var(--green);
 
     font-size: 21px;
 }
 
+/* Styles the label inside a summary card. */
 .summary-chip span {
     color: var(--muted);
 
@@ -108,10 +119,12 @@
    SECTION HEADING
 ========================================= */
 
+/* Adds spacing below the muscle group section. */
 .muscle-section {
     margin-bottom: 32px;
 }
 
+/* Aligns a workout section title and item count. */
 .workout-section-heading {
     margin-bottom: 18px;
 
@@ -121,6 +134,7 @@
     gap: 20px;
 }
 
+/* Styles the small step label in section headings. */
 .workout-section-heading p {
     margin-bottom: 6px;
 
@@ -131,11 +145,13 @@
     letter-spacing: 1.5px;
 }
 
+/* Styles workout section titles. */
 .workout-section-heading h2 {
     font-size: 22px;
     letter-spacing: -0.8px;
 }
 
+/* Styles the item count beside a section heading. */
 .workout-section-heading > span {
     color: var(--muted);
 
@@ -147,12 +163,14 @@
    MUSCLE GROUPS
 ========================================= */
 
+/* Creates the muscle group card grid. */
 .muscle-group-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
 }
 
+/* Styles each muscle group selection card. */
 .muscle-group-card {
     position: relative;
     overflow: hidden;
@@ -185,6 +203,7 @@
         background 0.25s ease;
 }
 
+/* Adds a decorative glow to each muscle group card. */
 .muscle-group-card::after {
     content: "";
 
@@ -206,12 +225,14 @@
         );
 }
 
+/* Raises and highlights a muscle group card on hover. */
 .muscle-group-card:hover {
     transform: translateY(-5px);
 
     border-color: var(--green-border);
 }
 
+/* Highlights the currently selected muscle group. */
 .muscle-group-card.active {
     border-color: rgba(166, 255, 63, 0.45);
 
@@ -229,6 +250,7 @@
             rgba(0, 0, 0, 0.22);
 }
 
+/* Styles the icon inside a muscle group card. */
 .muscle-group-icon {
     width: 43px;
     height: 43px;
@@ -251,6 +273,7 @@
     font-size: 17px;
 }
 
+/* Changes the icon style for the selected muscle group. */
 .muscle-group-card.active
 .muscle-group-icon {
     color: #071004;
@@ -263,17 +286,20 @@
         );
 }
 
+/* Arranges muscle group text vertically. */
 .muscle-group-card > div:last-child {
     display: flex;
     flex-direction: column;
 }
 
+/* Styles the muscle group name. */
 .muscle-group-card strong {
     margin-bottom: 9px;
 
     font-size: 15px;
 }
 
+/* Styles the muscle group description. */
 .muscle-group-card small {
     color: var(--muted);
 
@@ -286,6 +312,7 @@
    EXERCISE AREA
 ========================================= */
 
+/* Creates the exercise library and session panel layout. */
 .workout-exercise-layout {
     padding-bottom: 40px;
 
@@ -297,6 +324,7 @@
     align-items: start;
 }
 
+/* Creates the exercise card grid. */
 .workout-exercise-grid {
     display: grid;
     grid-template-columns:
@@ -305,6 +333,7 @@
     gap: 15px;
 }
 
+/* Styles each exercise card. */
 .workout-exercise-card {
     padding: 20px;
 
@@ -324,6 +353,7 @@
         background 0.25s ease;
 }
 
+/* Raises and highlights an exercise card on hover. */
 .workout-exercise-card:hover {
     transform: translateY(-4px);
 
@@ -331,6 +361,7 @@
         rgba(166, 255, 63, 0.25);
 }
 
+/* Highlights an exercise added to the current session. */
 .workout-exercise-card.selected {
     border-color:
         rgba(166, 255, 63, 0.45);
@@ -343,6 +374,7 @@
         );
 }
 
+/* Aligns the exercise number and difficulty label. */
 .workout-exercise-card-header {
     margin-bottom: 18px;
 
@@ -351,6 +383,7 @@
     justify-content: space-between;
 }
 
+/* Styles the exercise order number. */
 .exercise-number {
     color: var(--green);
 
@@ -358,6 +391,7 @@
     font-weight: 900;
 }
 
+/* Styles the exercise difficulty badge. */
 .exercise-level {
     padding: 5px 8px;
 
@@ -375,6 +409,7 @@
     text-transform: uppercase;
 }
 
+/* Styles exercise names. */
 .workout-exercise-card h3 {
     margin-bottom: 20px;
 
@@ -387,6 +422,7 @@
    SETS AND REPS SELECT
 ========================================= */
 
+/* Creates the sets, reps and rest control grid. */
 .exercise-customize-grid {
     margin-bottom: 18px;
 
@@ -397,6 +433,7 @@
     gap: 8px;
 }
 
+/* Arranges sets and repetitions controls vertically. */
 .exercise-customize-grid label,
 .session-edit-controls label {
     margin: 0;
@@ -408,6 +445,7 @@
     text-transform: none;
 }
 
+/* Styles labels used in exercise controls. */
 .exercise-customize-grid label > span,
 .session-edit-controls label > span,
 .exercise-rest-box > span {
@@ -419,6 +457,7 @@
     text-transform: uppercase;
 }
 
+/* Styles sets and repetitions dropdowns. */
 .exercise-customize-grid select,
 .session-edit-controls select {
     width: 100%;
@@ -439,11 +478,13 @@
     cursor: pointer;
 }
 
+/* Highlights exercise dropdowns on hover. */
 .exercise-customize-grid select:hover,
 .session-edit-controls select:hover {
     border-color: var(--green-border);
 }
 
+/* Highlights exercise dropdowns when focused. */
 .exercise-customize-grid select:focus,
 .session-edit-controls select:focus {
     border-color: var(--green);
@@ -453,12 +494,14 @@
         rgba(166, 255, 63, 0.08);
 }
 
+/* Styles options inside exercise dropdowns. */
 .exercise-customize-grid option,
 .session-edit-controls option {
     color: white;
     background: #111913;
 }
 
+/* Styles the exercise rest time display. */
 .exercise-rest-box {
     padding: 7px 9px;
 
@@ -474,6 +517,7 @@
         rgba(255, 255, 255, 0.025);
 }
 
+/* Styles the exercise rest time value. */
 .exercise-rest-box strong {
     font-size: 11px;
 }
@@ -483,6 +527,7 @@
    ADD EXERCISE BUTTON
 ========================================= */
 
+/* Styles the button used to add an exercise to the session. */
 .exercise-add-button {
     width: 100%;
     height: 42px;
@@ -510,11 +555,13 @@
     transition: 0.22s ease;
 }
 
+/* Highlights the add exercise button on hover. */
 .exercise-add-button:hover {
     color: #071004;
     background: var(--green);
 }
 
+/* Changes the button style when an exercise is already added. */
 .exercise-add-button.added {
     border-color:
         rgba(255, 112, 112, 0.22);
@@ -524,6 +571,7 @@
         rgba(255, 112, 112, 0.06);
 }
 
+/* Highlights the remove exercise button on hover. */
 .exercise-add-button.added:hover {
     color: white;
     background: #c94d4d;
@@ -534,6 +582,7 @@
    SESSION PANEL
 ========================================= */
 
+/* Styles the sticky workout session panel. */
 .session-panel {
     position: sticky;
     top: 25px;
@@ -555,6 +604,7 @@
         rgba(0, 0, 0, 0.3);
 }
 
+/* Aligns the session title and exercise count. */
 .session-panel-header {
     margin-bottom: 18px;
 
@@ -563,6 +613,7 @@
     justify-content: space-between;
 }
 
+/* Styles the small session panel label. */
 .session-panel-header p {
     margin-bottom: 5px;
 
@@ -573,10 +624,12 @@
     letter-spacing: 1.4px;
 }
 
+/* Styles the session panel title. */
 .session-panel-header h2 {
     font-size: 19px;
 }
 
+/* Styles the selected exercise count badge. */
 .session-count {
     width: 35px;
     height: 35px;
@@ -605,6 +658,7 @@
    WORKOUT TIMER
 ========================================= */
 
+/* Styles the workout timer information card. */
 .workout-timer-card {
     margin-bottom: 17px;
     padding: 14px;
@@ -627,6 +681,7 @@
         );
 }
 
+/* Styles the timer icon. */
 .timer-icon {
     width: 39px;
     height: 39px;
@@ -646,12 +701,14 @@
     font-size: 16px;
 }
 
+/* Arranges timer information vertically. */
 .timer-information {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
+/* Styles the timer label. */
 .timer-information span {
     color: var(--muted);
 
@@ -660,11 +717,13 @@
     text-transform: uppercase;
 }
 
+/* Styles the elapsed workout time. */
 .timer-information strong {
     font-size: 19px;
     letter-spacing: 0.8px;
 }
 
+/* Applies shared styles to timer status badges. */
 .timer-status {
     margin-left: auto;
     padding: 5px 8px;
@@ -676,12 +735,14 @@
     text-transform: uppercase;
 }
 
+/* Styles the running timer status. */
 .timer-status.running {
     color: var(--green);
     background:
         rgba(166, 255, 63, 0.1);
 }
 
+/* Styles the paused timer status. */
 .timer-status.paused {
     color: #ffbf69;
     background:
@@ -693,6 +754,7 @@
    EMPTY SESSION
 ========================================= */
 
+/* Styles the empty session placeholder. */
 .session-empty {
     min-height: 190px;
     padding: 25px;
@@ -711,6 +773,7 @@
     text-align: center;
 }
 
+/* Styles the icon in the empty session placeholder. */
 .session-empty > svg {
     margin-bottom: 15px;
 
@@ -720,12 +783,14 @@
     opacity: 0.7;
 }
 
+/* Styles the empty session title. */
 .session-empty strong {
     margin-bottom: 8px;
 
     font-size: 13px;
 }
 
+/* Styles the empty session description. */
 .session-empty p {
     max-width: 210px;
 
@@ -740,6 +805,7 @@
    SESSION EXERCISES
 ========================================= */
 
+/* Arranges selected exercises in a scrollable list. */
 .session-list {
     max-height: 360px;
     overflow-y: auto;
@@ -749,6 +815,7 @@
     gap: 9px;
 }
 
+/* Styles each exercise in the current session. */
 .session-list-item {
     padding: 11px;
 
@@ -759,6 +826,7 @@
         rgba(255, 255, 255, 0.025);
 }
 
+/* Aligns the session exercise number, information and remove button. */
 .session-item-top {
     margin-bottom: 10px;
 
@@ -767,6 +835,7 @@
     gap: 10px;
 }
 
+/* Styles the session exercise order number. */
 .session-item-number {
     width: 28px;
     height: 28px;
@@ -787,6 +856,7 @@
     font-weight: 900;
 }
 
+/* Arranges session exercise information vertically. */
 .session-item-info {
     min-width: 0;
 
@@ -795,6 +865,7 @@
     gap: 3px;
 }
 
+/* Prevents long exercise names from overflowing. */
 .session-item-info strong {
     overflow: hidden;
 
@@ -804,12 +875,14 @@
     white-space: nowrap;
 }
 
+/* Styles the muscle group name in the session list. */
 .session-item-info span {
     color: var(--muted);
 
     font-size: 8px;
 }
 
+/* Styles the button used to remove a session exercise. */
 .session-remove-button {
     width: 29px;
     height: 29px;
@@ -832,11 +905,13 @@
     cursor: pointer;
 }
 
+/* Highlights the remove exercise button on hover. */
 .session-remove-button:hover {
     background:
         rgba(255, 112, 112, 0.15);
 }
 
+/* Creates the session sets and reps control grid. */
 .session-edit-controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -848,6 +923,7 @@
    SESSION TOTAL
 ========================================= */
 
+/* Aligns the estimated workout time and value. */
 .session-total {
     margin: 18px 0;
     padding: 13px 0;
@@ -860,6 +936,7 @@
     border-bottom: 1px solid var(--border);
 }
 
+/* Aligns the estimated time icon and label. */
 .session-total > div {
     display: flex;
     align-items: center;
@@ -870,10 +947,12 @@
     font-size: 10px;
 }
 
+/* Highlights the estimated time icon. */
 .session-total svg {
     color: var(--green);
 }
 
+/* Styles the estimated workout duration. */
 .session-total strong {
     font-size: 13px;
 }
@@ -883,6 +962,7 @@
    SESSION BUTTONS
 ========================================= */
 
+/* Applies shared styles to session control buttons. */
 .session-start-button,
 .session-pause-button,
 .session-reset-button,
@@ -905,6 +985,7 @@
     transition: 0.2s ease;
 }
 
+/* Styles the start or resume timer button. */
 .session-start-button {
     margin-bottom: 9px;
 
@@ -920,10 +1001,12 @@
         );
 }
 
+/* Raises the start button when hovered and enabled. */
 .session-start-button:hover:not(:disabled) {
     transform: translateY(-2px);
 }
 
+/* Styles the pause timer button. */
 .session-pause-button {
     margin-bottom: 9px;
 
@@ -936,11 +1019,13 @@
         rgba(255, 191, 105, 0.08);
 }
 
+/* Highlights the pause timer button on hover. */
 .session-pause-button:hover {
     color: #171006;
     background: #ffbf69;
 }
 
+/* Styles the reset timer button. */
 .session-reset-button {
     margin-bottom: 9px;
 
@@ -952,11 +1037,13 @@
         rgba(166, 255, 63, 0.05);
 }
 
+/* Highlights the reset timer button on hover. */
 .session-reset-button:hover:not(:disabled) {
     color: #071004;
     background: var(--green);
 }
 
+/* Styles the clear session button. */
 .session-clear-button {
     border: 1px solid var(--border);
 
@@ -965,6 +1052,7 @@
         rgba(255, 255, 255, 0.025);
 }
 
+/* Highlights the clear session button on hover. */
 .session-clear-button:hover:not(:disabled) {
     color: #ff8a8a;
 
@@ -975,6 +1063,7 @@
         rgba(255, 112, 112, 0.06);
 }
 
+/* Styles disabled session control buttons. */
 .session-start-button:disabled,
 .session-reset-button:disabled,
 .session-clear-button:disabled {
@@ -987,6 +1076,7 @@
    RESPONSIVE
 ========================================= */
 
+/* Adjusts workout grids for smaller desktop screens. */
 @media screen and (max-width: 1300px) {
     .muscle-group-grid {
         grid-template-columns:
@@ -1004,6 +1094,7 @@
     }
 }
 
+/* Stacks the exercise library and session panel on medium screens. */
 @media screen and (max-width: 1050px) {
     .workout-exercise-layout {
         grid-template-columns: 1fr;
@@ -1014,6 +1105,7 @@
     }
 }
 
+/* Adjusts the workout page for tablets. */
 @media screen and (max-width: 750px) {
     .workout-page-header {
         align-items: flex-start;
@@ -1038,6 +1130,7 @@
     }
 }
 
+/* Adjusts the workout page for mobile screens. */
 @media screen and (max-width: 500px) {
     .workout-content {
         padding: 24px 14px;

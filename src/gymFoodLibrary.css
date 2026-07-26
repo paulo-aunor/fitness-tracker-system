@@ -2,6 +2,7 @@
    GYM FOOD LIBRARY
 ========================================= */
 
+/* Styles the main gym food library panel. */
 .gym-food-library {
     margin-bottom: 20px;
     padding: 22px;
@@ -21,6 +22,7 @@
         rgba(0, 0, 0, 0.22);
 }
 
+/* Aligns the library heading and search bar. */
 .gym-food-library-header {
     margin-bottom: 18px;
 
@@ -30,6 +32,7 @@
     gap: 22px;
 }
 
+/* Styles the small label above the library title. */
 .gym-food-library-header p {
     margin-bottom: 5px;
 
@@ -40,6 +43,7 @@
     letter-spacing: 1.4px;
 }
 
+/* Styles the gym food library title. */
 .gym-food-library-header h2 {
     margin-bottom: 6px;
 
@@ -47,12 +51,14 @@
     letter-spacing: -0.6px;
 }
 
+/* Styles the library description. */
 .gym-food-library-header span {
     color: var(--muted);
 
     font-size: 10px;
 }
 
+/* Styles the gym food search container. */
 .gym-food-search {
     width: min(100%, 330px);
     height: 44px;
@@ -68,6 +74,7 @@
     background: #101712;
 }
 
+/* Highlights the search container when the input is focused. */
 .gym-food-search:focus-within {
     border-color: var(--green);
 
@@ -76,6 +83,7 @@
         rgba(166, 255, 63, 0.08);
 }
 
+/* Styles the search icon. */
 .gym-food-search svg {
     flex-shrink: 0;
 
@@ -84,6 +92,7 @@
     font-size: 12px;
 }
 
+/* Styles the gym food search input. */
 .gym-food-search input {
     width: 100%;
     height: 100%;
@@ -98,6 +107,7 @@
     font-size: 11px;
 }
 
+/* Arranges the food category buttons. */
 .gym-food-categories {
     margin-bottom: 17px;
 
@@ -106,6 +116,7 @@
     gap: 8px;
 }
 
+/* Styles each food category button. */
 .gym-food-categories button {
     height: 34px;
     padding: 0 13px;
@@ -125,6 +136,7 @@
     transition: 0.2s ease;
 }
 
+/* Highlights hovered and selected category buttons. */
 .gym-food-categories button:hover,
 .gym-food-categories button.active {
     border-color:
@@ -134,6 +146,7 @@
     background: var(--green);
 }
 
+/* Creates the suggested food card grid. */
 .gym-food-grid {
     display: grid;
 
@@ -143,6 +156,7 @@
     gap: 12px;
 }
 
+/* Styles each suggested gym food card. */
 .gym-food-card {
     min-width: 0;
     padding: 15px;
@@ -161,6 +175,7 @@
         border-color 0.22s ease;
 }
 
+/* Raises and highlights a food card when hovered. */
 .gym-food-card:hover {
     transform: translateY(-4px);
 
@@ -168,6 +183,7 @@
         var(--green-border);
 }
 
+/* Aligns the food category and calorie value. */
 .gym-food-card-top {
     margin-bottom: 12px;
 
@@ -177,6 +193,7 @@
     gap: 8px;
 }
 
+/* Styles the category badge on a food card. */
 .gym-food-card-top span {
     padding: 4px 7px;
 
@@ -191,12 +208,14 @@
     text-transform: uppercase;
 }
 
+/* Styles the calorie value on a food card. */
 .gym-food-card-top strong {
     color: var(--green);
 
     font-size: 10px;
 }
 
+/* Styles and limits the food name to one line. */
 .gym-food-card h3 {
     margin-bottom: 5px;
 
@@ -208,6 +227,7 @@
     white-space: nowrap;
 }
 
+/* Styles the serving size text. */
 .gym-food-card > p {
     margin-bottom: 14px;
 
@@ -216,6 +236,7 @@
     font-size: 8px;
 }
 
+/* Creates the macronutrient information grid. */
 .gym-food-macros {
     margin-bottom: 14px;
 
@@ -226,6 +247,7 @@
     gap: 5px;
 }
 
+/* Styles each macronutrient information box. */
 .gym-food-macros span {
     padding: 7px 4px;
 
@@ -244,12 +266,14 @@
     font-size: 7px;
 }
 
+/* Styles macronutrient values. */
 .gym-food-macros strong {
     color: var(--white);
 
     font-size: 9px;
 }
 
+/* Styles the button used to load a suggested food. */
 .gym-food-card > button {
     width: 100%;
     height: 37px;
@@ -277,11 +301,13 @@
     cursor: pointer;
 }
 
+/* Highlights the use food button when hovered. */
 .gym-food-card > button:hover {
     color: #071004;
     background: var(--green);
 }
 
+/* Styles the nutrition value disclaimer. */
 .gym-food-disclaimer {
     margin-top: 14px;
 
@@ -291,6 +317,7 @@
     line-height: 1.5;
 }
 
+/* Styles the empty search result message. */
 .no-suggested-foods {
     min-height: 130px;
 
@@ -308,6 +335,7 @@
     color: var(--muted);
 }
 
+/* Styles the empty search result icon. */
 .no-suggested-foods svg {
     margin-bottom: 9px;
 
@@ -316,6 +344,7 @@
     font-size: 21px;
 }
 
+/* Styles the empty search result text. */
 .no-suggested-foods p {
     font-size: 10px;
 }
@@ -325,6 +354,7 @@
    RESPONSIVE
 ========================================= */
 
+/* Displays food cards in three columns on smaller desktops. */
 @media screen and (max-width: 1250px) {
     .gym-food-grid {
         grid-template-columns:
@@ -332,31 +362,41 @@
     }
 }
 
+/* Adjusts the food library for tablets. */
 @media screen and (max-width: 900px) {
+
+    /* Stacks the library heading and search bar vertically. */
     .gym-food-library-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /* Makes the search bar use the full width. */
     .gym-food-search {
         width: 100%;
     }
 
+    /* Displays food cards in two columns. */
     .gym-food-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 }
 
+/* Adjusts the food library for mobile screens. */
 @media screen and (max-width: 520px) {
+
+    /* Reduces the library panel padding. */
     .gym-food-library {
         padding: 17px;
     }
 
+    /* Displays food cards in one column. */
     .gym-food-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Allows category buttons to scroll horizontally. */
     .gym-food-categories {
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -364,6 +404,7 @@
         padding-bottom: 5px;
     }
 
+    /* Prevents category buttons from shrinking. */
     .gym-food-categories button {
         flex-shrink: 0;
     }

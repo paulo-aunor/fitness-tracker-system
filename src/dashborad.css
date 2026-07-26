@@ -2,6 +2,7 @@
    DASHBOARD PAGE
 ========================================= */
 
+/* Defines the dashboard color variables and main page layout. */
 .dashboard-page {
     --dashboard-background: #030604;
     --dashboard-panel: #0d130f;
@@ -32,6 +33,7 @@
    SIDEBAR
 ========================================= */
 
+/* Styles the fixed sidebar navigation area. */
 .dashboard-sidebar {
     position: sticky;
     top: 0;
@@ -52,6 +54,7 @@
         );
 }
 
+/* Aligns the dashboard logo and application name. */
 .dashboard-logo {
     padding: 0 10px 30px;
 
@@ -62,6 +65,7 @@
     border-bottom: 1px solid var(--dashboard-border);
 }
 
+/* Styles the highlighted logo icon. */
 .dashboard-logo-icon {
     width: 43px;
     height: 43px;
@@ -86,6 +90,7 @@
         0 10px 30px rgba(166, 255, 63, 0.2);
 }
 
+/* Styles the main dashboard logo text. */
 .dashboard-logo h2 {
     color: white;
 
@@ -93,6 +98,7 @@
     letter-spacing: 1px;
 }
 
+/* Styles the dashboard logo subtitle. */
 .dashboard-logo span {
     color: var(--dashboard-muted);
     font-size: 11px;
@@ -101,6 +107,7 @@
 
 /* Navigation */
 
+/* Arranges the sidebar navigation links vertically. */
 .sidebar-navigation {
     margin-top: 28px;
 
@@ -109,6 +116,7 @@
     gap: 8px;
 }
 
+/* Styles each sidebar navigation button. */
 .sidebar-link {
     width: 100%;
     height: 48px;
@@ -135,16 +143,19 @@
     transition: 0.25s ease;
 }
 
+/* Sets the size of sidebar navigation icons. */
 .sidebar-link svg {
     width: 18px;
     font-size: 17px;
 }
 
+/* Highlights a sidebar link when hovered. */
 .sidebar-link:hover {
     color: white;
     background: rgba(255, 255, 255, 0.04);
 }
 
+/* Highlights the currently active sidebar link. */
 .sidebar-link.active {
     border-color: rgba(166, 255, 63, 0.18);
 
@@ -164,10 +175,12 @@
 
 /* Sidebar bottom */
 
+/* Keeps the user information and logout button at the bottom. */
 .sidebar-bottom {
     margin-top: auto;
 }
 
+/* Styles the signed-in user information area. */
 .sidebar-user {
     margin-bottom: 14px;
     padding: 16px 10px;
@@ -180,26 +193,31 @@
     border-bottom: 1px solid var(--dashboard-border);
 }
 
+/* Styles the user profile icon. */
 .sidebar-user > svg {
     color: var(--dashboard-green);
     font-size: 34px;
 }
 
+/* Arranges the user name and email vertically. */
 .sidebar-user div {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
+/* Styles the user display name. */
 .sidebar-user strong {
     font-size: 13px;
 }
 
+/* Styles the user email address. */
 .sidebar-user span {
     color: var(--dashboard-muted);
     font-size: 11px;
 }
 
+/* Styles the dashboard logout button. */
 .logout-button {
     width: 100%;
     height: 45px;
@@ -225,6 +243,7 @@
     transition: 0.2s ease;
 }
 
+/* Highlights the logout button when hovered. */
 .logout-button:hover {
     border-color: rgba(255, 99, 99, 0.3);
     background: rgba(255, 99, 99, 0.1);
@@ -235,6 +254,7 @@
    CONTENT
 ========================================= */
 
+/* Adds spacing around the main dashboard content. */
 .dashboard-content {
     min-width: 0;
     padding: 38px;
@@ -243,6 +263,7 @@
 
 /* Header */
 
+/* Aligns the dashboard welcome text and quick action button. */
 .dashboard-header {
     margin-bottom: 34px;
 
@@ -252,6 +273,7 @@
     gap: 25px;
 }
 
+/* Styles the small date label above the dashboard title. */
 .dashboard-date {
     margin-bottom: 9px;
 
@@ -262,6 +284,7 @@
     letter-spacing: 1.8px;
 }
 
+/* Styles the main dashboard heading. */
 .dashboard-header h1 {
     margin-bottom: 8px;
 
@@ -270,6 +293,7 @@
     letter-spacing: -2px;
 }
 
+/* Highlights the period in the dashboard heading. */
 .dashboard-header h1 span {
     color: var(--dashboard-green);
 
@@ -277,11 +301,13 @@
         0 0 20px rgba(166, 255, 63, 0.4);
 }
 
+/* Styles the dashboard header description. */
 .dashboard-header > div > p:last-child {
     color: var(--dashboard-muted);
     font-size: 14px;
 }
 
+/* Styles the main quick add button. */
 .quick-add-button {
     height: 48px;
     padding: 0 20px;
@@ -314,6 +340,7 @@
     transition: 0.25s ease;
 }
 
+/* Raises the quick add button when hovered. */
 .quick-add-button:hover {
     transform: translateY(-3px);
 
@@ -326,6 +353,7 @@
    STAT CARDS
 ========================================= */
 
+/* Creates the responsive dashboard statistics grid. */
 .stats-grid {
     margin-bottom: 25px;
 
@@ -334,6 +362,7 @@
     gap: 16px;
 }
 
+/* Styles each dashboard statistic card. */
 .stat-card {
     position: relative;
     overflow: hidden;
@@ -356,6 +385,7 @@
     transition: 0.25s ease;
 }
 
+/* Adds a decorative glow inside each statistic card. */
 .stat-card::after {
     content: "";
 
@@ -377,11 +407,13 @@
         );
 }
 
+/* Raises and highlights a statistic card when hovered. */
 .stat-card:hover {
     transform: translateY(-5px);
     border-color: rgba(166, 255, 63, 0.22);
 }
 
+/* Aligns the statistic icon and label. */
 .stat-card-top {
     margin-bottom: 20px;
 
@@ -390,6 +422,7 @@
     justify-content: space-between;
 }
 
+/* Styles the statistic card category label. */
 .stat-card-top > span {
     color: var(--dashboard-muted);
 
@@ -398,6 +431,7 @@
     letter-spacing: 1.1px;
 }
 
+/* Styles the icon inside a statistic card. */
 .stat-icon {
     width: 37px;
     height: 37px;
@@ -415,6 +449,7 @@
     font-size: 15px;
 }
 
+/* Styles the main statistic value. */
 .stat-card h2 {
     margin-bottom: 15px;
 
@@ -422,6 +457,7 @@
     letter-spacing: -1px;
 }
 
+/* Styles the target value beside the main statistic. */
 .stat-card h2 small {
     color: var(--dashboard-muted);
 
@@ -429,6 +465,7 @@
     font-weight: 600;
 }
 
+/* Styles the supporting statistic description. */
 .stat-card p {
     margin-top: 10px;
 
@@ -436,6 +473,7 @@
     font-size: 11px;
 }
 
+/* Creates the background track for progress bars. */
 .progress-track {
     width: 100%;
     height: 5px;
@@ -447,6 +485,7 @@
     background: rgba(255, 255, 255, 0.07);
 }
 
+/* Styles the filled portion of progress bars. */
 .progress-fill {
     height: 100%;
 
@@ -463,6 +502,7 @@
         0 0 15px rgba(166, 255, 63, 0.4);
 }
 
+/* Styles the body weight change indicator. */
 .weight-change {
     width: fit-content;
     padding: 5px 8px;
@@ -481,6 +521,7 @@
    MAIN GRID
 ========================================= */
 
+/* Creates the main dashboard panel grid. */
 .dashboard-main-grid {
     margin-bottom: 28px;
 
@@ -489,6 +530,7 @@
     gap: 18px;
 }
 
+/* Styles a general dashboard information panel. */
 .dashboard-panel {
     padding: 25px;
 
@@ -506,6 +548,7 @@
         0 20px 60px rgba(0, 0, 0, 0.28);
 }
 
+/* Aligns a panel title and its action. */
 .panel-header {
     margin-bottom: 27px;
 
@@ -514,6 +557,7 @@
     justify-content: space-between;
 }
 
+/* Styles the small label above a panel title. */
 .panel-label {
     margin-bottom: 7px;
 
@@ -524,11 +568,13 @@
     letter-spacing: 1.5px;
 }
 
+/* Styles dashboard panel titles. */
 .panel-header h2 {
     font-size: 21px;
     letter-spacing: -0.7px;
 }
 
+/* Styles the text action used inside panel headings. */
 .panel-link {
     border: none;
 
@@ -545,6 +591,7 @@
 
 /* Calorie panel */
 
+/* Aligns the calorie progress ring and macro list. */
 .calorie-content {
     min-height: 245px;
 
@@ -554,6 +601,7 @@
     gap: 35px;
 }
 
+/* Creates the circular calorie progress indicator. */
 .calorie-ring {
     width: 175px;
     height: 175px;
@@ -581,17 +629,20 @@
         0 0 35px rgba(166, 255, 63, 0.08);
 }
 
+/* Centers the calorie percentage inside the progress ring. */
 .calorie-ring-center {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+/* Styles the calorie completion percentage. */
 .calorie-ring-center strong {
     font-size: 32px;
     letter-spacing: -1.5px;
 }
 
+/* Styles the calorie ring status label. */
 .calorie-ring-center span {
     margin-top: 4px;
 
@@ -599,6 +650,7 @@
     font-size: 10px;
 }
 
+/* Arranges the macronutrient values vertically. */
 .macro-list {
     min-width: 230px;
 
@@ -607,6 +659,7 @@
     gap: 17px;
 }
 
+/* Aligns each macronutrient label and value. */
 .macro-item {
     padding-bottom: 14px;
 
@@ -618,21 +671,25 @@
     border-bottom: 1px solid var(--dashboard-border);
 }
 
+/* Aligns a macro color dot with its label. */
 .macro-item > div {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Styles macronutrient names. */
 .macro-item p {
     color: #bdc7c0;
     font-size: 12px;
 }
 
+/* Styles macronutrient values. */
 .macro-item strong {
     font-size: 12px;
 }
 
+/* Creates the circular macronutrient color marker. */
 .macro-dot {
     width: 9px;
     height: 9px;
@@ -642,16 +699,19 @@
     border-radius: 50%;
 }
 
+/* Uses green to represent protein. */
 .macro-dot.protein {
     background: #a6ff3f;
     box-shadow: 0 0 10px rgba(166, 255, 63, 0.5);
 }
 
+/* Uses blue to represent carbohydrates. */
 .macro-dot.carbs {
     background: #59a9ff;
     box-shadow: 0 0 10px rgba(89, 169, 255, 0.5);
 }
 
+/* Uses orange to represent fat. */
 .macro-dot.fat {
     background: #ffbb55;
     box-shadow: 0 0 10px rgba(255, 187, 85, 0.5);
@@ -660,6 +720,7 @@
 
 /* Workout panel */
 
+/* Styles the calendar icon in the workout panel. */
 .calendar-icon {
     width: 39px;
     height: 39px;
@@ -674,6 +735,7 @@
     background: rgba(166, 255, 63, 0.08);
 }
 
+/* Styles the next workout time information box. */
 .workout-time {
     margin-bottom: 20px;
     padding: 14px;
@@ -688,25 +750,30 @@
     background: rgba(166, 255, 63, 0.045);
 }
 
+/* Highlights the workout time icon. */
 .workout-time > svg {
     color: var(--dashboard-green);
 }
 
+/* Arranges workout time details vertically. */
 .workout-time div {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
+/* Styles the scheduled workout time. */
 .workout-time strong {
     font-size: 12px;
 }
 
+/* Styles the estimated workout duration. */
 .workout-time span {
     color: var(--dashboard-muted);
     font-size: 10px;
 }
 
+/* Arranges the upcoming workout exercises vertically. */
 .exercise-list {
     margin-bottom: 19px;
 
@@ -714,6 +781,7 @@
     flex-direction: column;
 }
 
+/* Styles each exercise in the upcoming workout list. */
 .exercise-item {
     padding: 13px 0;
 
@@ -724,6 +792,7 @@
     border-bottom: 1px solid var(--dashboard-border);
 }
 
+/* Styles the exercise order number. */
 .exercise-item > span {
     color: var(--dashboard-green);
 
@@ -731,21 +800,25 @@
     font-weight: 900;
 }
 
+/* Arranges exercise information vertically. */
 .exercise-item div {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
+/* Styles exercise names. */
 .exercise-item strong {
     font-size: 12px;
 }
 
+/* Styles exercise set and repetition details. */
 .exercise-item p {
     color: var(--dashboard-muted);
     font-size: 10px;
 }
 
+/* Styles the button used to begin a workout. */
 .start-workout-button {
     width: 100%;
     height: 45px;
@@ -770,6 +843,7 @@
     transition: 0.2s ease;
 }
 
+/* Highlights the start workout button when hovered. */
 .start-workout-button:hover {
     color: #071004;
     background: var(--dashboard-green);
@@ -780,14 +854,17 @@
    QUICK ACTIONS
 ========================================= */
 
+/* Adds spacing below the quick actions section. */
 .quick-actions-section {
     padding-bottom: 30px;
 }
 
+/* Adds spacing below the quick actions heading. */
 .section-title {
     margin-bottom: 17px;
 }
 
+/* Styles the small quick actions label. */
 .section-title p {
     margin-bottom: 6px;
 
@@ -798,16 +875,19 @@
     letter-spacing: 1.4px;
 }
 
+/* Styles the quick actions section title. */
 .section-title h2 {
     font-size: 20px;
 }
 
+/* Creates the quick action card grid. */
 .quick-actions-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 15px;
 }
 
+/* Styles each dashboard quick action card. */
 .action-card {
     min-height: 92px;
     padding: 16px;
@@ -835,6 +915,7 @@
     transition: 0.25s ease;
 }
 
+/* Raises and highlights a quick action card when hovered. */
 .action-card:hover {
     transform: translateY(-4px);
 
@@ -848,6 +929,7 @@
         );
 }
 
+/* Styles the icon inside a quick action card. */
 .action-icon {
     width: 42px;
     height: 42px;
@@ -866,21 +948,25 @@
     font-size: 16px;
 }
 
+/* Arranges quick action text vertically. */
 .action-card > div:nth-child(2) {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
+/* Styles quick action titles. */
 .action-card strong {
     font-size: 12px;
 }
 
+/* Styles quick action descriptions. */
 .action-card span {
     color: var(--dashboard-muted);
     font-size: 10px;
 }
 
+/* Positions and styles the plus icon. */
 .action-plus {
     margin-left: auto;
 
@@ -893,24 +979,30 @@
    RESPONSIVE
 ========================================= */
 
+/* Adjusts the dashboard layout for smaller desktop screens. */
 @media screen and (max-width: 1200px) {
 
+    /* Displays statistic cards in two columns. */
     .stats-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Stacks the main dashboard panels vertically. */
     .dashboard-main-grid {
         grid-template-columns: 1fr;
     }
 }
 
 
+/* Changes the sidebar and content layout for tablets. */
 @media screen and (max-width: 850px) {
 
+    /* Changes the dashboard from a grid to a block layout. */
     .dashboard-page {
         display: block;
     }
 
+    /* Changes the sidebar into a full-width top navigation area. */
     .dashboard-sidebar {
         position: relative;
 
@@ -923,10 +1015,12 @@
         border-bottom: 1px solid var(--dashboard-border);
     }
 
+    /* Reduces the spacing below the dashboard logo. */
     .dashboard-logo {
         padding-bottom: 18px;
     }
 
+    /* Displays sidebar links in a five-column grid. */
     .sidebar-navigation {
         margin-top: 17px;
 
@@ -934,6 +1028,7 @@
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
+    /* Stacks each sidebar icon above its label. */
     .sidebar-link {
         height: 60px;
         padding: 7px;
@@ -946,57 +1041,70 @@
         text-align: center;
     }
 
+    /* Moves the active link indicator to the bottom. */
     .sidebar-link.active {
         box-shadow:
             inset 0 -3px 0 var(--dashboard-green);
     }
 
+    /* Hides the desktop user and logout section. */
     .sidebar-bottom {
         display: none;
     }
 
+    /* Reduces the main content padding. */
     .dashboard-content {
         padding: 25px 18px;
     }
 
+    /* Stacks quick action cards vertically. */
     .quick-actions-grid {
         grid-template-columns: 1fr;
     }
 }
 
 
+/* Adjusts dashboard components for mobile screens. */
 @media screen and (max-width: 600px) {
 
+    /* Stacks the dashboard header content vertically. */
     .dashboard-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /* Reduces the dashboard title size. */
     .dashboard-header h1 {
         font-size: 33px;
     }
 
+    /* Makes the quick add button use the full width. */
     .quick-add-button {
         width: 100%;
     }
 
+    /* Displays statistic cards in one column. */
     .stats-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Stacks the calorie ring and macro list vertically. */
     .calorie-content {
         flex-direction: column;
     }
 
+    /* Makes the macro list use the full available width. */
     .macro-list {
         width: 100%;
         min-width: 0;
     }
 
+    /* Reduces dashboard panel padding. */
     .dashboard-panel {
         padding: 20px;
     }
 
+    /* Allows horizontal scrolling for navigation links. */
     .sidebar-navigation {
         overflow-x: auto;
         grid-template-columns: repeat(5, 85px);
