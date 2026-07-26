@@ -72,7 +72,7 @@ export function calculateTDEE(bmr, activityLevel) {
 }
 
 //function to calculate the target calories
-export function calculateTargetCalories(
+export function calculateTargetCalories({
   weight,
   height,
   age,
@@ -80,4 +80,11 @@ export function calculateTargetCalories(
   unitSystem,
   activityLevel,
   goal,
-) {}
+}) {
+  let bmr = calculateBMR({ weight, height, age, gender, unitSystem });
+  let tdee = calculateTDEE(bmr, activityLevel);
+  if (!(goal in GOAL_ADJUSTMENTS)) {
+    throw new Error(`Goal is not valid`);
+  }
+  return Math.round(tdee + GOAL_ADJUSTMENTS[goal]);
+}
