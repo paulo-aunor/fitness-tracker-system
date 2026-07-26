@@ -1,0 +1,370 @@
+/* =========================================
+   GYM FOOD LIBRARY
+========================================= */
+
+.gym-food-library {
+    margin-bottom: 20px;
+    padding: 22px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 29, 22, 0.98),
+            rgba(7, 11, 8, 0.98)
+        );
+
+    box-shadow:
+        0 20px 55px
+        rgba(0, 0, 0, 0.22);
+}
+
+.gym-food-library-header {
+    margin-bottom: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+}
+
+.gym-food-library-header p {
+    margin-bottom: 5px;
+
+    color: var(--green);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+}
+
+.gym-food-library-header h2 {
+    margin-bottom: 6px;
+
+    font-size: 20px;
+    letter-spacing: -0.6px;
+}
+
+.gym-food-library-header span {
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.gym-food-search {
+    width: min(100%, 330px);
+    height: 44px;
+    padding: 0 13px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: #101712;
+}
+
+.gym-food-search:focus-within {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(166, 255, 63, 0.08);
+}
+
+.gym-food-search svg {
+    flex-shrink: 0;
+
+    color: var(--green);
+
+    font-size: 12px;
+}
+
+.gym-food-search input {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+
+    border: none;
+    outline: none;
+
+    color: var(--white);
+    background: transparent;
+
+    font-size: 11px;
+}
+
+.gym-food-categories {
+    margin-bottom: 17px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.gym-food-categories button {
+    height: 34px;
+    padding: 0 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    color: var(--muted);
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    font-size: 9px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.gym-food-categories button:hover,
+.gym-food-categories button.active {
+    border-color:
+        var(--green-border);
+
+    color: #071004;
+    background: var(--green);
+}
+
+.gym-food-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.gym-food-card {
+    min-width: 0;
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    transition:
+        transform 0.22s ease,
+        border-color 0.22s ease;
+}
+
+.gym-food-card:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        var(--green-border);
+}
+
+.gym-food-card-top {
+    margin-bottom: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.gym-food-card-top span {
+    padding: 4px 7px;
+
+    border-radius: 6px;
+
+    color: #9cc7ff;
+    background:
+        rgba(89, 169, 255, 0.08);
+
+    font-size: 7px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.gym-food-card-top strong {
+    color: var(--green);
+
+    font-size: 10px;
+}
+
+.gym-food-card h3 {
+    margin-bottom: 5px;
+
+    overflow: hidden;
+
+    font-size: 13px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gym-food-card > p {
+    margin-bottom: 14px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+}
+
+.gym-food-macros {
+    margin-bottom: 14px;
+
+    display: grid;
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 5px;
+}
+
+.gym-food-macros span {
+    padding: 7px 4px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+
+    border: 1px solid var(--border);
+    border-radius: 7px;
+
+    color: var(--muted);
+    background:
+        rgba(255, 255, 255, 0.02);
+
+    font-size: 7px;
+}
+
+.gym-food-macros strong {
+    color: var(--white);
+
+    font-size: 9px;
+}
+
+.gym-food-card > button {
+    width: 100%;
+    height: 37px;
+    margin-top: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    border:
+        1px solid
+        var(--green-border);
+
+    border-radius: 8px;
+
+    color: var(--green);
+    background:
+        rgba(166, 255, 63, 0.05);
+
+    font-size: 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+.gym-food-card > button:hover {
+    color: #071004;
+    background: var(--green);
+}
+
+.gym-food-disclaimer {
+    margin-top: 14px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+.no-suggested-foods {
+    min-height: 130px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px dashed
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 12px;
+
+    color: var(--muted);
+}
+
+.no-suggested-foods svg {
+    margin-bottom: 9px;
+
+    color: var(--green);
+
+    font-size: 21px;
+}
+
+.no-suggested-foods p {
+    font-size: 10px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media screen and (max-width: 1250px) {
+    .gym-food-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .gym-food-library-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .gym-food-search {
+        width: 100%;
+    }
+
+    .gym-food-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .gym-food-library {
+        padding: 17px;
+    }
+
+    .gym-food-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gym-food-categories {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+
+        padding-bottom: 5px;
+    }
+
+    .gym-food-categories button {
+        flex-shrink: 0;
+    }
+}

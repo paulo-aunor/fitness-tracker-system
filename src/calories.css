@@ -1,0 +1,746 @@
+.calories-content {
+    min-width: 0;
+
+    background:
+        radial-gradient(
+            circle at 88% 4%,
+            rgba(166, 255, 63, 0.08),
+            transparent 25%
+        ),
+        #030604;
+}
+
+.calories-header {
+    margin-bottom: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.calories-kicker {
+    margin-bottom: 9px;
+
+    color: var(--green);
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.7px;
+}
+
+.calories-header h1 {
+    margin-bottom: 9px;
+
+    font-size: clamp(
+        35px,
+        5vw,
+        52px
+    );
+
+    line-height: 1;
+    letter-spacing: -2.6px;
+}
+
+.calories-header h1 span {
+    color: var(--green);
+
+    text-shadow:
+        0 0 22px
+        rgba(166, 255, 63, 0.45);
+}
+
+.calories-header > div > p:last-child {
+    max-width: 680px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.calories-reset-button {
+    min-width: 155px;
+    height: 45px;
+    padding: 0 17px;
+
+    border:
+        1px solid
+        var(--green-border);
+
+    border-radius: 11px;
+
+    color: var(--green);
+
+    background:
+        rgba(166, 255, 63, 0.06);
+
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+.calories-reset-button:hover {
+    color: #071004;
+    background: var(--green);
+}
+
+.calculator-layout {
+    padding-bottom: 45px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(0, 1.15fr);
+
+    gap: 20px;
+    align-items: start;
+}
+
+.calculator-panel {
+    padding: 25px;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 29, 22, 0.98),
+            rgba(7, 11, 8, 0.98)
+        );
+
+    box-shadow:
+        0 25px 65px
+        rgba(0, 0, 0, 0.25);
+}
+
+.calculator-panel-heading {
+    margin-bottom: 23px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.calculator-heading-icon {
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border:
+        1px solid
+        var(--green-border);
+
+    border-radius: 12px;
+
+    color: var(--green);
+
+    background:
+        rgba(166, 255, 63, 0.08);
+
+    font-size: 17px;
+}
+
+.calculator-panel-heading p,
+.goal-section-heading p,
+.nutrition-section-heading p {
+    margin-bottom: 5px;
+
+    color: var(--green);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+}
+
+.calculator-panel-heading h2 {
+    font-size: 20px;
+    letter-spacing: -0.7px;
+}
+
+.calculator-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+}
+
+.full-width-field {
+    grid-column: 1 / -1;
+}
+
+.calculator-field label {
+    margin-bottom: 8px;
+
+    color: #cbd5ce;
+
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.7px;
+}
+
+.gender-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+
+.gender-button {
+    height: 44px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    color: var(--muted);
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    font-size: 11px;
+    font-weight: 850;
+
+    cursor: pointer;
+}
+
+.gender-button:hover,
+.gender-button.active {
+    border-color:
+        var(--green-border);
+
+    color: var(--green);
+
+    background:
+        rgba(166, 255, 63, 0.08);
+}
+
+.calculator-input-box {
+    height: 46px;
+    padding: 0 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: #111913;
+}
+
+.calculator-input-box:focus-within {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(166, 255, 63, 0.08);
+}
+
+.calculator-input-box > svg {
+    flex-shrink: 0;
+
+    color: var(--green);
+
+    font-size: 12px;
+}
+
+.calculator-input-box input {
+    height: 100%;
+    padding: 0;
+
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+    box-shadow: none;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.calculator-input-box input:focus {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.calculator-input-box span {
+    margin-left: auto;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.calculator-field select {
+    width: 100%;
+    height: 46px;
+    padding: 0 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+
+    color: var(--white);
+    background: #111913;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    cursor: pointer;
+}
+
+.calculator-field select:focus {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(166, 255, 63, 0.08);
+}
+
+.calculator-field option {
+    color: white;
+    background: #111913;
+}
+
+.activity-description {
+    padding: 11px 13px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    border:
+        1px solid
+        rgba(166, 255, 63, 0.13);
+
+    border-radius: 10px;
+
+    color: var(--muted);
+
+    background:
+        rgba(166, 255, 63, 0.045);
+
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.activity-description svg {
+    flex-shrink: 0;
+    color: var(--green);
+}
+
+.goal-section {
+    margin-top: 27px;
+    padding-top: 24px;
+
+    border-top:
+        1px solid var(--border);
+}
+
+.goal-section-heading {
+    margin-bottom: 16px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.goal-section-heading > svg {
+    color: var(--green);
+}
+
+.goal-section-heading h3,
+.nutrition-section-heading h3 {
+    font-size: 16px;
+}
+
+.goal-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.goal-card {
+    min-height: 105px;
+    padding: 14px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: var(--white);
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    text-align: left;
+    cursor: pointer;
+
+    transition: 0.22s ease;
+}
+
+.goal-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        var(--green-border);
+}
+
+.goal-card.active {
+    border-color:
+        rgba(166, 255, 63, 0.5);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(166, 255, 63, 0.13),
+            rgba(7, 11, 8, 0.95)
+        );
+}
+
+.goal-card strong {
+    font-size: 12px;
+}
+
+.goal-card span {
+    color: var(--green);
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.goal-card small {
+    margin-top: auto;
+
+    color: var(--muted);
+
+    font-size: 9px;
+}
+
+.energy-result-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 11px;
+}
+
+.energy-result-card {
+    min-height: 125px;
+    padding: 17px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.energy-result-card > span {
+    color: var(--muted);
+
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.energy-result-card strong {
+    font-size: 27px;
+    letter-spacing: -1px;
+}
+
+.energy-result-card small {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.energy-result-card.target-card {
+    border-color:
+        rgba(166, 255, 63, 0.4);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(166, 255, 63, 0.13),
+            rgba(7, 11, 8, 0.95)
+        );
+}
+
+.energy-result-card.target-card strong {
+    color: var(--green);
+}
+
+.selected-goal-summary {
+    margin-top: 15px;
+    padding: 17px;
+
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 20px;
+
+    border:
+        1px solid
+        rgba(166, 255, 63, 0.15);
+
+    border-radius: 13px;
+
+    background:
+        rgba(166, 255, 63, 0.045);
+}
+
+.selected-goal-summary span {
+    color: var(--green);
+
+    font-size: 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.selected-goal-summary h3 {
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+.selected-goal-summary p {
+    color: var(--muted);
+
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.nutrition-section-heading {
+    margin-top: 25px;
+    margin-bottom: 14px;
+}
+
+.macro-result-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 11px;
+}
+
+.macro-result-card {
+    min-height: 145px;
+    padding: 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.macro-result-icon {
+    width: 37px;
+    height: 37px;
+    margin-bottom: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    color: var(--green);
+
+    background:
+        rgba(166, 255, 63, 0.08);
+}
+
+.macro-result-card > span {
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.macro-result-card strong {
+    font-size: 24px;
+}
+
+.macro-result-card small {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.essential-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.essential-card {
+    padding: 14px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.essential-card > svg {
+    color: var(--green);
+    font-size: 18px;
+}
+
+.essential-card div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.essential-card span {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.essential-card strong {
+    font-size: 14px;
+}
+
+.calculator-note {
+    margin-top: 16px;
+    padding: 13px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    border:
+        1px solid
+        rgba(89, 169, 255, 0.18);
+
+    border-radius: 11px;
+
+    color: #a7cfff;
+
+    background:
+        rgba(89, 169, 255, 0.05);
+
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.calculator-note svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.invalid-result {
+    min-height: 350px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.invalid-result > svg {
+    margin-bottom: 17px;
+
+    color: var(--green);
+
+    font-size: 38px;
+}
+
+.invalid-result h3 {
+    margin-bottom: 8px;
+}
+
+.invalid-result p {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+@media screen and (max-width: 1150px) {
+    .calculator-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .calories-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .calories-reset-button {
+        width: 100%;
+    }
+
+    .energy-result-grid,
+    .macro-result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .selected-goal-summary {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .calories-content {
+        padding: 24px 14px;
+    }
+
+    .calculator-panel {
+        padding: 18px;
+    }
+
+    .calculator-form-grid,
+    .goal-grid,
+    .essential-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width-field {
+        grid-column: auto;
+    }
+
+    .calories-header h1 {
+        font-size: 36px;
+    }
+}

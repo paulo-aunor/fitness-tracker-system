@@ -26,3 +26,4 @@ dist-ssr
 
 #ignore the claude folder
 .claude
+.env.local
