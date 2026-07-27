@@ -10,7 +10,7 @@ import {
     updateProfile
 } from "firebase/auth";
 
-import { auth } from "../firebase";
+import { auth } from "../firebase.jsx";
 import PasswordInput from "../components/PasswordInput";
 
 function Signup() {
@@ -19,12 +19,7 @@ function Signup() {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const [
-        confirmPassword,
-        setConfirmPassword
-    ] = useState("");
-
+    const [confirmPassword,setConfirmPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 

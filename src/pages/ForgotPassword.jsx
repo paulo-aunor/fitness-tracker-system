@@ -6,8 +6,7 @@ import { FaLock } from "react-icons/fa";
 import {
     sendPasswordResetEmail
 } from "firebase/auth";
-
-import { auth } from "../firebase";
+import { auth } from "../firebase.jsx";
 
 function ForgotPassword() {
     const [email, setEmail] = useState("");
