@@ -6,18 +6,26 @@ import {
 } from "react-router-dom";
 
 import PasswordInput from "../components/PasswordInput";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase.jsx";
 
 function Login() {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
-    function handleLogin(event) {
+async function  handleLogin(event) {
         event.preventDefault();
-
+    try{
+        await signInWithEmailAndPassword(auth, email,password);
         navigate("/home");
-    }
+    } catch (err) {
+    setError(err.message);
+}
+}
+
 
     return (
         <main className="login-page">
@@ -63,14 +71,9 @@ function Login() {
 
                         <h2>Welcome Back</h2>
 
-                        <p className="subtitle">
-                            Demo mode: enter anything to view
-                            the dashboard.
-                        </p>
-
                     </div>
 
-
+                    {error && <p style={{ color: "red" }}>{error}</p>}
                     <form onSubmit={handleLogin}>
 
                         <div className="input-group">

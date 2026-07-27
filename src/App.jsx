@@ -1,6 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+
+// Authentification imports.
+import { auth } from "./firebase.jsx";
+import { onAuthStateChanged } from "firebase/auth";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 
 import Calories from "./pages/Calories";
 import FoodLog from "./pages/FoodLog";
@@ -13,10 +19,21 @@ import Workout from "./pages/Workout";
 function App() {
   const navigate = useNavigate();
 
-  const demoUser = {
-    displayName: "Demo User",
-    email: "demo@fitness.com",
+  // Nobody has log in thta why user it = null
+const [user,setUser] = useState(null);
+const [loading,setLoading] = useState(true);
+
+// 
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    setUser(firebaseUser);
+    setLoading(false)
+  });
+
+  return () => {
+    unsubscribe();
   };
+}, []);
 
   useEffect(() => {
     const routeByLabel = {
@@ -49,6 +66,12 @@ function App() {
     };
   }, [navigate]);
 
+
+  // loading guard
+  if (loading){
+    return<div>Loading...</div>;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Login />} />
@@ -57,13 +80,13 @@ function App() {
 
       <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      <Route path="/home" element={<Home user={demoUser} />} />
+      <Route path="/home" element={<ProtectedRoute user={user}><Home user={user} /> </ProtectedRoute>}/> 
 
-      <Route path="/workouts" element={<Workout user={demoUser} />} />
+      <Route path="/workouts" element={<ProtectedRoute user={user}><Workout user={user} /> </ProtectedRoute>}/> 
 
-      <Route path="/food-log" element={<FoodLog user={demoUser} />} />
+      <Route path="/food-log" element={<ProtectedRoute user={user}><FoodLog user={user} /> </ProtectedRoute>}/> 
 
-      <Route path="/calories" element={<Calories user={demoUser} />} />
+      <Route path="/calories" element={<ProtectedRoute user={user}><Calories user={user} /> </ProtectedRoute>}/> 
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
