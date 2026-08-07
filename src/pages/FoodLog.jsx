@@ -19,6 +19,7 @@ import {
     FaUserCircle,
     FaUtensils
 } from "react-icons/fa";
+import { searchFoods } from "../services/foodApi";
 
 import "../foodLog.css";
 import "../gymFoodLibrary.css";
@@ -666,6 +667,33 @@ function FoodLog({ user }) {
     ] = useState("All");
 
 
+    // Search text for the live Open Food Facts search (separate from
+    // the local suggestedFoods search above).
+    const [
+        apiSearchTerm,
+        setApiSearchTerm
+    ] = useState("");
+
+
+    // Results returned from the last Open Food Facts search.
+    const [
+        apiResults,
+        setApiResults
+    ] = useState([]);
+
+
+    const [
+        isSearching,
+        setIsSearching
+    ] = useState(false);
+
+
+    const [
+        searchError,
+        setSearchError
+    ] = useState("");
+
+
     // Gets the user's display name or uses a demo name.
     const memberName =
         user?.displayName ||
@@ -874,6 +902,68 @@ function FoodLog({ user }) {
                     block: "start"
                 });
         }, 50);
+    }
+
+
+    // Same idea as loadSuggestedFood above, but for a result that came back
+    // from the Open Food Facts API instead of the local suggestedFoods list.
+    // API results don't include a servingSize (values are per 100g), so we
+    // hardcode "100 g" here instead of reading it off the food object.
+    function loadApiFood(food) {
+        setEditingFood(null);
+
+        setFoodForm(
+            (current) => ({
+                ...current,
+                name: food.name,
+                servingSize: "100 g",
+                servings: 1,
+                calories: food.calories,
+                protein: food.protein,
+                carbs: food.carbs,
+                fat: food.fat,
+                fiber: food.fiber
+            })
+        );
+
+        setFormMessage(
+            `${food.name} was loaded into the food form.`
+        );
+
+        window.setTimeout(() => {
+            document
+                .getElementById(
+                    "food-entry-form"
+                )
+                ?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+        }, 50);
+    }
+
+
+    // Runs when the "search online" form is submitted. searchFoods() is async
+    // (it hits a real API), so it can't live in a useMemo like filteredFoods
+    // does above -- it needs to be a real event handler with its own loading
+    // and error state instead.
+    async function handleApiSearch(event) {
+        // Stop the browser's default full-page form submit/reload.
+        event.preventDefault();
+
+        setIsSearching(true);
+        setSearchError("");
+
+        try {
+            const results = await searchFoods(apiSearchTerm);
+            setApiResults(results);
+        } catch {
+            // searchFoods throws on a failed request (bad response status) --
+            // catch it here so a network hiccup doesn't crash the page.
+            setSearchError("Could not search Open Food Facts. Please try again.");
+        } finally {
+            setIsSearching(false);
+        }
     }
 
 
@@ -1635,6 +1725,100 @@ function FoodLog({ user }) {
                         method.
                     </p>
 
+                </section>
+
+
+                {/*
+                  Separate section for live Open Food Facts search, kept apart from
+                  the curated gym-food-library above. Reuses the same
+                  gym-food-search / gym-food-grid / gym-food-card classes so it looks
+                  consistent, but this list has no category filter (the API doesn't
+                  return one) and it only ever holds whatever the last search
+                  returned, not a fixed local list.
+                */}
+                <section className="gym-food-library">
+                    <div className="gym-food-library-header">
+                        <div>
+                            <p>SEARCH ONLINE</p>
+                            <h2>Open Food Facts Search</h2>
+                            <span>
+                                Can't find it above? Search the full Open Food
+                                Facts database.
+                            </span>
+                        </div>
+
+                        {/* onSubmit instead of onChange -- searches on button click,
+                            not on every keystroke, so we're not hitting the API on
+                            every character typed. */}
+                        <form onSubmit={handleApiSearch} className="gym-food-search">
+                            <FaSearch />
+                            <input
+                                type="text"
+                                placeholder="Search any food online..."
+                                value={apiSearchTerm}
+                                onChange={(event) =>
+                                    setApiSearchTerm(event.target.value)
+                                }
+                            />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+
+                    {isSearching && <p>Searching...</p>}
+
+                    {searchError && (
+                        <p className="gym-food-disclaimer">{searchError}</p>
+                    )}
+
+                    {!isSearching && apiResults.length > 0 && (
+                        <div className="gym-food-grid">
+                            {/* API results have no stable id like the local list does, so
+                                the key is built from name + index instead. */}
+                            {apiResults.map((food, index) => (
+                                <article
+                                    className="gym-food-card"
+                                    key={`${food.name}-${index}`}
+                                >
+                                    <div className="gym-food-card-top">
+                                        <strong>{food.calories} kcal</strong>
+                                    </div>
+
+                                    <h3>{food.name}</h3>
+                                    <p>per 100 g</p>
+
+                                    <div className="gym-food-macros">
+                                        <span>
+                                            <strong>{food.protein}g</strong>
+                                            Protein
+                                        </span>
+
+                                        <span>
+                                            <strong>{food.carbs}g</strong>
+                                            Carbs
+                                        </span>
+
+                                        <span>
+                                            <strong>{food.fat}g</strong>
+                                            Fat
+                                        </span>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => loadApiFood(food)}
+                                    >
+                                        <FaPlus />
+                                        Use This Food
+                                    </button>
+                                </article>
+                            ))}
+                        </div>
+                    )}
+
+                    <p className="gym-food-disclaimer">
+                        Nutrition values come from Open Food Facts and are per
+                        100g -- they may not match the exact serving you eat.
+                    </p>
                 </section>
 
 

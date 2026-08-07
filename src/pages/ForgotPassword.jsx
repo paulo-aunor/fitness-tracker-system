@@ -7,8 +7,7 @@ import { FaLock } from "react-icons/fa";
 import {
     sendPasswordResetEmail
 } from "firebase/auth";
-
-import { auth } from "../firebase";
+import { auth } from "../firebase.jsx";
 
 
 // Displays the password recovery page.

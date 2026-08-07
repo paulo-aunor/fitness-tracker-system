@@ -27,34 +27,47 @@ import {
 
 import "../calories.css";
 
+//import the functions from calculations.js
+import {
+    calculateBMR,
+    calculateTDEE,
+    calculateTargetCalories,
+    GOAL_ADJUSTMENTS
+} from "../utils/calculations";
+
 
 // Stores the available activity levels and their calorie multipliers.
 const activityLevels = [
     {
+        key: "sedentary",
         value: 1.2,
         label: "Sedentary",
         description:
             "Little exercise or mostly seated work"
     },
     {
+        key: "light",
         value: 1.375,
         label: "Lightly Active",
         description:
             "Exercise 1–3 days per week"
     },
     {
+        key: "moderate",
         value: 1.55,
         label: "Moderately Active",
         description:
             "Exercise 3–5 days per week"
     },
     {
+        key: "active",
         value: 1.725,
         label: "Very Active",
         description:
             "Hard exercise 6–7 days per week"
     },
     {
+        key: "veryActive",
         value: 1.9,
         label: "Extremely Active",
         description:
@@ -68,7 +81,6 @@ const goalProfiles = {
     maintenance: {
         name: "Maintenance",
         badge: "Maintain Weight",
-        adjustment: 0,
         proteinPerKg: 1.6,
         fatPercentage: 0.25,
         description:
@@ -78,7 +90,6 @@ const goalProfiles = {
     cutting: {
         name: "Cutting",
         badge: "Fat-Loss Phase",
-        adjustment: -0.2,
         proteinPerKg: 2.2,
         fatPercentage: 0.25,
         description:
@@ -88,7 +99,6 @@ const goalProfiles = {
     recomp: {
         name: "Body Recomposition",
         badge: "Muscle Gain and Fat Loss",
-        adjustment: -0.05,
         proteinPerKg: 2,
         fatPercentage: 0.25,
         description:
@@ -98,7 +108,6 @@ const goalProfiles = {
     bulking: {
         name: "Bulking",
         badge: "Calorie Surplus",
-        adjustment: 0.15,
         proteinPerKg: 1.6,
         fatPercentage: 0.25,
         description:
@@ -163,7 +172,7 @@ function Calories({ user }) {
     const [
         activity,
         setActivity
-    ] = useState(1.55);
+    ] = useState("moderate");
 
 
     // Stores the selected fitness goal.
@@ -186,75 +195,37 @@ function Calories({ user }) {
     // Finds the description for the selected activity level.
     const selectedActivity =
         activityLevels.find(
-            (item) =>
-                item.value ===
-                Number(activity)
+            (item) => item.key === activity
         );
 
 
     // Calculates and caches all calorie and nutrition results.
-    const results =
-        useMemo(() => {
+    const results = useMemo(() => {
+        try {
+            const bmr = calculateBMR({
+                weight: Number(weight),
+                height: Number(height),
+                age: Number(age),
+                gender,
+                unitSystem: "metric"
+            });
 
-            // Converts the form values into numbers.
-            const numericAge =
-                Number(age);
+            const tdee = calculateTDEE(bmr, activity);
 
-            const numericHeight =
-                Number(height);
+            const targetCalories = roundToNearestTen(
+                calculateTargetCalories({
+                    weight: Number(weight),
+                    height: Number(height),
+                    age: Number(age),
+                    gender,
+                    unitSystem: "metric",
+                    activityLevel: activity,
+                    goal
+                })
+            );
 
-            const numericWeight =
-                Number(weight);
-
-            const numericActivity =
-                Number(activity);
-
-
-            // Stops the calculation when an input is invalid.
-            if (
-                numericAge <= 0 ||
-                numericHeight <= 0 ||
-                numericWeight <= 0 ||
-                numericActivity <= 0
-            ) {
-                return null;
-            }
-
-
-            // Selects the gender value used in the BMR formula.
-            const genderConstant =
-                gender === "male"
-                    ? 5
-                    : -161;
-
-
-            // Calculates basal metabolic rate.
-            const bmr =
-                10 * numericWeight +
-                6.25 * numericHeight -
-                5 * numericAge +
-                genderConstant;
-
-
-            // Calculates maintenance calories using the activity level.
-            const tdee =
-                bmr * numericActivity;
-
-
-            // Gets the settings for the selected fitness goal.
-            const selectedGoal =
-                goalProfiles[goal];
-
-
-            // Applies the goal adjustment to the maintenance calories.
-            const targetCalories =
-                roundToNearestTen(
-                    tdee *
-                        (
-                            1 +
-                            selectedGoal.adjustment
-                        )
-                );
+            const selectedGoal = goalProfiles[goal];
+            const numericWeight = Number(weight);
 
 
             // Calculates the daily protein target.
@@ -355,6 +326,9 @@ function Calories({ user }) {
                 calorieDifference,
                 selectedGoal
             };
+        } catch {
+            return null;
+        }
         }, [
             age,
             height,
@@ -371,7 +345,7 @@ function Calories({ user }) {
         setAge(22);
         setHeight(176);
         setWeight(77);
-        setActivity(1.55);
+        setActivity("moderate");
         setGoal("cutting");
     }
 
@@ -719,9 +693,7 @@ function Calories({ user }) {
                                     value={activity}
                                     onChange={(event) =>
                                         setActivity(
-                                            Number(
-                                                event.target.value
-                                            )
+                                            event.target.value
                                         )
                                     }
                                 >
@@ -729,8 +701,8 @@ function Calories({ user }) {
                                     {activityLevels.map(
                                         (item) => (
                                             <option
-                                                key={item.value}
-                                                value={item.value}
+                                                key={item.key}
+                                                value={item.key}
                                             >
                                                 {item.label}
                                             </option>
@@ -809,15 +781,15 @@ function Calories({ user }) {
 
                                             <small>
                                                 {
-                                                    profile.adjustment === 0
+                                                    GOAL_ADJUSTMENTS[goalKey] === 0
                                                         ? "No calorie adjustment"
                                                         : `${
                                                             Math.abs(
-                                                                profile.adjustment *
+                                                                GOAL_ADJUSTMENTS[goalKey] *
                                                                 100
                                                             )
                                                         }% ${
-                                                            profile.adjustment < 0
+                                                            GOAL_ADJUSTMENTS[goalKey] < 0
                                                                 ? "deficit"
                                                                 : "surplus"
                                                         }`

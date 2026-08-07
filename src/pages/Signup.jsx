@@ -10,7 +10,7 @@ import {
     updateProfile
 } from "firebase/auth";
 
-import { auth } from "../firebase";
+import { auth } from "../firebase.jsx";
 import PasswordInput from "../components/PasswordInput";
 
 

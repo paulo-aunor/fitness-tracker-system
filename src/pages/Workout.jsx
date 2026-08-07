@@ -12,6 +12,7 @@ import {
     FaChevronUp,
     FaClock,
     FaDumbbell,
+    FaEdit,
     FaExpandArrowsAlt,
     FaFire,
     FaGripHorizontal,
@@ -33,6 +34,16 @@ import {
 
 import "../workout.css";
 import "../customExercise.css";
+
+// Firestore CRUD wrappers for the "workouts" collection (src/services/firestoreService.js).
+// Used here to save a logged session, load past sessions, edit a saved
+// session's note, and delete a saved session.
+import {
+    addWorkout,
+    deleteWorkout,
+    getWorkouts,
+    updateWorkout
+} from "../services/firestoreService";
 
 // Stores the localStorage key for custom exercises.
 const STORAGE_KEY =
@@ -547,6 +558,43 @@ function Workout({ user }) {
         setFormError
     ] = useState("");
 
+    // Workouts loaded from Firestore (via getWorkouts), shown in the
+    // "Workout History" section below the session builder.
+    const [
+        savedWorkouts,
+        setSavedWorkouts
+    ] = useState([]);
+
+    const [
+        isLoadingHistory,
+        setIsLoadingHistory
+    ] = useState(true);
+
+    const [
+        isSavingWorkout,
+        setIsSavingWorkout
+    ] = useState(false);
+
+    // Separate from formError/formMessage above -- those are for the
+    // custom-exercise form, this is for the history list (load/save/
+    // delete/note errors), so the two don't stomp on each other.
+    const [
+        historyError,
+        setHistoryError
+    ] = useState("");
+
+    // Tracks which saved workout (by id) currently has its note field open
+    // for editing. null means no card is being edited.
+    const [
+        editingNoteId,
+        setEditingNoteId
+    ] = useState(null);
+
+    const [
+        noteDraft,
+        setNoteDraft
+    ] = useState("");
+
     // Gets the user display name or uses a demo name.
     const memberName =
         user?.displayName || "Demo User";
@@ -628,6 +676,33 @@ function Workout({ user }) {
             );
         };
     }, [isTimerRunning]);
+
+    // Load the user's saved workouts from Firestore once, when the page
+    // first mounts. Runs async work inside an inner function since the
+    // useEffect callback itself can't be async directly.
+    useEffect(() => {
+        async function loadHistory() {
+            try {
+                const workouts = await getWorkouts();
+
+                // Show the most recently logged workout first.
+                const sortedWorkouts = [...workouts].sort(
+                    (a, b) =>
+                        new Date(b.loggedAt) - new Date(a.loggedAt)
+                );
+
+                setSavedWorkouts(sortedWorkouts);
+            } catch {
+                setHistoryError(
+                    "Could not load your workout history. Please refresh the page."
+                );
+            } finally {
+                setIsLoadingHistory(false);
+            }
+        }
+
+        loadHistory();
+    }, []);
 
     // Formats elapsed seconds as hours, minutes and seconds.
     function formatTime(seconds) {
@@ -932,6 +1007,92 @@ function Workout({ user }) {
         setSelectedExercises([]);
         setIsTimerRunning(false);
         setElapsedSeconds(0);
+    }
+
+    // Saves the current session (selected exercises + timer) as a new
+    // document in the "workouts" Firestore collection via addWorkout.
+    async function handleSaveWorkout() {
+        if (selectedExercises.length === 0) {
+            return;
+        }
+
+        setIsSavingWorkout(true);
+        setFormError("");
+        setFormMessage("");
+
+        // Trim each exercise down to just the fields worth keeping in the
+        // saved record -- selectedExercises also carries UI-only fields
+        // (key, groupId, difficulty, etc.) that don't need to live in Firestore.
+        const workoutData = {
+            exercises: selectedExercises.map((exercise) => ({
+                name: exercise.name,
+                groupName: exercise.groupName,
+                sets: exercise.sets,
+                reps: exercise.reps
+            })),
+            totalSets,
+            durationSeconds: elapsedSeconds,
+            loggedAt: new Date().toISOString()
+        };
+
+        try {
+            const id = await addWorkout(workoutData);
+
+            // Put the new workout at the top of the history list right
+            // away instead of waiting on a full refetch from Firestore.
+            setSavedWorkouts((current) => [
+                { id, ...workoutData },
+                ...current
+            ]);
+
+            setFormMessage("Workout saved to your history.");
+            clearSession();
+        } catch {
+            setFormError("Could not save this workout. Please try again.");
+        } finally {
+            setIsSavingWorkout(false);
+        }
+    }
+
+    // Deletes a saved workout from Firestore and removes it from the list.
+    async function handleDeleteWorkout(id) {
+        try {
+            await deleteWorkout(id);
+
+            setSavedWorkouts((current) =>
+                current.filter((workout) => workout.id !== id)
+            );
+        } catch {
+            setHistoryError(
+                "Could not delete that workout. Please try again."
+            );
+        }
+    }
+
+    // Opens the note editor on a specific saved workout card.
+    function startEditingNote(workout) {
+        setEditingNoteId(workout.id);
+        setNoteDraft(workout.notes || "");
+    }
+
+    // Saves the note draft to Firestore via updateWorkout, then updates the
+    // matching card in local state so the UI reflects it immediately.
+    async function saveNote(id) {
+        try {
+            await updateWorkout(id, { notes: noteDraft });
+
+            setSavedWorkouts((current) =>
+                current.map((workout) =>
+                    workout.id === id
+                        ? { ...workout, notes: noteDraft }
+                        : workout
+                )
+            );
+
+            setEditingNoteId(null);
+        } catch {
+            setHistoryError("Could not save that note. Please try again.");
+        }
     }
 
     // Displays the complete workout builder interface.
@@ -2139,6 +2300,23 @@ function Workout({ user }) {
                             Reset Timer
                         </button>
 
+                        {/* Saves the current session to Firestore (addWorkout), then
+                            clears it -- disabled while empty or already saving so it
+                            can't be double-clicked into two Firestore writes. */}
+                        <button
+                            type="button"
+                            className="session-start-button"
+                            onClick={handleSaveWorkout}
+                            disabled={
+                                selectedExercises.length === 0 ||
+                                isSavingWorkout
+                            }
+                        >
+                            <FaSave />
+                            {isSavingWorkout
+                                ? "Saving..."
+                                : "Save Workout"}
+                        </button>
 
                         <button
                             type="button"
@@ -2159,6 +2337,129 @@ function Workout({ user }) {
 
                 </section>
 
+                {/*
+                  Workout history, backed by Firestore (addWorkout/getWorkouts/
+                  updateWorkout/deleteWorkout in src/services/firestoreService.js).
+                  Separate section from the exercise-builder layout above --
+                  this just lists what's already been saved.
+                */}
+                <section className="workout-history-section">
+                    <div className="workout-history-header">
+                        <h2>Workout History</h2>
+                        <span>Workouts you have saved to your account.</span>
+                    </div>
+
+                    {historyError && (
+                        <p className="form-error">{historyError}</p>
+                    )}
+
+                    {isLoadingHistory ? (
+                        <p>Loading your workout history...</p>
+                    ) : savedWorkouts.length === 0 ? (
+                        <div className="session-empty">
+                            <FaDumbbell />
+                            <strong>No saved workouts yet</strong>
+                            <p>
+                                Build a session above, then click "Save
+                                Workout" to log it here.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="workout-history-list">
+                            {savedWorkouts.map((workout) => (
+                                <div
+                                    className="workout-history-item"
+                                    key={workout.id}
+                                >
+                                    <div className="workout-history-item-top">
+                                        <strong>
+                                            {new Date(
+                                                workout.loggedAt
+                                            ).toLocaleDateString()}
+                                        </strong>
+
+                                        <span>
+                                            {formatTime(
+                                                workout.durationSeconds
+                                            )}
+                                        </span>
+
+                                        <button
+                                            type="button"
+                                            className="session-remove-button"
+                                            onClick={() =>
+                                                handleDeleteWorkout(
+                                                    workout.id
+                                                )
+                                            }
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    </div>
+
+                                    <p>{workout.totalSets} total sets</p>
+
+                                    <ul>
+                                        {workout.exercises.map(
+                                            (exercise, index) => (
+                                                <li
+                                                    key={`${workout.id}-${index}`}
+                                                >
+                                                    {exercise.name} --{" "}
+                                                    {exercise.sets} x{" "}
+                                                    {exercise.reps}
+                                                </li>
+                                            )
+                                        )}
+                                    </ul>
+
+                                    {editingNoteId === workout.id ? (
+                                        <div className="workout-history-note-edit">
+                                            <input
+                                                type="text"
+                                                value={noteDraft}
+                                                onChange={(event) =>
+                                                    setNoteDraft(
+                                                        event.target.value
+                                                    )
+                                                }
+                                                placeholder="Add a note about this workout..."
+                                            />
+
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    saveNote(workout.id)
+                                                }
+                                            >
+                                                Save Note
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="workout-history-note-display">
+                                            <p>
+                                                {workout.notes ||
+                                                    "No notes yet."}
+                                            </p>
+
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    startEditingNote(workout)
+                                                }
+                                            >
+                                                <FaEdit />
+                                                {workout.notes
+                                                    ? "Edit Note"
+                                                    : "Add Note"}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
             </section>
 
         </main>

@@ -23,4 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#ignore the claude folder
+.claude
 .env.local

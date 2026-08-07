@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 
 import PasswordInput from "../components/PasswordInput";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase.jsx";
 
 
 // Displays the login page and manages demo login data.
@@ -30,12 +32,24 @@ function Login() {
     ] = useState("");
 
 
-    // Opens the dashboard after the login form is submitted.
-    function handleLogin(event) {
-        event.preventDefault();
+    // Stores a login error message, if any.
+    const [
+        error,
+        setError
+    ] = useState("");
 
+
+    // Opens the dashboard after the login form is submitted.
+    async function handleLogin(event) {
+        event.preventDefault();
+    try{
+        await signInWithEmailAndPassword(auth, email,password);
         navigate("/home");
-    }
+    } catch (err) {
+    setError(err.message);
+}
+}
+
 
 
     // Displays the login page interface.
@@ -88,12 +102,13 @@ function Login() {
 
                         <h2>Welcome Back</h2>
 
-                        <p className="subtitle">
-                            Demo mode: enter anything to view
-                            the dashboard.
-                        </p>
-
                     </div>
+
+
+                    {/* Displays a login error message, if any. */}
+                    {error && (
+                        <p style={{ color: "red" }}>{error}</p>
+                    )}
 
 
                     {/* Submits the entered login information. */}
