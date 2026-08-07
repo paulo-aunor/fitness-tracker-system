@@ -35,9 +35,9 @@ import {
 import "../workout.css";
 import "../customExercise.css";
 
-// Firestore CRUD wrappers for the "workouts" collection (src/services/firestoreService.js).
-// Used here to save a logged session, load past sessions, edit a saved
-// session's note, and delete a saved session.
+//firestore CRUD wrappers for the "workouts" collection (src/services/firestoreService.js)
+//used here to save a logged session, load past sessions, edit a saved
+//session's note, and delete a saved session
 import {
     addWorkout,
     deleteWorkout,
@@ -45,9 +45,11 @@ import {
     updateWorkout
 } from "../services/firestoreService";
 
+//localStorage key for exercises the user creates themselves
 const STORAGE_KEY =
     "fittrack-custom-exercises";
 
+//dropdown options for sets/reps/rest time pickers
 const setOptions = [
     1,
     2,
@@ -83,6 +85,7 @@ const difficultyOptions = [
     "Advanced"
 ];
 
+//the 8 muscle groups exercises get filed under
 const muscleGroups = [
     {
         id: "chest",
@@ -142,6 +145,7 @@ const muscleGroups = [
     }
 ];
 
+//builds one built-in exercise entry (isCustom: false separates these from user-added ones)
 function createExercise(
     id,
     name,
@@ -161,6 +165,7 @@ function createExercise(
     };
 }
 
+//built-in exercise library, grouped by muscle group id
 const defaultExercises = {
     chest: [
         createExercise(
@@ -443,6 +448,8 @@ const defaultExercises = {
     ]
 };
 
+//reads user-created exercises out of localStorage, falls back to [] if
+//nothing saved yet or the saved data is corrupted
 function loadCustomExercises() {
     try {
         const saved =
@@ -470,6 +477,7 @@ function loadCustomExercises() {
     }
 }
 
+//unique id for a new custom exercise, uses randomUUID when available
 function generateExerciseId() {
     if (
         window.crypto &&
@@ -485,26 +493,32 @@ function generateExerciseId() {
 function Workout({ user }) {
     const navigate = useNavigate();
 
+    //which muscle group tab is currently shown
     const [
         selectedGroup,
         setSelectedGroup
     ] = useState("chest");
 
+    //exercises added to the current (unsaved) session, each with its own sets/reps
     const [
         selectedExercises,
         setSelectedExercises
     ] = useState([]);
 
+    //user-created exercises, persisted to localStorage (see useEffect below)
     const [
         customExercises,
         setCustomExercises
     ] = useState(loadCustomExercises);
 
+    //per-exercise sets/reps overrides, keyed by createExerciseKey() so they
+    //persist even when switching muscle groups and back
     const [
         exerciseSettings,
         setExerciseSettings
     ] = useState({});
 
+    //workout timer state
     const [
         elapsedSeconds,
         setElapsedSeconds
@@ -515,6 +529,7 @@ function Workout({ user }) {
         setIsTimerRunning
     ] = useState(false);
 
+    //form values for adding a new custom exercise
     const [
         customForm,
         setCustomForm
@@ -527,6 +542,7 @@ function Workout({ user }) {
         difficulty: "Beginner"
     });
 
+    //success/error text for the custom exercise form and the save-workout action
     const [
         formMessage,
         setFormMessage
@@ -580,12 +596,14 @@ function Workout({ user }) {
     const memberEmail =
         user?.email || "demo@fitness.com";
 
+    //full muscleGroups entry for whichever group is selected
     const activeGroup =
         muscleGroups.find(
             (group) =>
                 group.id === selectedGroup
         );
 
+    //built-in + custom exercises for the currently selected muscle group
     const activeExercises =
         useMemo(() => {
             const builtIn =
@@ -609,6 +627,7 @@ function Workout({ user }) {
             customExercises
         ]);
 
+    //sum of sets across every exercise in the current session
     const totalSets =
         useMemo(() => {
             return selectedExercises.reduce(
@@ -619,6 +638,7 @@ function Workout({ user }) {
             );
         }, [selectedExercises]);
 
+    //persists customExercises to localStorage whenever it changes
     useEffect(() => {
         localStorage.setItem(
             STORAGE_KEY,
@@ -628,6 +648,7 @@ function Workout({ user }) {
         );
     }, [customExercises]);
 
+    //ticks elapsedSeconds up by 1 every second while the timer is running
     useEffect(() => {
         if (!isTimerRunning) {
             return undefined;
@@ -648,15 +669,15 @@ function Workout({ user }) {
         };
     }, [isTimerRunning]);
 
-    // Load the user's saved workouts from Firestore once, when the page
-    // first mounts. Runs async work inside an inner function since the
-    // useEffect callback itself can't be async directly.
+    //load the user's saved workouts from firestore once, when the page
+    //first mounts. runs async work inside an inner function since the
+    //useEffect callback itself can't be async directly
     useEffect(() => {
         async function loadHistory() {
             try {
                 const workouts = await getWorkouts();
 
-                // Show the most recently logged workout first.
+                //show the most recently logged workout first
                 const sortedWorkouts = [...workouts].sort(
                     (a, b) =>
                         new Date(b.loggedAt) - new Date(a.loggedAt)
@@ -675,6 +696,7 @@ function Workout({ user }) {
         loadHistory();
     }, []);
 
+    //formats a seconds count as HH:MM:SS for the timer display
     function formatTime(seconds) {
         const hours =
             Math.floor(
@@ -704,6 +726,8 @@ function Workout({ user }) {
             .join(":");
     }
 
+    //unique key for one exercise within one muscle group, used to track
+    //per-exercise settings and session selection
     function createExerciseKey(
         exercise,
         groupId = selectedGroup
@@ -711,6 +735,7 @@ function Workout({ user }) {
         return `${groupId}-${exercise.id}`;
     }
 
+    //current sets/reps for an exercise -- either a saved override, or the exercise's own defaults
     function getExerciseSettings(
         exercise
     ) {
@@ -729,6 +754,7 @@ function Workout({ user }) {
         );
     }
 
+    //saves a sets/reps override for one exercise (used before it's added to the session)
     function updateExerciseSetting(
         exercise,
         field,
@@ -757,6 +783,7 @@ function Workout({ user }) {
         );
     }
 
+    //toggles an exercise in/out of the current session
     function addOrRemoveExercise(
         exercise
     ) {
@@ -809,6 +836,7 @@ function Workout({ user }) {
         );
     }
 
+    //updates sets/reps for an exercise that's already in the session
     function updateSessionExercise(
         key,
         field,
@@ -831,6 +859,7 @@ function Workout({ user }) {
         );
     }
 
+    //updates one field in the custom-exercise form
     function updateCustomForm(
         field,
         value
@@ -843,6 +872,7 @@ function Workout({ user }) {
         );
     }
 
+    //validates + saves a new custom exercise, then switches to its muscle group
     function addCustomExercise(
         event
     ) {
@@ -937,6 +967,7 @@ function Workout({ user }) {
         );
     }
 
+    //removes a custom exercise entirely, and drops it from the session if it was added
     function deleteCustomExercise(
         exercise
     ) {
@@ -964,14 +995,15 @@ function Workout({ user }) {
         );
     }
 
+    //clears the current session and resets the timer, without saving anything
     function clearSession() {
         setSelectedExercises([]);
         setIsTimerRunning(false);
         setElapsedSeconds(0);
     }
 
-    // Saves the current session (selected exercises + timer) as a new
-    // document in the "workouts" Firestore collection via addWorkout.
+    //saves the current session (selected exercises + timer) as a new
+    //document in the "workouts" firestore collection via addWorkout
     async function handleSaveWorkout() {
         if (selectedExercises.length === 0) {
             return;
@@ -981,9 +1013,9 @@ function Workout({ user }) {
         setFormError("");
         setFormMessage("");
 
-        // Trim each exercise down to just the fields worth keeping in the
-        // saved record -- selectedExercises also carries UI-only fields
-        // (key, groupId, difficulty, etc.) that don't need to live in Firestore.
+        //trim each exercise down to just the fields worth keeping in the
+        //saved record -- selectedExercises also carries UI-only fields
+        //(key, groupId, difficulty, etc.) that don't need to live in firestore
         const workoutData = {
             exercises: selectedExercises.map((exercise) => ({
                 name: exercise.name,
@@ -999,8 +1031,8 @@ function Workout({ user }) {
         try {
             const id = await addWorkout(workoutData);
 
-            // Put the new workout at the top of the history list right
-            // away instead of waiting on a full refetch from Firestore.
+            //put the new workout at the top of the history list right
+            //away instead of waiting on a full refetch from firestore
             setSavedWorkouts((current) => [
                 { id, ...workoutData },
                 ...current
@@ -1015,7 +1047,7 @@ function Workout({ user }) {
         }
     }
 
-    // Deletes a saved workout from Firestore and removes it from the list.
+    //deletes a saved workout from firestore and removes it from the list
     async function handleDeleteWorkout(id) {
         try {
             await deleteWorkout(id);
@@ -1030,14 +1062,14 @@ function Workout({ user }) {
         }
     }
 
-    // Opens the note editor on a specific saved workout card.
+    //opens the note editor on a specific saved workout card
     function startEditingNote(workout) {
         setEditingNoteId(workout.id);
         setNoteDraft(workout.notes || "");
     }
 
-    // Saves the note draft to Firestore via updateWorkout, then updates the
-    // matching card in local state so the UI reflects it immediately.
+    //saves the note draft to firestore via updateWorkout, then updates the
+    //matching card in local state so the UI reflects it immediately
     async function saveNote(id) {
         try {
             await updateWorkout(id, { notes: noteDraft });
@@ -1058,6 +1090,7 @@ function Workout({ user }) {
 
     return (
         <main className="dashboard-page">
+            {/* sidebar nav, same on every dashboard page */}
             <aside className="dashboard-sidebar">
                 <div className="dashboard-logo">
                     <div className="dashboard-logo-icon">
@@ -1150,6 +1183,7 @@ function Workout({ user }) {
             </aside>
 
             <section className="dashboard-content workout-content">
+                {/* exercise count, total sets, elapsed time -- all read from state above */}
                 <header className="workout-page-header">
                     <div className="workout-heading">
                         <p className="workout-kicker">
@@ -1202,6 +1236,7 @@ function Workout({ user }) {
                     </div>
                 </header>
 
+                {/* form for adding a custom exercise, calls addCustomExercise on submit */}
                 <section className="custom-exercise-section">
                     <div className="custom-exercise-heading">
                         <div>
@@ -1484,6 +1519,7 @@ function Workout({ user }) {
                     </form>
                 </section>
 
+                {/* muscle group tabs -- clicking one sets selectedGroup, which drives activeExercises below */}
                 <section className="muscle-section">
                     <div className="workout-section-heading">
                         <div>
@@ -1568,6 +1604,7 @@ function Workout({ user }) {
                     </div>
                 </section>
 
+                {/* left: exercise picker for the selected muscle group. right: the session-in-progress panel */}
                 <section className="workout-exercise-layout">
                     <div className="exercise-library">
                         <div className="workout-section-heading">
@@ -1809,6 +1846,7 @@ function Workout({ user }) {
                         </div>
                     </div>
 
+                    {/* current (unsaved) session -- exercises, timer, and the save/clear actions */}
                     <aside className="session-panel">
                         <div className="session-panel-header">
                             <div>
@@ -2091,9 +2129,9 @@ function Workout({ user }) {
                             Reset Timer
                         </button>
 
-                        {/* Saves the current session to Firestore (addWorkout), then
+                        {/* saves the current session to firestore (addWorkout), then
                             clears it -- disabled while empty or already saving so it
-                            can't be double-clicked into two Firestore writes. */}
+                            can't be double-clicked into two firestore writes */}
                         <button
                             type="button"
                             className="session-start-button"
@@ -2127,10 +2165,10 @@ function Workout({ user }) {
                 </section>
 
                 {/*
-                  Workout history, backed by Firestore (addWorkout/getWorkouts/
+                  workout history, backed by firestore (addWorkout/getWorkouts/
                   updateWorkout/deleteWorkout in src/services/firestoreService.js).
-                  Separate section from the exercise-builder layout above --
-                  this just lists what's already been saved.
+                  separate section from the exercise-builder layout above --
+                  this just lists what's already been saved
                 */}
                 <section className="workout-history-section">
                     <div className="workout-history-header">

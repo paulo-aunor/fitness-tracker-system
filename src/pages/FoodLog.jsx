@@ -20,15 +20,18 @@ import {
   FaUserCircle,
   FaUtensils,
 } from "react-icons/fa";
+//function to search food by query, used by the "search online" section below
 import { searchFoods } from "../services/foodApi";
 
 import "../foodLog.css";
 import "../gymFoodLibrary.css";
 
+//localStorage keys for the two things this page persists
 const FOOD_STORAGE_KEY = "fittrack-food-log";
 
 const TARGET_STORAGE_KEY = "fittrack-food-targets";
 
+//the four meal sections a food entry can belong to
 const mealTypes = [
   {
     id: "breakfast",
@@ -52,6 +55,7 @@ const mealTypes = [
   },
 ];
 
+//starting nutrition targets, used until the user overrides them (and again if they hit "Reset Targets")
 const defaultTargets = {
   calories: 2100,
   protein: 170,
@@ -61,6 +65,7 @@ const defaultTargets = {
   waterMl: 2700,
 };
 
+//category filter options for the local gym food library below
 const foodCategories = [
   "All",
   "Protein",
@@ -71,6 +76,8 @@ const foodCategories = [
   "Vegetables",
 ];
 
+//local curated food list (per-100g/per-serving values), separate from the
+//live Open Food Facts search -- this is a fixed list, not fetched from anywhere
 const suggestedFoods = [
   {
     id: "chicken-breast",
@@ -338,6 +345,7 @@ const suggestedFoods = [
   },
 ];
 
+//blank starting point for the add/edit food form
 const emptyFoodForm = {
   name: "",
   meal: "breakfast",
@@ -350,6 +358,7 @@ const emptyFoodForm = {
   fiber: "",
 };
 
+//shape of one day's log: foods grouped by meal, plus water intake
 function createEmptyDay() {
   return {
     meals: {
@@ -362,6 +371,8 @@ function createEmptyDay() {
   };
 }
 
+//turns a Date into a YYYY-MM-DD string in local time (not UTC), used as
+//the key for foodDays and for the date input's value
 function createLocalDateValue(date = new Date()) {
   const year = date.getFullYear();
 
@@ -372,6 +383,8 @@ function createLocalDateValue(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
+//reads the saved food log out of localStorage, falls back to {} if nothing
+//saved yet or if the saved data is corrupted/unparseable
 function loadFoodDays() {
   try {
     const saved = localStorage.getItem(FOOD_STORAGE_KEY);
@@ -390,6 +403,7 @@ function loadFoodDays() {
   }
 }
 
+//same idea as loadFoodDays but for nutrition targets, falls back to defaultTargets
 function loadTargets() {
   try {
     const saved = localStorage.getItem(TARGET_STORAGE_KEY);
@@ -411,6 +425,8 @@ function loadTargets() {
   }
 }
 
+//generates a unique id for a new food entry, uses randomUUID when the
+//browser supports it, otherwise falls back to a timestamp-based id
 function createId() {
   if (window.crypto && typeof window.crypto.randomUUID === "function") {
     return window.crypto.randomUUID();
@@ -419,18 +435,23 @@ function createId() {
   return `food-${Date.now()}`;
 }
 
+//safely converts a form value (which could be "", undefined, etc.) into a
+//real number, defaulting to 0 instead of NaN
 function toNumber(value) {
   const number = Number(value);
 
   return Number.isFinite(number) ? number : 0;
 }
 
+//rounds to one decimal place for display, but drops the decimal entirely
+//if the value is a whole number (so "165" instead of "165.0")
 function formatValue(value) {
   const rounded = Math.round(value * 10) / 10;
 
   return Number.isInteger(rounded) ? rounded : rounded.toFixed(1);
 }
 
+//scales one food entry's per-serving nutrition by how many servings were logged
 function calculateFoodNutrition(food) {
   const servings = toNumber(food.servings);
 
@@ -447,6 +468,7 @@ function calculateFoodNutrition(food) {
   };
 }
 
+//sums calculateFoodNutrition across every food in one meal (e.g. all of breakfast)
 function calculateMealTotals(foods) {
   return foods.reduce(
     (totals, food) => {
@@ -474,6 +496,8 @@ function calculateMealTotals(foods) {
   );
 }
 
+//how far along a target the current value is, as a percentage capped at 100
+//(used for the progress bars), returns 0 if target is missing/invalid instead of dividing by 0
 function calculateProgress(current, target) {
   if (!target || target <= 0) {
     return 0;
@@ -485,14 +509,19 @@ function calculateProgress(current, target) {
 function FoodLog({ user }) {
   const navigate = useNavigate();
 
+  //which day's log is currently shown
   const [selectedDate, setSelectedDate] = useState(createLocalDateValue());
 
+  //every day's log, keyed by date string, loaded from localStorage once on mount
   const [foodDays, setFoodDays] = useState(loadFoodDays);
 
+  //nutrition targets, also loaded from localStorage once on mount
   const [targets, setTargets] = useState(loadTargets);
 
+  //current values in the add/edit food form
   const [foodForm, setFoodForm] = useState(emptyFoodForm);
 
+  //the food entry being edited, or null when adding a brand new one
   const [editingFood, setEditingFood] = useState(null);
 
   const [quickAdd, setQuickAdd] = useState({
@@ -501,14 +530,18 @@ function FoodLog({ user }) {
     calories: "",
   });
 
+  //success/validation text shown under the add/edit form
   const [formMessage, setFormMessage] = useState("");
 
+  //search + category filter for the local suggestedFoods list
   const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  //search text for the live Open Food Facts search (separate from the local search above)
   const [apiSearchTerm, setApiSearchTerm] = useState("");
 
+  //results returned from the last Open Food Facts search
   const [apiResults, setApiResults] = useState([]);
 
   const [isSearching, setIsSearching] = useState(false);
@@ -519,8 +552,10 @@ function FoodLog({ user }) {
 
   const memberEmail = user?.email || "demo@fitness.com";
 
+  //today's log, or a blank one if nothing's been logged for this date yet
   const dayData = foodDays[selectedDate] || createEmptyDay();
 
+  //filters suggestedFoods by search text + category, recalculated only when those change
   const filteredFoods = useMemo(() => {
     const cleanedSearch = searchTerm.trim().toLowerCase();
 
@@ -535,6 +570,7 @@ function FoodLog({ user }) {
     });
   }, [searchTerm, selectedCategory]);
 
+  //nutrition totals per meal for the selected day
   const mealTotals = useMemo(() => {
     const result = {};
 
@@ -545,6 +581,7 @@ function FoodLog({ user }) {
     return result;
   }, [dayData]);
 
+  //adds mealTotals together into one grand total for the whole day
   const dailyTotals = useMemo(() => {
     return mealTypes.reduce(
       (totals, meal) => {
@@ -572,6 +609,7 @@ function FoodLog({ user }) {
     );
   }, [mealTotals]);
 
+  //persists foodDays/targets to localStorage every time either one changes
   useEffect(() => {
     localStorage.setItem(FOOD_STORAGE_KEY, JSON.stringify(foodDays));
   }, [foodDays]);
@@ -580,6 +618,7 @@ function FoodLog({ user }) {
     localStorage.setItem(TARGET_STORAGE_KEY, JSON.stringify(targets));
   }, [targets]);
 
+  //helper for updating just the selected day's data without touching other days
   function updateDay(updater) {
     setFoodDays((currentDays) => {
       const currentDay = currentDays[selectedDate] || createEmptyDay();
@@ -599,6 +638,7 @@ function FoodLog({ user }) {
     }));
   }
 
+  //fills the add/edit form from a food clicked in the local suggestedFoods grid
   function loadSuggestedFood(food) {
     setEditingFood(null);
 
@@ -624,10 +664,10 @@ function FoodLog({ user }) {
     }, 50);
   }
 
-  // Same idea as loadSuggestedFood above, but for a result that came back
-  // from the Open Food Facts API instead of the local suggestedFoods list.
-  // API results don't include a servingSize (values are per 100g), so we
-  // hardcode "100 g" here instead of reading it off the food object.
+  //same idea as loadSuggestedFood above, but for a result that came back
+  //from the Open Food Facts API instead of the local suggestedFoods list.
+  //api results don't include a servingSize (values are per 100g), so
+  //hardcode "100 g" here instead of reading it off the food object
   function loadApiFood(food) {
     setEditingFood(null);
 
@@ -653,12 +693,12 @@ function FoodLog({ user }) {
     }, 50);
   }
 
-  // Runs when the "search online" form is submitted. searchFoods() is async
-  // (it hits a real API), so it can't live in a useMemo like filteredFoods
-  // does above -- it needs to be a real event handler with its own loading
-  // and error state instead.
+  //runs when the "search online" form is submitted. searchFoods() is async
+  //(it hits a real api), so it can't live in a useMemo like filteredFoods
+  //does above -- it needs to be a real event handler with its own loading
+  //and error state instead
   async function handleApiSearch(event) {
-    // Stop the browser's default full-page form submit/reload.
+    //stop the browser's default full-page form submit/reload
     event.preventDefault();
 
     setIsSearching(true);
@@ -668,14 +708,15 @@ function FoodLog({ user }) {
       const results = await searchFoods(apiSearchTerm);
       setApiResults(results);
     } catch {
-      // searchFoods throws on a failed request (bad response status) --
-      // catch it here so a network hiccup doesn't crash the page.
+      //searchFoods throws on a failed request (bad response status) --
+      //catch it here so a network hiccup doesn't crash the page
       setSearchError("Could not search Open Food Facts. Please try again.");
     } finally {
       setIsSearching(false);
     }
   }
 
+  //clears the form back to blank, keeping whichever meal was selected (or the one passed in)
   function resetFoodForm(meal = "breakfast") {
     setFoodForm({
       ...emptyFoodForm,
@@ -686,6 +727,7 @@ function FoodLog({ user }) {
     setFormMessage("");
   }
 
+  //validates + saves the food form, either as a new entry or replacing the one being edited
   function handleSaveFood(event) {
     event.preventDefault();
 
@@ -730,6 +772,9 @@ function FoodLog({ user }) {
         snacks: [...currentDay.meals.snacks],
       };
 
+      //if editing, remove the old copy of this food from whichever meal it
+      //was in before adding the updated version back in (possibly to a
+      //different meal, if the user changed it)
       if (editingFood) {
         mealTypes.forEach((meal) => {
           updatedMeals[meal.id] = updatedMeals[meal.id].filter(
@@ -758,6 +803,7 @@ function FoodLog({ user }) {
     setEditingFood(null);
   }
 
+  //loads an already-logged food back into the form for editing
   function handleEditFood(food) {
     setEditingFood(food);
 
@@ -792,11 +838,14 @@ function FoodLog({ user }) {
       },
     }));
 
+    //if the food being deleted is also the one currently loaded in the edit
+    //form, clear the form so it's not left pointing at a deleted entry
     if (editingFood?.id === foodId) {
       resetFoodForm(mealId);
     }
   }
 
+  //adds a calories-only entry (no macros) from the quick add panel
   function handleQuickAdd(event) {
     event.preventDefault();
 
@@ -863,6 +912,7 @@ function FoodLog({ user }) {
     }));
   }
 
+  //moves selectedDate forward/backward by the given number of days
   function changeDate(days) {
     const currentDate = new Date(`${selectedDate}T12:00:00`);
 
@@ -871,6 +921,7 @@ function FoodLog({ user }) {
     setSelectedDate(createLocalDateValue(currentDate));
   }
 
+  //remaining amounts for the "daily status" panel, can go negative if over target
   const calorieRemaining = targets.calories - dailyTotals.calories;
 
   const proteinRemaining = targets.protein - dailyTotals.protein;
@@ -879,6 +930,7 @@ function FoodLog({ user }) {
 
   return (
     <main className="dashboard-page">
+      {/* sidebar nav, same on every dashboard page */}
       <aside className="dashboard-sidebar">
         <div className="dashboard-logo">
           <div className="dashboard-logo-icon">
@@ -911,6 +963,7 @@ function FoodLog({ user }) {
             <span>Workouts</span>
           </button>
 
+          {/* current page, marked active */}
           <button
             type="button"
             className="sidebar-link active"
@@ -970,6 +1023,7 @@ function FoodLog({ user }) {
             <p>Track meals, calories, macros, fiber and daily water intake.</p>
           </div>
 
+          {/* date picker + prev/next/today buttons, all drive selectedDate */}
           <div className="date-controller">
             <button type="button" onClick={() => changeDate(-1)}>
               ‹
@@ -999,6 +1053,8 @@ function FoodLog({ user }) {
           </div>
         </header>
 
+        {/* local curated food list -- search + category filter over suggestedFoods,
+            clicking a card calls loadSuggestedFood to fill the form below */}
         <section className="gym-food-library">
           <div className="gym-food-library-header">
             <div>
@@ -1089,12 +1145,12 @@ function FoodLog({ user }) {
         </section>
 
         {/*
-          Separate section for live Open Food Facts search, kept apart from
-          the curated gym-food-library above. Reuses the same
+          separate section for live Open Food Facts search, kept apart from
+          the curated gym-food-library above. reuses the same
           gym-food-search / gym-food-grid / gym-food-card classes so it looks
-          consistent, but this list has no category filter (the API doesn't
+          consistent, but this list has no category filter (the api doesn't
           return one) and it only ever holds whatever the last search
-          returned, not a fixed local list.
+          returned, not a fixed local list
         */}
         <section className="gym-food-library">
           <div className="gym-food-library-header">
@@ -1108,8 +1164,8 @@ function FoodLog({ user }) {
             </div>
 
             {/* onSubmit instead of onChange -- searches on button click,
-                not on every keystroke, so we're not hitting the API on
-                every character typed. */}
+                not on every keystroke, so we're not hitting the api on
+                every character typed */}
             <form onSubmit={handleApiSearch} className="gym-food-search">
               <FaSearch />
               <input
@@ -1128,8 +1184,8 @@ function FoodLog({ user }) {
 
           {!isSearching && apiResults.length > 0 && (
             <div className="gym-food-grid">
-              {/* API results have no stable id like the local list does, so
-                  the key is built from name + index instead. */}
+              {/* api results have no stable id like the local list does, so
+                  the key is built from name + index instead */}
               {apiResults.map((food, index) => (
                 <article className="gym-food-card" key={`${food.name}-${index}`}>
                   <div className="gym-food-card-top">
@@ -1171,6 +1227,7 @@ function FoodLog({ user }) {
           </p>
         </section>
 
+        {/* calories/protein/carbs/fat/fiber progress cards for the selected day */}
         <section className="food-summary-grid">
           {[
             {
@@ -1233,6 +1290,7 @@ function FoodLog({ user }) {
         </section>
 
         <section className="food-log-main-grid">
+          {/* the add/edit food form -- id used by scrollIntoView calls elsewhere in this file */}
           <article
             className="food-log-panel add-food-panel"
             id="food-entry-form"
@@ -1313,6 +1371,8 @@ function FoodLog({ user }) {
                   />
                 </div>
 
+                {/* remaining nutrition fields, built from a list instead of
+                    five near-identical <div> blocks */}
                 {[
                   {
                     id: "foodCalories",
@@ -1380,6 +1440,7 @@ function FoodLog({ user }) {
           </article>
 
           <div className="food-log-side-column">
+            {/* water tracker */}
             <article className="food-log-panel water-panel">
               <div className="food-panel-heading">
                 <div className="food-panel-icon">
@@ -1425,6 +1486,7 @@ function FoodLog({ user }) {
               </div>
             </article>
 
+            {/* quick add -- logs calories only, no macro breakdown */}
             <article className="food-log-panel quick-add-panel">
               <div className="food-panel-heading">
                 <div className="food-panel-icon">
@@ -1487,6 +1549,7 @@ function FoodLog({ user }) {
               </form>
             </article>
 
+            {/* remaining calories/protein/fiber for the day, warns (red) if over on calories */}
             <article className="food-log-panel nutrition-status-panel">
               <div className="food-panel-heading">
                 <div className="food-panel-icon">
@@ -1525,6 +1588,7 @@ function FoodLog({ user }) {
           </div>
         </section>
 
+        {/* editable nutrition targets, saved to localStorage via the useEffect above */}
         <section className="food-log-panel targets-panel">
           <div className="food-panel-heading">
             <div className="food-panel-icon">
@@ -1584,6 +1648,7 @@ function FoodLog({ user }) {
           </div>
         </section>
 
+        {/* one card per meal, listing every food logged to it for the selected day */}
         <section className="meal-section-grid">
           {mealTypes.map((meal) => {
             const foods = dayData.meals[meal.id] || [];

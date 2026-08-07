@@ -32,6 +32,9 @@ import {
   GOAL_ADJUSTMENTS,
 } from "../utils/calculations";
 
+//list of activity levels for the dropdown
+//key matches the ACTIVITY_MULTIPLIERS keys in calculations.js, value is only
+//used for display/legacy reasons, key is what actually gets sent to calculateTDEE
 const activityLevels = [
   {
     key: "sedentary",
@@ -65,6 +68,9 @@ const activityLevels = [
   },
 ];
 
+//display info + macro settings for each fitness goal
+//the actual calorie adjustment percentage lives in GOAL_ADJUSTMENTS
+//(calculations.js), not here, so there's only one source of truth for it
 const goalProfiles = {
   maintenance: {
     name: "Maintenance",
@@ -100,10 +106,12 @@ const goalProfiles = {
   },
 };
 
+//rounds a calorie number to the nearest 10, just for cleaner display
 function roundToNearestTen(value) {
   return Math.round(value / 10) * 10;
 }
 
+//formats a number with thousands separators (e.g. 2400 -> "2,400")
 function formatNumber(value) {
   return new Intl.NumberFormat("en-US").format(value);
 }
@@ -111,24 +119,25 @@ function formatNumber(value) {
 function Calories({ user }) {
   const navigate = useNavigate();
 
+  //form inputs, all controlled state
   const [gender, setGender] = useState("male");
-
   const [age, setAge] = useState(22);
-
   const [height, setHeight] = useState(176);
-
   const [weight, setWeight] = useState(77);
-
   const [activity, setActivity] = useState("moderate");
-
   const [goal, setGoal] = useState("cutting");
 
   const memberName = user?.displayName || "Demo User";
 
   const memberEmail = user?.email || "demo@fitness.com";
 
+  //looks up the full activityLevels entry for the description text under the dropdown
   const selectedActivity = activityLevels.find((item) => item.key === activity);
 
+  //recalculates bmr/tdee/target calories/macros whenever an input changes
+  //wrapped in try/catch since calculateBMR etc. throw on invalid input (e.g.
+  //while the user is mid-typing and a field is temporarily empty/0) -- that
+  //should show the "invalid" state below, not crash the page
   const results = useMemo(() => {
     try {
       const bmr = calculateBMR({
@@ -155,18 +164,25 @@ function Calories({ user }) {
 
       const selectedGoal = goalProfiles[goal];
       const numericWeight = Number(weight);
+
+      //protein target from goal's g-per-kg setting
       const protein = Math.round(numericWeight * selectedGoal.proteinPerKg);
+      //fat target as a percentage of total calories, converted from kcal to grams (9 kcal/g)
       const fat = Math.round((targetCalories * selectedGoal.fatPercentage) / 9);
       const proteinCalories = protein * 4;
       const fatCalories = fat * 9;
+      //whatever calories are left after protein/fat go to carbs
       const remainingCalories = Math.max(
         0,
         targetCalories - proteinCalories - fatCalories,
       );
 
       const carbs = Math.round(remainingCalories / 4);
+      //rough fiber estimate: 14g per 1000 kcal
       const fiber = Math.round((targetCalories / 1000) * 14);
+      //rough water estimate: 35ml per kg of bodyweight
       const waterLitres = Number(((numericWeight * 35) / 1000).toFixed(1));
+      //how far the target is from maintenance calories (negative = deficit)
       const calorieDifference = Math.round(targetCalories - tdee);
 
       return {
@@ -184,10 +200,13 @@ function Calories({ user }) {
         selectedGoal,
       };
     } catch {
+      //invalid input (age/height/weight <= 0, etc) -- results panel shows
+      //the "Enter valid information" message instead
       return null;
     }
   }, [age, height, weight, activity, gender, goal]);
 
+  //puts every input back to its starting value
   function resetCalculator() {
     setGender("male");
     setAge(22);
@@ -199,6 +218,7 @@ function Calories({ user }) {
 
   return (
     <main className="dashboard-page">
+      {/* sidebar nav, same on every dashboard page */}
       <aside className="dashboard-sidebar">
         <div className="dashboard-logo">
           <div className="dashboard-logo-icon">
@@ -235,6 +255,7 @@ function Calories({ user }) {
             <span>Food Log</span>
           </button>
 
+          {/* current page, marked active */}
           <button
             type="button"
             className="sidebar-link active"
@@ -298,6 +319,7 @@ function Calories({ user }) {
         </header>
 
         <section className="calculator-layout">
+          {/* left panel: all the user's inputs */}
           <article className="calculator-panel">
             <div className="calculator-panel-heading">
               <div className="calculator-heading-icon">
@@ -312,6 +334,7 @@ function Calories({ user }) {
             </div>
 
             <div className="calculator-form-grid">
+              {/* gender toggle, feeds the +5/-161 constant in calculateBMR */}
               <div className="calculator-field full-width-field">
                 <label>Gender</label>
 
@@ -400,6 +423,8 @@ function Calories({ user }) {
                 </div>
               </div>
 
+              {/* value stored here is the activity KEY (e.g. "moderate"), not
+                  the numeric multiplier -- calculateTDEE needs the key */}
               <div className="calculator-field full-width-field">
                 <label htmlFor="activity">Activity Level</label>
 
@@ -423,6 +448,9 @@ function Calories({ user }) {
               </div>
             </div>
 
+            {/* goal cards -- clicking one sets `goal`, which drives both the
+                calorie adjustment (via GOAL_ADJUSTMENTS) and the macro split
+                (via goalProfiles) */}
             <div className="goal-section">
               <div className="goal-section-heading">
                 <FaBullseye />
@@ -448,6 +476,9 @@ function Calories({ user }) {
 
                     <span>{profile.badge}</span>
 
+                    {/* pulls the adjustment % straight from GOAL_ADJUSTMENTS
+                        so this label can never drift out of sync with the
+                        actual math in calculateTargetCalories */}
                     <small>
                       {GOAL_ADJUSTMENTS[goalKey] === 0
                         ? "No calorie adjustment"
@@ -463,6 +494,8 @@ function Calories({ user }) {
             </div>
           </article>
 
+          {/* right panel: the calculated results, or an error state if
+              results is null (invalid input) */}
           <article className="calculator-panel">
             <div className="calculator-panel-heading">
               <div className="calculator-heading-icon">
@@ -630,6 +663,7 @@ function Calories({ user }) {
                 </div>
               </>
             ) : (
+              //shown when results is null, i.e. calculateBMR/TDEE/TargetCalories threw
               <div className="invalid-result">
                 <FaCalculator />
 
