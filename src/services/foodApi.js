@@ -6,7 +6,11 @@ export async function searchFoods(query) {
     return [];
   }
 
-  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1`;
+  // Using the v2 API here instead of the legacy cgi/search.pl endpoint --
+  // the legacy endpoint doesn't send CORS headers, so browser fetch() calls
+  // to it are always blocked. v2 supports CORS and returns the same
+  // products/nutriments shape, so the mapping logic below didn't need to change.
+  const url = `https://world.openfoodfacts.org/api/v2/search?search_terms=${encodeURIComponent(query)}&fields=product_name,nutriments`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(
@@ -22,6 +26,7 @@ export async function searchFoods(query) {
     protein: item.nutriments?.["proteins_100g"] ?? 0,
     carbs: item.nutriments?.["carbohydrates_100g"] ?? 0,
     fat: item.nutriments?.["fat_100g"] ?? 0,
+    fiber: item.nutriments?.["fiber_100g"] ?? 0,
   }));
 
   return items;

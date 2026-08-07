@@ -10,11 +10,11 @@ const ACTIVITY_MULTIPLIERS = {
 };
 
 //object to hold the values for gain and loss goals
-const GOAL_ADJUSTMENTS = {
-  lose: -500,
-  maintain: 0,
-  gain: 500,
-  bodyRecomposition: 250,
+export const GOAL_ADJUSTMENTS = {
+  maintenance: 0,
+  cutting: -0.2,
+  recomp: -0.05,
+  bulking: 0.15,
 };
 
 //function to convert every value from english (lb, etc) to metric (kg, etc)
@@ -86,5 +86,5 @@ export function calculateTargetCalories({
   if (!(goal in GOAL_ADJUSTMENTS)) {
     throw new Error(`Goal is not valid`);
   }
-  return Math.round(tdee + GOAL_ADJUSTMENTS[goal]);
+  return Math.round(tdee * (1 + GOAL_ADJUSTMENTS[goal]));
 }
