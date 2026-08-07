@@ -11,17 +11,21 @@ import { db } from "../firebase";
 
 //function to add Workout to db
 export async function addWorkout(data) {
+  //throws if data is missing or an empty object, instead of writing a blank doc
   if (data == null || Object.keys(data).length === 0) {
     throw new Error(`Data is null/empty. Please check`);
   }
   //variable to store collection of workouts for addDoc
   const docRef = await addDoc(collection(db, "workouts"), data);
+  //returns the new doc's id so the caller can reference it right away
   return docRef.id;
 }
 
 //function to get Workout from db
 export async function getWorkouts() {
   const snapshot = await getDocs(collection(db, "workouts"));
+  //maps each doc into a plain object with its id included, since
+  //snapshot.docs only gives you doc.data() and doc.id separately
   const items = snapshot.docs.map((docSnapshot) => ({
     id: docSnapshot.id,
     ...docSnapshot.data(),
@@ -31,9 +35,12 @@ export async function getWorkouts() {
 
 //function to update Workouts in db
 export async function updateWorkout(id, data) {
+  //throws if id is missing OR data is missing/empty -- either one being bad is enough to reject
   if (!id || data == null || Object.keys(data).length === 0) {
     throw new Error(`Data is null/empty. Please check`);
   }
+  //doc(db, "workouts", id) points at one specific document, unlike collection() above
+  //updateDoc merges these fields in, it doesn't replace the whole document
   await updateDoc(doc(db, "workouts", id), data);
   return `Updates are done`;
 }

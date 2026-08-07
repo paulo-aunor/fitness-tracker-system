@@ -9,7 +9,9 @@ const ACTIVITY_MULTIPLIERS = {
   veryActive: 1.9,
 };
 
-//object to hold the values for gain and loss goals
+//object to hold the percentage adjustments for each fitness goal
+//negative = calorie deficit, positive = calorie surplus, 0 = maintenance
+//matches the goal keys used in Calories.jsx's goalProfiles
 export const GOAL_ADJUSTMENTS = {
   maintenance: 0,
   cutting: -0.2,
@@ -25,6 +27,8 @@ export const GOAL_ADJUSTMENTS = {
 function toMetric(weight, height, currentUnitSystem) {
   let newWeight = weight;
   let newHeight = height;
+  //throws on any unit system besides the two known values, instead of
+  //silently defaulting to metric
   if (currentUnitSystem !== "metric" && currentUnitSystem !== "imperial") {
     throw new Error(`Unknown unit system: ${currentUnitSystem}`);
   }
@@ -51,6 +55,7 @@ export function calculateBMR({ weight, height, age, gender, unitSystem }) {
   if (gender !== "male" && gender !== "female") {
     throw new Error(`Gender should be either Male or Female`);
   }
+  //mifflin-st jeor formula, using the metric weight/height from toMetric
   let base = 10 * userDetails.weight + 6.25 * userDetails.height - 5 * age;
   //if male, base + 5 if female, base - 5 based on TDEE calculation
   if (gender == "male") {
@@ -64,6 +69,8 @@ export function calculateBMR({ weight, height, age, gender, unitSystem }) {
 //function to calculate the TDEE
 //multipliers are located on the top and is hardcoded
 export function calculateTDEE(bmr, activityLevel) {
+  //throws if activityLevel isn't one of the ACTIVITY_MULTIPLIERS keys,
+  //instead of silently multiplying by undefined and returning NaN
   if (!(activityLevel in ACTIVITY_MULTIPLIERS)) {
     throw new Error(`Activity Level not valid`);
   }
@@ -81,10 +88,14 @@ export function calculateTargetCalories({
   activityLevel,
   goal,
 }) {
+  //runs bmr and tdee first so their own validation errors surface before
+  //checking the goal
   let bmr = calculateBMR({ weight, height, age, gender, unitSystem });
   let tdee = calculateTDEE(bmr, activityLevel);
+  //throws if goal isn't a key in GOAL_ADJUSTMENTS
   if (!(goal in GOAL_ADJUSTMENTS)) {
     throw new Error(`Goal is not valid`);
   }
+  //applies the goal's percentage adjustment to tdee and rounds the final number
   return Math.round(tdee * (1 + GOAL_ADJUSTMENTS[goal]));
 }
