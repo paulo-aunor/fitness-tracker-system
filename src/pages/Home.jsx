@@ -1,18 +1,18 @@
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { getWorkouts, addWeightLog, getWeightLogs, getDailyNutrition } from "../services/firestoreService";
 
 import {
-    FaBolt,
-    FaCalendarAlt,
-    FaChartLine,
-    FaDumbbell,
-    FaFire,
-    FaHome,
-    FaPlus,
-    FaSignOutAlt,
-    FaUserCircle,
-    FaUtensils
+  FaBolt,
+  FaCalendarAlt,
+  FaChartLine,
+  FaDumbbell,
+  FaFire,
+  FaHome,
+  FaPlus,
+  FaSignOutAlt,
+  FaUserCircle,
+  FaUtensils,
 } from "react-icons/fa";
 
 function Home({ user }) {
@@ -37,9 +37,13 @@ function Home({ user }) {
 
     const caloriesEaten = nutrition?.calories ?? 0;
     const proteinEaten = nutrition?.protein ?? 0;
+    const carbsEaten = nutrition?.carbs ?? 0;
+    const fatEaten = nutrition?.fat ?? 0;
 
     const calorieGoal = 2300;
     const proteinGoal = 160;
+    const carbsGoal = 260;
+    const fatGoal = 65;
 
     const caloriesRemaining = calorieGoal - caloriesEaten;
     const proteinRemaining = proteinGoal - proteinEaten;
@@ -48,20 +52,20 @@ function Home({ user }) {
     const proteinPercent = Math.min((proteinEaten / proteinGoal) * 100, 100);
 
 
-useEffect(() => {
-    if (!user?.uid) return;
+    useEffect(() => {
+        if (!user?.uid) return;
 
-    async function loadNutrition() {
-        try {
-            const today = new Date().toISOString().split("T")[0];
-            const data = await getDailyNutrition(user.uid, today);
-            setNutrition(data);
-        } catch (error) {
-            setNutrition(null);
+        async function loadNutrition() {
+            try {
+                const today = new Date().toISOString().split("T")[0];
+                const data = await getDailyNutrition(user.uid, today);
+                setNutrition(data);
+            } catch (error) {
+                setNutrition(null);
+            }
         }
-    }
 
-    loadNutrition();
+        loadNutrition();
     }, [user]);
 
     // this runs once when the page loads (and again if "user" changes)
@@ -69,18 +73,18 @@ useEffect(() => {
         // if there is no logged in user yet, do nothing
         if (!user?.uid) return;
 
-    // this function asks the database for this user's weight history
-    async function loadWeight() {
-        try {
-            const data = await getWeightLogs(user.uid);
-            setWeightLogs(data);
-        } catch (error) {
-            // if something goes wrong, just show an empty list
-            setWeightLogs([]);
+        // this function asks the database for this user's weight history
+        async function loadWeight() {
+            try {
+                const data = await getWeightLogs(user.uid);
+                setWeightLogs(data);
+            } catch (error) {
+                // if something goes wrong, just show an empty list
+                setWeightLogs([]);
+            }
         }
-    }
 
-    loadWeight();
+        loadWeight();
     }, [user]);
 
     useEffect(() => {
@@ -99,7 +103,7 @@ useEffect(() => {
 
         loadStats();
     }, [user]);
-    
+
     // count workouts logged in the last 7 days
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -107,6 +111,12 @@ useEffect(() => {
     const workoutsThisWeek = workouts.filter(
         (w) => new Date(w.loggedAt) >= oneWeekAgo
     ).length;
+
+    // workouts sorted newest first, so we can show the most recent one below
+    const sortedWorkouts = [...workouts].sort(
+        (a, b) => new Date(b.loggedAt) - new Date(a.loggedAt)
+    );
+    const lastWorkout = sortedWorkouts[0] || null;
 
     function handleLogout() {
         navigate("/");
@@ -145,33 +155,33 @@ useEffect(() => {
         // turn the text input into a number
         const value = parseFloat(newWeight);
 
-    // stop if the input is empty, not a number, or zero/negative
-    if (!value || value <= 0) {
-        return;
+        // stop if the input is empty, not a number, or zero/negative
+        if (!value || value <= 0) {
+            return;
+        }
+
+        setSavingWeight(true);
+
+        try {
+            // save the new weight to the database
+            await addWeightLog({
+                userId: user.uid,
+                weight: value,
+                date: new Date().toISOString()
+            });
+
+            // after saving, get the updated list so the UI shows the new entry
+            const updated = await getWeightLogs(user.uid);
+            setWeightLogs(updated);
+
+            // clear the input box
+            setNewWeight("");
+        } catch (error) {
+            console.log("Could not save weight:", error);
+        } finally {
+            setSavingWeight(false);
+        }
     }
-
-    setSavingWeight(true);
-
-    try {
-        // save the new weight to the database
-        await addWeightLog({
-            userId: user.uid,
-            weight: value,
-            date: new Date().toISOString()
-        });
-
-        // after saving, get the updated list so the UI shows the new entry
-        const updated = await getWeightLogs(user.uid);
-        setWeightLogs(updated);
-
-        // clear the input box
-        setNewWeight("");
-    } catch (error) {
-        console.log("Could not save weight:", error);
-    } finally {
-        setSavingWeight(false);
-    }
-}
 
     return (
         <main className="dashboard-page">
@@ -187,7 +197,7 @@ useEffect(() => {
                     </div>
                 </div>
 
-                <nav classNafme="sidebar-navigation">
+                <nav className="sidebar-navigation">
                     <button
                         type="button"
                         className="sidebar-link active"
@@ -213,6 +223,9 @@ useEffect(() => {
                     <button
                         type="button"
                         className="sidebar-link"
+                        onClick={() =>
+                            navigate("/food-log")
+                        }
                     >
                         <FaUtensils />
                         <span>Food Log</span>
@@ -303,7 +316,7 @@ useEffect(() => {
                             <span>DAILY CALORIES</span>
                         </div>
 
-                       <h2>
+                        <h2>
                             {caloriesEaten}
                             <small> / {calorieGoal} kcal</small>
                         </h2>
@@ -351,25 +364,25 @@ useEffect(() => {
                         </div>
 
                         <h2>
-                    {loadingStats ? "…" : workoutsThisWeek}
-                    <small> / 5 this week</small>
-                                </h2>
+                            {loadingStats ? "…" : workoutsThisWeek}
+                            <small> / 5 this week</small>
+                        </h2>
 
-                                <div className="progress-track">
-                                    <div
-                                        className="progress-fill"
-                                        style={{ width: `${Math.min((workoutsThisWeek / 5) * 100, 100)}%` }}
-                                    />
-                                </div>
+                        <div className="progress-track">
+                            <div
+                                className="progress-fill"
+                                style={{ width: `${Math.min((workoutsThisWeek / 5) * 100, 100)}%` }}
+                            />
+                        </div>
 
-                                <p>
-                                    {loadingStats
-                                        ? "Loading..."
-                                        : workoutsThisWeek >= 5
-                                        ? "Weekly goal reached!"
-                                        : `${5 - workoutsThisWeek} workout${5 - workoutsThisWeek === 1 ? "" : "s"} left this week`}
-                                </p>
-                                    </article>
+                        <p>
+                            {loadingStats
+                                ? "Loading..."
+                                : workoutsThisWeek >= 5
+                                ? "Weekly goal reached!"
+                                : `${5 - workoutsThisWeek} workout${5 - workoutsThisWeek === 1 ? "" : "s"} left this week`}
+                        </p>
+                    </article>
 
                     <article className="stat-card">
                         <div className="stat-card-top">
@@ -381,27 +394,27 @@ useEffect(() => {
                         </div>
 
                         <h2>
-                                {latestWeight === null ? "—" : latestWeight}
-                                <small> kg</small>
-                            </h2>
+                            {latestWeight === null ? "—" : latestWeight}
+                            <small> kg</small>
+                        </h2>
 
-                            <div className="weight-change">
-                                {weightChangeText}
-                            </div>
+                        <div className="weight-change">
+                            {weightChangeText}
+                        </div>
 
-                            <div style={{ display: "flex", gap: "6px", marginTop: "8px" }}>
-                                <input
-                                    type="number"
-                                    step="0.1"
-                                    placeholder="Log weight (kg)"
-                                    value={newWeight}
-                                    onChange={(e) => setNewWeight(e.target.value)}
-                                    style={{ flex: 1, padding: "4px 8px" }}
-                                />
-                                <button type="button" onClick={handleLogWeight} disabled={savingWeight}>
-                                    {savingWeight ? "..." : "Log"}
-                                </button>
-                            </div>
+                        <div style={{ display: "flex", gap: "6px", marginTop: "8px" }}>
+                            <input
+                                type="number"
+                                step="0.1"
+                                placeholder="Log weight (kg)"
+                                value={newWeight}
+                                onChange={(e) => setNewWeight(e.target.value)}
+                                style={{ flex: 1, padding: "4px 8px" }}
+                            />
+                            <button type="button" onClick={handleLogWeight} disabled={savingWeight}>
+                                {savingWeight ? "..." : "Log"}
+                            </button>
+                        </div>
 
                         <p>Goal weight: 72 kg</p>
                     </article>
@@ -431,7 +444,7 @@ useEffect(() => {
                         <div className="calorie-content">
                             <div className="calorie-ring">
                                 <div className="calorie-ring-center">
-                                    <strong>71%</strong>
+                                    <strong>{Math.round(caloriePercent)}%</strong>
                                     <span>Completed</span>
                                 </div>
                             </div>
@@ -444,7 +457,7 @@ useEffect(() => {
                                     </div>
 
                                     <strong>
-                                        118g / 160g
+                                        {proteinEaten}g / {proteinGoal}g
                                     </strong>
                                 </div>
 
@@ -455,7 +468,7 @@ useEffect(() => {
                                     </div>
 
                                     <strong>
-                                        180g / 260g
+                                        {carbsEaten}g / {carbsGoal}g
                                     </strong>
                                 </div>
 
@@ -466,18 +479,20 @@ useEffect(() => {
                                     </div>
 
                                     <strong>
-                                        48g / 65g
+                                        {fatEaten}g / {fatGoal}g
                                     </strong>
                                 </div>
                             </div>
                         </div>
                     </article>
 
+                    {/* shows the most recently saved workout instead of a fake
+                        "upcoming session", since nothing tracks scheduled workouts yet */}
                     <article className="dashboard-panel">
                         <div className="panel-header">
                             <div>
-                                <p>NEXT SESSION</p>
-                                <h2>Push Day</h2>
+                                <p>LAST WORKOUT</p>
+                                <h2>{lastWorkout ? "Recent Session" : "No Workouts Yet"}</h2>
                             </div>
 
                             <div className="panel-icon">
@@ -485,64 +500,41 @@ useEffect(() => {
                             </div>
                         </div>
 
-                        <div className="workout-time">
-                            <FaBolt />
+                        {loadingStats ? (
+                            <p>Loading your workout history...</p>
+                        ) : lastWorkout ? (
+                            <>
+                                <div className="workout-time">
+                                    <FaBolt />
 
-                            <div>
-                                <strong>
-                                    Today at 6:00 PM
-                                </strong>
+                                    <div>
+                                        <strong>
+                                            {new Date(lastWorkout.loggedAt).toLocaleDateString()}
+                                        </strong>
 
-                                <span>
-                                    Estimated time:
-                                    60 minutes
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="exercise-list">
-                            <div className="exercise-item">
-                                <span>01</span>
-
-                                <div>
-                                    <strong>
-                                        Bench Press
-                                    </strong>
-
-                                    <p>
-                                        4 sets × 8 reps
-                                    </p>
+                                        <span>{lastWorkout.totalSets} total sets</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="exercise-item">
-                                <span>02</span>
+                                <div className="exercise-list">
+                                    {lastWorkout.exercises.slice(0, 3).map((exercise, index) => (
+                                        <div className="exercise-item" key={`${exercise.name}-${index}`}>
+                                            <span>{String(index + 1).padStart(2, "0")}</span>
 
-                                <div>
-                                    <strong>
-                                        Shoulder Press
-                                    </strong>
+                                            <div>
+                                                <strong>{exercise.name}</strong>
 
-                                    <p>
-                                        3 sets × 10 reps
-                                    </p>
+                                                <p>
+                                                    {exercise.sets} sets × {exercise.reps} reps
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            </div>
-
-                            <div className="exercise-item">
-                                <span>03</span>
-
-                                <div>
-                                    <strong>
-                                        Tricep Pushdown
-                                    </strong>
-
-                                    <p>
-                                        3 sets × 12 reps
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                            </>
+                        ) : (
+                            <p>Save a workout on the Workouts page to see it here.</p>
+                        )}
 
                         <button
                             type="button"
@@ -552,7 +544,7 @@ useEffect(() => {
                             }
                         >
                             <FaDumbbell />
-                            Start Workout
+                            {lastWorkout ? "Log Another Workout" : "Start Workout"}
                         </button>
                     </article>
                 </section>
@@ -595,6 +587,9 @@ useEffect(() => {
                         <button
                             type="button"
                             className="action-card"
+                            onClick={() =>
+                                navigate("/food-log")
+                            }
                         >
                             <div className="action-icon">
                                 <FaUtensils />
@@ -644,6 +639,5 @@ useEffect(() => {
         </main>
     );
 }
-
 
 export default Home;
