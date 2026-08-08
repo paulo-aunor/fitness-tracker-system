@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { saveDailyNutrition } from "../services/firestoreService";
 
 import {
   FaAppleAlt,
@@ -28,6 +29,7 @@ import "../gymFoodLibrary.css";
 
 //localStorage keys for the two things this page persists
 const FOOD_STORAGE_KEY = "fittrack-food-log";
+
 
 const TARGET_STORAGE_KEY = "fittrack-food-targets";
 
@@ -617,6 +619,19 @@ function FoodLog({ user }) {
   useEffect(() => {
     localStorage.setItem(TARGET_STORAGE_KEY, JSON.stringify(targets));
   }, [targets]);
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    async function saveToDatabase() {
+        try {
+            await saveDailyNutrition(user.uid, selectedDate, dailyTotals);
+        } catch (error) {
+            console.log("Could not save nutrition totals:", error);
+        }
+    }
+
+    saveToDatabase();
+}, [dailyTotals, selectedDate, user]);
 
   //helper for updating just the selected day's data without touching other days
   function updateDay(updater) {
