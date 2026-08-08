@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +31,9 @@ import {
   calculateTargetCalories,
   GOAL_ADJUSTMENTS,
 } from "../utils/calculations";
+
+//persists the weight field so Home.jsx can show it as the last recorded body weight
+import { loadLastWeight, saveLastWeight } from "../utils/profile";
 
 //list of activity levels for the dropdown
 //key matches the ACTIVITY_MULTIPLIERS keys in calculations.js, value is only
@@ -123,9 +126,17 @@ function Calories({ user }) {
   const [gender, setGender] = useState("male");
   const [age, setAge] = useState(22);
   const [height, setHeight] = useState(176);
-  const [weight, setWeight] = useState(77);
+  //loaded from localStorage so it survives a page refresh/revisit, and so
+  //Home.jsx can show it as the last recorded body weight
+  const [weight, setWeight] = useState(loadLastWeight);
   const [activity, setActivity] = useState("moderate");
   const [goal, setGoal] = useState("cutting");
+
+  //saves weight to localStorage every time it changes, so Home.jsx always
+  //has the latest value without this page needing to push it anywhere directly
+  useEffect(() => {
+    saveLastWeight(weight);
+  }, [weight]);
 
   const memberName = user?.displayName || "Demo User";
 

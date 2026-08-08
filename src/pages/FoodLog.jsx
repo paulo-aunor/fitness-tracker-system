@@ -23,47 +23,25 @@ import {
 //function to search food by query, used by the "search online" section below
 import { searchFoods } from "../services/foodApi";
 
+//shared with Home.jsx -- see src/utils/foodLog.js for why these live there
+//instead of being defined locally in this file
+import {
+  FOOD_STORAGE_KEY,
+  TARGET_STORAGE_KEY,
+  mealTypes,
+  defaultTargets,
+  createEmptyDay,
+  createLocalDateValue,
+  loadFoodDays,
+  loadTargets,
+  toNumber,
+  calculateFoodNutrition,
+  calculateMealTotals,
+  calculateDailyTotals,
+} from "../utils/foodLog";
+
 import "../foodLog.css";
 import "../gymFoodLibrary.css";
-
-//localStorage keys for the two things this page persists
-const FOOD_STORAGE_KEY = "fittrack-food-log";
-
-const TARGET_STORAGE_KEY = "fittrack-food-targets";
-
-//the four meal sections a food entry can belong to
-const mealTypes = [
-  {
-    id: "breakfast",
-    name: "Breakfast",
-    description: "Start the day with energy",
-  },
-  {
-    id: "lunch",
-    name: "Lunch",
-    description: "Midday meal",
-  },
-  {
-    id: "dinner",
-    name: "Dinner",
-    description: "Evening meal",
-  },
-  {
-    id: "snacks",
-    name: "Snacks",
-    description: "Snacks and drinks",
-  },
-];
-
-//starting nutrition targets, used until the user overrides them (and again if they hit "Reset Targets")
-const defaultTargets = {
-  calories: 2100,
-  protein: 170,
-  carbs: 220,
-  fat: 60,
-  fiber: 30,
-  waterMl: 2700,
-};
 
 //category filter options for the local gym food library below
 const foodCategories = [
@@ -358,73 +336,6 @@ const emptyFoodForm = {
   fiber: "",
 };
 
-//shape of one day's log: foods grouped by meal, plus water intake
-function createEmptyDay() {
-  return {
-    meals: {
-      breakfast: [],
-      lunch: [],
-      dinner: [],
-      snacks: [],
-    },
-    waterMl: 0,
-  };
-}
-
-//turns a Date into a YYYY-MM-DD string in local time (not UTC), used as
-//the key for foodDays and for the date input's value
-function createLocalDateValue(date = new Date()) {
-  const year = date.getFullYear();
-
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-//reads the saved food log out of localStorage, falls back to {} if nothing
-//saved yet or if the saved data is corrupted/unparseable
-function loadFoodDays() {
-  try {
-    const saved = localStorage.getItem(FOOD_STORAGE_KEY);
-
-    if (!saved) {
-      return {};
-    }
-
-    const parsed = JSON.parse(saved);
-
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch (error) {
-    console.error("Unable to load food log:", error);
-
-    return {};
-  }
-}
-
-//same idea as loadFoodDays but for nutrition targets, falls back to defaultTargets
-function loadTargets() {
-  try {
-    const saved = localStorage.getItem(TARGET_STORAGE_KEY);
-
-    if (!saved) {
-      return defaultTargets;
-    }
-
-    const parsed = JSON.parse(saved);
-
-    return {
-      ...defaultTargets,
-      ...parsed,
-    };
-  } catch (error) {
-    console.error("Unable to load nutrition targets:", error);
-
-    return defaultTargets;
-  }
-}
-
 //generates a unique id for a new food entry, uses randomUUID when the
 //browser supports it, otherwise falls back to a timestamp-based id
 function createId() {
@@ -435,65 +346,12 @@ function createId() {
   return `food-${Date.now()}`;
 }
 
-//safely converts a form value (which could be "", undefined, etc.) into a
-//real number, defaulting to 0 instead of NaN
-function toNumber(value) {
-  const number = Number(value);
-
-  return Number.isFinite(number) ? number : 0;
-}
-
 //rounds to one decimal place for display, but drops the decimal entirely
 //if the value is a whole number (so "165" instead of "165.0")
 function formatValue(value) {
   const rounded = Math.round(value * 10) / 10;
 
   return Number.isInteger(rounded) ? rounded : rounded.toFixed(1);
-}
-
-//scales one food entry's per-serving nutrition by how many servings were logged
-function calculateFoodNutrition(food) {
-  const servings = toNumber(food.servings);
-
-  return {
-    calories: toNumber(food.calories) * servings,
-
-    protein: toNumber(food.protein) * servings,
-
-    carbs: toNumber(food.carbs) * servings,
-
-    fat: toNumber(food.fat) * servings,
-
-    fiber: toNumber(food.fiber) * servings,
-  };
-}
-
-//sums calculateFoodNutrition across every food in one meal (e.g. all of breakfast)
-function calculateMealTotals(foods) {
-  return foods.reduce(
-    (totals, food) => {
-      const nutrition = calculateFoodNutrition(food);
-
-      return {
-        calories: totals.calories + nutrition.calories,
-
-        protein: totals.protein + nutrition.protein,
-
-        carbs: totals.carbs + nutrition.carbs,
-
-        fat: totals.fat + nutrition.fat,
-
-        fiber: totals.fiber + nutrition.fiber,
-      };
-    },
-    {
-      calories: 0,
-      protein: 0,
-      carbs: 0,
-      fat: 0,
-      fiber: 0,
-    },
-  );
 }
 
 //how far along a target the current value is, as a percentage capped at 100
@@ -581,33 +439,12 @@ function FoodLog({ user }) {
     return result;
   }, [dayData]);
 
-  //adds mealTotals together into one grand total for the whole day
+  //adds every meal together into one grand total for the whole day --
+  //calculateDailyTotals lives in utils/foodLog.js so Home.jsx can compute
+  //the same thing from the same raw dayData
   const dailyTotals = useMemo(() => {
-    return mealTypes.reduce(
-      (totals, meal) => {
-        const mealTotal = mealTotals[meal.id];
-
-        return {
-          calories: totals.calories + mealTotal.calories,
-
-          protein: totals.protein + mealTotal.protein,
-
-          carbs: totals.carbs + mealTotal.carbs,
-
-          fat: totals.fat + mealTotal.fat,
-
-          fiber: totals.fiber + mealTotal.fiber,
-        };
-      },
-      {
-        calories: 0,
-        protein: 0,
-        carbs: 0,
-        fat: 0,
-        fiber: 0,
-      },
-    );
-  }, [mealTotals]);
+    return calculateDailyTotals(dayData);
+  }, [dayData]);
 
   //persists foodDays/targets to localStorage every time either one changes
   useEffect(() => {
