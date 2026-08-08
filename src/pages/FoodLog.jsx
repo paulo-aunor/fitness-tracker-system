@@ -25,54 +25,23 @@ import "../foodLog.css";
 import "../gymFoodLibrary.css";
 
 
-// Stores the localStorage key for daily food log data.
-const FOOD_STORAGE_KEY =
-    "fittrack-food-log";
+//shared with Home.jsx -- see src/utils/foodLog.js for why these live there
+//instead of being defined locally in this file
+import {
+    FOOD_STORAGE_KEY,
+    TARGET_STORAGE_KEY,
+    mealTypes,
+    defaultTargets,
+    createEmptyDay,
+    createLocalDateValue,
+    loadFoodDays,
+    loadTargets,
+    toNumber,
+    calculateFoodNutrition,
+    calculateMealTotals,
+    calculateDailyTotals
+} from "../utils/foodLog";
 
-
-// Stores the localStorage key for nutrition targets.
-const TARGET_STORAGE_KEY =
-    "fittrack-food-targets";
-
-
-// Defines the meal sections used throughout the food log.
-const mealTypes = [
-    {
-        id: "breakfast",
-        name: "Breakfast",
-        description:
-            "Start the day with energy"
-    },
-    {
-        id: "lunch",
-        name: "Lunch",
-        description:
-            "Midday meal"
-    },
-    {
-        id: "dinner",
-        name: "Dinner",
-        description:
-            "Evening meal"
-    },
-    {
-        id: "snacks",
-        name: "Snacks",
-        description:
-            "Snacks and drinks"
-    }
-];
-
-
-// Provides the default daily nutrition and water targets.
-const defaultTargets = {
-    calories: 2100,
-    protein: 170,
-    carbs: 220,
-    fat: 60,
-    fiber: 30,
-    waterMl: 2700
-};
 
 
 // Defines the available food library categories.
@@ -370,101 +339,6 @@ const emptyFoodForm = {
 };
 
 
-// Creates an empty food log for a new date.
-function createEmptyDay() {
-    return {
-        meals: {
-            breakfast: [],
-            lunch: [],
-            dinner: [],
-            snacks: []
-        },
-        waterMl: 0
-    };
-}
-
-
-// Converts a Date object into a local YYYY-MM-DD value.
-function createLocalDateValue(
-    date = new Date()
-) {
-    const year =
-        date.getFullYear();
-
-    const month =
-        String(
-            date.getMonth() + 1
-        ).padStart(2, "0");
-
-    const day =
-        String(
-            date.getDate()
-        ).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-}
-
-
-// Loads all saved food log days from localStorage.
-function loadFoodDays() {
-    try {
-        const saved =
-            localStorage.getItem(
-                FOOD_STORAGE_KEY
-            );
-
-        if (!saved) {
-            return {};
-        }
-
-        const parsed =
-            JSON.parse(saved);
-
-        return parsed &&
-            typeof parsed === "object"
-            ? parsed
-            : {};
-    } catch (error) {
-        console.error(
-            "Unable to load food log:",
-            error
-        );
-
-        return {};
-    }
-}
-
-
-// Loads saved nutrition targets from localStorage.
-function loadTargets() {
-    try {
-        const saved =
-            localStorage.getItem(
-                TARGET_STORAGE_KEY
-            );
-
-        if (!saved) {
-            return defaultTargets;
-        }
-
-        const parsed =
-            JSON.parse(saved);
-
-        return {
-            ...defaultTargets,
-            ...parsed
-        };
-    } catch (error) {
-        console.error(
-            "Unable to load nutrition targets:",
-            error
-        );
-
-        return defaultTargets;
-    }
-}
-
-
 // Creates a unique ID for a food entry.
 function createId() {
     if (
@@ -479,18 +353,7 @@ function createId() {
 }
 
 
-// Converts a value into a valid number.
-function toNumber(value) {
-    const number =
-        Number(value);
-
-    return Number.isFinite(number)
-        ? number
-        : 0;
-}
-
-
-// Formats nutrition values with a maximum of one decimal place.
+// Formats a value to one decimal place, without a trailing ".0" for whole numbers.
 function formatValue(value) {
     const rounded =
         Math.round(value * 10) / 10;
@@ -498,77 +361,6 @@ function formatValue(value) {
     return Number.isInteger(rounded)
         ? rounded
         : rounded.toFixed(1);
-}
-
-
-// Calculates total nutrition based on the number of servings.
-function calculateFoodNutrition(food) {
-    const servings =
-        toNumber(food.servings);
-
-    return {
-        calories:
-            toNumber(food.calories) *
-            servings,
-
-        protein:
-            toNumber(food.protein) *
-            servings,
-
-        carbs:
-            toNumber(food.carbs) *
-            servings,
-
-        fat:
-            toNumber(food.fat) *
-            servings,
-
-        fiber:
-            toNumber(food.fiber) *
-            servings
-    };
-}
-
-
-// Calculates the combined nutrition totals for one meal.
-function calculateMealTotals(foods) {
-    return foods.reduce(
-        (totals, food) => {
-            const nutrition =
-                calculateFoodNutrition(
-                    food
-                );
-
-            return {
-                calories:
-                    totals.calories +
-                    nutrition.calories,
-
-                protein:
-                    totals.protein +
-                    nutrition.protein,
-
-                carbs:
-                    totals.carbs +
-                    nutrition.carbs,
-
-                fat:
-                    totals.fat +
-                    nutrition.fat,
-
-                fiber:
-                    totals.fiber +
-                    nutrition.fiber
-            };
-        },
-        {
-            calories: 0,
-            protein: 0,
-            carbs: 0,
-            fat: 0,
-            fiber: 0
-        }
-    );
 }
 
 
@@ -769,46 +561,12 @@ function FoodLog({ user }) {
 
 
     // Calculates the combined nutrition totals for the entire day.
+    // calculateDailyTotals lives in utils/foodLog.js so Home.jsx can
+    // compute the same thing from the same raw dayData.
     const dailyTotals =
         useMemo(() => {
-            return mealTypes.reduce(
-                (totals, meal) => {
-                    const mealTotal =
-                        mealTotals[
-                            meal.id
-                        ];
-
-                    return {
-                        calories:
-                            totals.calories +
-                            mealTotal.calories,
-
-                        protein:
-                            totals.protein +
-                            mealTotal.protein,
-
-                        carbs:
-                            totals.carbs +
-                            mealTotal.carbs,
-
-                        fat:
-                            totals.fat +
-                            mealTotal.fat,
-
-                        fiber:
-                            totals.fiber +
-                            mealTotal.fiber
-                    };
-                },
-                {
-                    calories: 0,
-                    protein: 0,
-                    carbs: 0,
-                    fat: 0,
-                    fiber: 0
-                }
-            );
-        }, [mealTotals]);
+            return calculateDailyTotals(dayData);
+        }, [dayData]);
 
 
     // Saves food log data whenever it changes.

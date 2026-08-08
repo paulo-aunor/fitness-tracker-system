@@ -1,4 +1,5 @@
 import {
+    useEffect,
     useMemo,
     useState
 } from "react";
@@ -35,6 +36,9 @@ import {
     GOAL_ADJUSTMENTS
 } from "../utils/calculations";
 
+
+//persists the weight field so Home.jsx can show it as the last recorded body weight
+import { loadLastWeight, saveLastWeight } from "../utils/profile";
 
 // Stores the available activity levels and their calorie multipliers.
 const activityLevels = [
@@ -161,11 +165,13 @@ function Calories({ user }) {
     ] = useState(176);
 
 
-    // Stores the user's weight in kilograms.
+    // Stores the user's weight in kilograms. Loaded from localStorage so it
+    // survives a page refresh/revisit, and so Home.jsx can show it as the
+    // last recorded body weight.
     const [
         weight,
         setWeight
-    ] = useState(77);
+    ] = useState(loadLastWeight);
 
 
     // Stores the selected activity multiplier.
@@ -180,6 +186,14 @@ function Calories({ user }) {
         goal,
         setGoal
     ] = useState("cutting");
+
+
+    // Saves weight to localStorage every time it changes, so Home.jsx
+    // always has the latest value without this page needing to push it
+    // anywhere directly.
+    useEffect(() => {
+        saveLastWeight(weight);
+    }, [weight]);
 
 
     // Gets the user's display name or uses a demo name.
