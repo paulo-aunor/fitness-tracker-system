@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase.jsx";
 import { getWorkouts, addWeightLog, getWeightLogs, getDailyNutrition } from "../services/firestoreService";
 
 //real, editable nutrition targets (same source FoodLog.jsx reads/writes) --
@@ -127,7 +129,12 @@ function Home({ user }) {
     const lastWorkout = sortedWorkouts[0] || null;
 
     function handleLogout() {
-        navigate("/");
+        //signOut actually ends the Firebase session -- without this, the
+        //user was still "logged in" per Firebase even after clicking Log
+        //Out, so hitting back or typing a protected url still worked
+        signOut(auth).finally(() => {
+            navigate("/");
+        });
     }
     // the most recent weight is the first item in the sorted list
     // if the list is empty, we use null instead

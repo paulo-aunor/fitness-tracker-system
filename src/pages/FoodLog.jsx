@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase.jsx";
 import {
   addMeal,
   deleteMeal,
@@ -980,7 +982,9 @@ function FoodLog({ user }) {
           <button
             type="button"
             className="logout-button"
-            onClick={() => navigate("/")}
+            //signOut ends the Firebase session -- without it the user was
+            //still "logged in" after clicking Log Out
+            onClick={() => signOut(auth).finally(() => navigate("/"))}
           >
             <FaSignOutAlt />
             <span>Log Out</span>
