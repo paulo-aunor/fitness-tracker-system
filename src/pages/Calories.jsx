@@ -1,26 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase.jsx";
+import Sidebar from "../components/Sidebar";
 
 import {
   FaBreadSlice,
   FaBullseye,
   FaCalculator,
-  FaChartLine,
   FaDumbbell,
-  FaFire,
   FaHeartbeat,
-  FaHome,
   FaInfoCircle,
   FaLeaf,
   FaRulerVertical,
   FaRunning,
-  FaSignOutAlt,
   FaTint,
-  FaUserCircle,
-  FaUtensils,
   FaWeight,
 } from "react-icons/fa";
 
@@ -124,8 +116,6 @@ function formatNumber(value) {
 }
 
 function Calories({ user }) {
-  const navigate = useNavigate();
-
   //form inputs, all controlled state
   const [gender, setGender] = useState("male");
   const [age, setAge] = useState(22);
@@ -157,10 +147,6 @@ function Calories({ user }) {
 
     loadLatestWeight();
   }, [user]);
-
-  const memberName = user?.displayName || "Demo User";
-
-  const memberEmail = user?.email || "demo@fitness.com";
 
   //looks up the full activityLevels entry for the description text under the dropdown
   const selectedActivity = activityLevels.find((item) => item.key === activity);
@@ -249,82 +235,7 @@ function Calories({ user }) {
 
   return (
     <main className="dashboard-page">
-      {/* sidebar nav, same on every dashboard page */}
-      <aside className="dashboard-sidebar">
-        <div className="dashboard-logo">
-          <div className="dashboard-logo-icon">
-            <FaDumbbell />
-          </div>
-
-          <div>
-            <h2>FITTRACK</h2>
-            <span>Fitness System</span>
-          </div>
-        </div>
-
-        <nav className="sidebar-navigation">
-          <button
-            type="button"
-            className="sidebar-link"
-            onClick={() => navigate("/home")}
-          >
-            <FaHome />
-            <span>Dashboard</span>
-          </button>
-
-          <button
-            type="button"
-            className="sidebar-link"
-            onClick={() => navigate("/workouts")}
-          >
-            <FaDumbbell />
-            <span>Workouts</span>
-          </button>
-
-          <button type="button" className="sidebar-link">
-            <FaUtensils />
-            <span>Food Log</span>
-          </button>
-
-          {/* current page, marked active */}
-          <button
-            type="button"
-            className="sidebar-link active"
-            onClick={() => navigate("/calories")}
-          >
-            <FaFire />
-            <span>Calories</span>
-          </button>
-
-          <button type="button" className="sidebar-link">
-            <FaChartLine />
-            <span>Progress</span>
-          </button>
-        </nav>
-
-        <div className="sidebar-bottom">
-          <div className="sidebar-user">
-            <FaUserCircle />
-
-            <div>
-              <strong>{memberName}</strong>
-
-              <span>{memberEmail}</span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="logout-button"
-            //signOut ends the Firebase session -- without it the user was
-            //still "logged in" after clicking Log Out
-            onClick={() => signOut(auth).finally(() => navigate("/"))}
-          >
-            <FaSignOutAlt />
-            <span>Log Out</span>
-          </button>
-        </div>
-      </aside>
+      <Sidebar user={user} active="calories" />
 
       <section className="dashboard-content calories-content">
         <header className="calories-header">

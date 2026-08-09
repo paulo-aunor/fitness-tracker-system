@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase.jsx";
+import Sidebar from "../components/Sidebar";
 import {
   addMeal,
   deleteMeal,
@@ -15,18 +13,13 @@ import {
   FaAppleAlt,
   FaBullseye,
   FaCalendarAlt,
-  FaChartLine,
-  FaDumbbell,
   FaEdit,
   FaFire,
-  FaHome,
   FaPlus,
   FaSave,
   FaSearch,
-  FaSignOutAlt,
   FaTint,
   FaTrash,
-  FaUserCircle,
   FaUtensils,
 } from "react-icons/fa";
 //function to search food by query, used by the "search online" section below
@@ -374,8 +367,6 @@ function calculateProgress(current, target) {
 }
 
 function FoodLog({ user }) {
-  const navigate = useNavigate();
-
   //which day's log is currently shown
   const [selectedDate, setSelectedDate] = useState(createLocalDateValue());
 
@@ -414,10 +405,6 @@ function FoodLog({ user }) {
   const [isSearching, setIsSearching] = useState(false);
 
   const [searchError, setSearchError] = useState("");
-
-  const memberName = user?.displayName || "Demo User";
-
-  const memberEmail = user?.email || "demo@fitness.com";
 
   //today's log, or a blank one if nothing's been logged for this date yet
   const dayData = foodDays[selectedDate] || createEmptyDay();
@@ -910,87 +897,7 @@ function FoodLog({ user }) {
 
   return (
     <main className="dashboard-page">
-      {/* sidebar nav, same on every dashboard page */}
-      <aside className="dashboard-sidebar">
-        <div className="dashboard-logo">
-          <div className="dashboard-logo-icon">
-            <FaDumbbell />
-          </div>
-
-          <div>
-            <h2>FITTRACK</h2>
-
-            <span>Fitness System</span>
-          </div>
-        </div>
-
-        <nav className="sidebar-navigation">
-          <button
-            type="button"
-            className="sidebar-link"
-            onClick={() => navigate("/home")}
-          >
-            <FaHome />
-            <span>Dashboard</span>
-          </button>
-
-          <button
-            type="button"
-            className="sidebar-link"
-            onClick={() => navigate("/workouts")}
-          >
-            <FaDumbbell />
-            <span>Workouts</span>
-          </button>
-
-          {/* current page, marked active */}
-          <button
-            type="button"
-            className="sidebar-link active"
-            onClick={() => navigate("/food-log")}
-          >
-            <FaUtensils />
-            <span>Food Log</span>
-          </button>
-
-          <button
-            type="button"
-            className="sidebar-link"
-            onClick={() => navigate("/calories")}
-          >
-            <FaFire />
-            <span>Calories</span>
-          </button>
-
-          <button type="button" className="sidebar-link">
-            <FaChartLine />
-            <span>Progress</span>
-          </button>
-        </nav>
-
-        <div className="sidebar-bottom">
-          <div className="sidebar-user">
-            <FaUserCircle />
-
-            <div>
-              <strong>{memberName}</strong>
-
-              <span>{memberEmail}</span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="logout-button"
-            //signOut ends the Firebase session -- without it the user was
-            //still "logged in" after clicking Log Out
-            onClick={() => signOut(auth).finally(() => navigate("/"))}
-          >
-            <FaSignOutAlt />
-            <span>Log Out</span>
-          </button>
-        </div>
-      </aside>
+      <Sidebar user={user} active="food-log" />
 
       <section className="dashboard-content food-log-content">
         <header className="food-log-header">

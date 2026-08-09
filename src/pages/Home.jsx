@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase.jsx";
+import Sidebar from "../components/Sidebar";
 import { getWorkouts, addWeightLog, getWeightLogs, getDailyNutrition } from "../services/firestoreService";
 
 //real, editable nutrition targets (same source FoodLog.jsx reads/writes) --
@@ -16,10 +15,7 @@ import {
   FaChartLine,
   FaDumbbell,
   FaFire,
-  FaHome,
   FaPlus,
-  FaSignOutAlt,
-  FaUserCircle,
   FaUtensils,
 } from "react-icons/fa";
 
@@ -31,8 +27,6 @@ function Home({ user }) {
     const memberName =
         user?.displayName || "Demo User";
 
-    const memberEmail =
-        user?.email || "demo@fitness.com";
     // this will hold the list of weight entries from the database
     const [weightLogs, setWeightLogs] = useState([]);
 
@@ -130,14 +124,6 @@ function Home({ user }) {
     );
     const lastWorkout = sortedWorkouts[0] || null;
 
-    function handleLogout() {
-        //signOut actually ends the Firebase session -- without this, the
-        //user was still "logged in" per Firebase even after clicking Log
-        //Out, so hitting back or typing a protected url still worked
-        signOut(auth).finally(() => {
-            navigate("/");
-        });
-    }
     // the most recent weight is the first item in the sorted list
     // if the list is empty, we use null instead
     let latestWeight = null;
@@ -203,95 +189,7 @@ function Home({ user }) {
 
     return (
         <main className="dashboard-page">
-            <aside className="dashboard-sidebar">
-                <div className="dashboard-logo">
-                    <div className="dashboard-logo-icon">
-                        <FaDumbbell />
-                    </div>
-
-                    <div>
-                        <h2>FITTRACK</h2>
-                        <span>Fitness System</span>
-                    </div>
-                </div>
-
-                <nav className="sidebar-navigation">
-                    <button
-                        type="button"
-                        className="sidebar-link active"
-                        onClick={() =>
-                            navigate("/home")
-                        }
-                    >
-                        <FaHome />
-                        <span>Dashboard</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate("/workouts")
-                        }
-                    >
-                        <FaDumbbell />
-                        <span>Workouts</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate("/food-log")
-                        }
-                    >
-                        <FaUtensils />
-                        <span>Food Log</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate("/calories")
-                        }
-                    >
-                        <FaFire />
-                        <span>Calories</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate("/progress")
-                        }
-                    >
-                        <FaChartLine />
-                        <span>Progress</span>
-                    </button>
-                </nav>
-
-                <div className="sidebar-bottom">
-                    <div className="sidebar-user">
-                        <FaUserCircle />
-
-                        <div>
-                            <strong>{memberName}</strong>
-                            <span>{memberEmail}</span>
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        className="logout-button"
-                        onClick={handleLogout}
-                    >
-                        <FaSignOutAlt />
-                        <span>Log Out</span>
-                    </button>
-                </div>
-            </aside>
+            <Sidebar user={user} active="dashboard" />
 
             <section className="dashboard-content">
                 <header className="dashboard-header">

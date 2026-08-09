@@ -4,9 +4,7 @@ import {
     useState
 } from "react";
 
-import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase.jsx";
+import Sidebar from "../components/Sidebar";
 
 import {
     FaArrowDown,
@@ -16,17 +14,12 @@ import {
     FaChartLine,
     FaDumbbell,
     FaEdit,
-    FaFire,
     FaHistory,
-    FaHome,
     FaMedal,
     FaPlus,
     FaSave,
-    FaSignOutAlt,
     FaTrash,
     FaTrophy,
-    FaUserCircle,
-    FaUtensils,
     FaWeight
 } from "react-icons/fa";
 
@@ -351,11 +344,6 @@ function clamp(
 // Displays the progress tracker and manages progress data.
 function Progress({ user }) {
 
-    // Allows navigation between application pages.
-    const navigate =
-        useNavigate();
-
-
     // Stores all saved progress entries.
     const [
         entries,
@@ -407,18 +395,6 @@ function Progress({ user }) {
         selectedMetric,
         setSelectedMetric
     ] = useState("weight");
-
-
-    // Gets the user display name or uses a demo name.
-    const memberName =
-        user?.displayName ||
-        "Demo User";
-
-
-    // Gets the user email or uses a demo email.
-    const memberEmail =
-        user?.email ||
-        "demo@fitness.com";
 
 
     // Sorts progress entries from newest to oldest.
@@ -928,133 +904,7 @@ function Progress({ user }) {
     return (
         <main className="dashboard-page">
 
-            {/* Displays the sidebar navigation and user profile. */}
-            <aside className="dashboard-sidebar">
-
-                <div className="dashboard-logo">
-
-                    <div className="dashboard-logo-icon">
-                        <FaDumbbell />
-                    </div>
-
-                    <div>
-                        <h2>FITTRACK</h2>
-
-                        <span>
-                            Fitness System
-                        </span>
-                    </div>
-
-                </div>
-
-
-                <nav className="sidebar-navigation">
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate("/home")
-                        }
-                    >
-                        <FaHome />
-                        <span>Dashboard</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate(
-                                "/workouts"
-                            )
-                        }
-                    >
-                        <FaDumbbell />
-                        <span>Workouts</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate(
-                                "/food-log"
-                            )
-                        }
-                    >
-                        <FaUtensils />
-                        <span>Food Log</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate(
-                                "/calories"
-                            )
-                        }
-                    >
-                        <FaFire />
-                        <span>Calories</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link active"
-                        onClick={() =>
-                            navigate(
-                                "/progress"
-                            )
-                        }
-                    >
-                        <FaChartLine />
-                        <span>Progress</span>
-                    </button>
-
-                </nav>
-
-
-                <div className="sidebar-bottom">
-
-                    <div className="sidebar-user">
-
-                        <FaUserCircle />
-
-                        <div>
-                            <strong>
-                                {memberName}
-                            </strong>
-
-                            <span>
-                                {memberEmail}
-                            </span>
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        className="logout-button"
-                        onClick={() =>
-                            //signOut ends the Firebase session -- without it the
-                            //user was still "logged in" after clicking Log Out
-                            signOut(auth).finally(() => navigate("/"))
-                        }
-                    >
-                        <FaSignOutAlt />
-                        <span>Log Out</span>
-                    </button>
-
-                </div>
-
-            </aside>
+            <Sidebar user={user} active="progress" />
 
 
             {/* Contains all progress tracking content. */}
