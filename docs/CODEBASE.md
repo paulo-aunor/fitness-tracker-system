@@ -19,7 +19,6 @@ Owns routing and the app's login state.
 
 - On mount, subscribes to `onAuthStateChanged(auth, ...)`, which fires whenever the user logs in or out (including on page refresh, once Firebase resolves the existing session). This is stored in `user` state; `loading` is true until that first check resolves, showing a "Loading..." screen so protected routes don't flash the login page before Firebase has had a chance to say whether someone's logged in.
 - Defines all routes. `/`, `/signup`, `/forgot-password` are public. `/home`, `/workouts`, `/food-log`, `/calories`, `/progress` are each wrapped in `<ProtectedRoute user={user}>`, which redirects to `/` if `user` is null.
-- Also runs a `useEffect` that adds a single click listener on `document` for sidebar navigation — every page's sidebar buttons have class `sidebar-link`, and this listener reads the button's text and looks it up in `routeByLabel` to navigate. This is why sidebar nav works identically across every page despite each page defining its own sidebar JSX independently (there's no shared `<Sidebar>` component — it's duplicated per page).
 
 ## Auth pages
 
@@ -44,9 +43,14 @@ That's the whole thing. Wrap any route element in this, pass the current `user` 
 ### `src/components/PasswordInput.jsx`
 A password `<input>` with a show/hide toggle button (eye icon). Fully controlled — takes `value`/`onChange` from the parent, holds no data of its own besides the show/hide boolean. Used by Login, Signup, and (originally) `Auth.jsx`.
 
+### `src/components/Sidebar.jsx`
+The shared nav sidebar for every logged-in page — extracted out of five separately-duplicated copies. Takes two props: `user` (for the name/email footer) and `active` (a key like `"dashboard"`/`"workouts"`/`"food-log"`/`"calories"`/`"progress"`, used to highlight the current page's link). Renders its links from a single `NAV_ITEMS` array, each with a real `onClick={() => navigate(item.path)}` — no reliance on button text or a document-level click listener. Logout also lives here: `handleLogout` calls `signOut(auth)` then navigates to `/`.
+
+Each dashboard page now just renders `<Sidebar user={user} active="..." />` instead of its own sidebar JSX. If you're adding a new dashboard page, add it to `NAV_ITEMS` here rather than copy-pasting sidebar markup.
+
 ## Dashboard pages
 
-All five of these share the same sidebar markup (duplicated per file, see `App.jsx` notes above) and the same `.dashboard-page` / `.dashboard-sidebar` / `.dashboard-content` CSS class structure.
+All five of these render `<Sidebar user={user} active="..." />` (see above) and share the same `.dashboard-page` / `.dashboard-sidebar` / `.dashboard-content` CSS class structure.
 
 ### `src/pages/Home.jsx`
 The landing dashboard after login. Reads real data from three places, all on mount:
@@ -92,10 +96,12 @@ Two distinct halves:
 1. **Exercise browser/session builder** (top of the page) — pick a muscle group (`selectedGroup`), see `defaultExercises[selectedGroup]` plus any matching `customExercises`, add exercises to the current session (`selectedExercises`) with per-exercise sets/reps. Includes a workout timer (`elapsedSeconds`/`isTimerRunning`, ticked by a `setInterval` in a `useEffect`). Custom exercises persist to `localStorage` (`STORAGE_KEY`), same pattern as `FoodLog.jsx`'s local data.
 2. **Workout history** (bottom of the page) — this is the part that actually uses `firestoreService.js`:
    - On mount, a `useEffect` calls `getWorkouts()` and stores the result in `savedWorkouts`.
-   - `handleSaveWorkout` (wired to the "Save Workout" button) strips `selectedExercises` down to just `{ name, groupName, sets, reps }` per exercise, adds `totalSets`/`durationSeconds`/`loggedAt`, and calls `addWorkout(workoutData)`. On success it prepends the new workout to `savedWorkouts` locally (rather than re-fetching) and calls `clearSession()`.
+   - `handleSaveWorkout` (wired to the "Save Workout" button) strips `selectedExercises` down to just `{ name, groupName, sets, reps }` per exercise, adds `totalSets`/`durationSeconds`/`loggedAt`, and calls `addWorkout(workoutData)`. On success it sets `savedWorkoutSummary` (rather than a plain text message) and calls `clearSession()`.
    - Each saved workout card can have a note added/edited (`startEditingNote` / `saveNote`, calling `updateWorkout(id, { notes })`) and deleted (`handleDeleteWorkout`, calling `deleteWorkout(id)`).
 
 This is the one page where "session builder" state and "Firestore-backed" state are separate — building a session doesn't touch Firestore until you click "Save Workout".
+
+**Post-save summary popup** — `savedWorkoutSummary` state (set by `handleSaveWorkout` above) drives a confirmation modal (`.workout-summary-overlay`/`.workout-summary-card` in `workout.css`) showing the saved workout's date, exercise/set/duration stats, and per-exercise breakdown. This exists separately from `formMessage`/`formError` (which are still used for custom-exercise-creation feedback only) specifically so the save confirmation isn't buried near an unrelated form. Clicking "Back to Dashboard" (`handleConfirmWorkoutSummary`) clears `savedWorkoutSummary` and navigates to `/home`, so no saved-workout state lingers if the user comes back to `/workouts` later — a fresh mount re-fetches `savedWorkouts` from Firestore instead.
 
 ### `src/pages/Progress.jsx`
 Personal-records and progress-photo tracking. Entirely self-contained — its own `localStorage` keys (`PROGRESS_STORAGE_KEY` for logged entries, `RECORDS_STORAGE_KEY` for personal strength records, plus a settings key), no dependency on `firestoreService.js` or any other page's data. Only reads `user` for the display name/email in the sidebar, same as every other dashboard page. Built by the UI teammate; kept as-is when wired into `main`'s routing.
@@ -149,6 +155,10 @@ Shared food-log data layer, extracted out of `FoodLog.jsx` so `Home.jsx` can rea
 
 `src/utils/profile.js` — an earlier localStorage-only weight-tracking module (`loadLastWeight`/`saveLastWeight`), retired once `Home.jsx`/`Calories.jsx` moved to the Firestore-backed `weightLogs` collection instead. Deleted rather than left dead.
 
+`src/dashborad.css` — never imported by any `.jsx` file (confirmed via `grep -rn "dashborad" src`); all dashboard-page styling actually comes from the global `style.css` import in `main.jsx`. Left in place (not deleted, out of scope) but don't add styles here — they won't render.
+
+**Global `form` reset gotcha (`src/style.css`)** — there's a `form { display: flex; flex-direction: column; width: 100%; }` rule meant for the stacked Login/Signup/Add-Food forms. It cascades into *any* `<form>` element, including ones that want a horizontal layout (e.g. `.gym-food-search` in `gymFoodLibrary.css`), silently stacking their children vertically unless that component's own CSS explicitly sets `flex-direction: row`. If a new form-based component looks vertically squashed for no obvious reason, check for this before anything else.
+
 ## End-to-end flows
 
 **Sign up → land on dashboard**
@@ -164,7 +174,7 @@ User types in the "Search Online" box, submits → `handleApiSearch` → `search
 User logs food on device A (writes to `localStorage` + mirrors to `meals` in Firestore, as above) → opens the app on device B, logs in as the same account → `FoodLog.jsx` mounts with empty `localStorage` → the mount `useEffect` calls `getMeals(user.uid)`, gets back every entry ever synced for that user, and merges them into `foodDays` (matched by each entry's own id, so nothing duplicates if some entries already happen to be in local storage) → the meals from device A now show up on device B.
 
 **Log and save a workout**
-User picks a muscle group → adds exercises to `selectedExercises` (client-only state) → optionally starts the timer → clicks "Save Workout" → `handleSaveWorkout` builds a trimmed `workoutData` object (including `userId: user.uid`) → `addWorkout(workoutData)` in `firestoreService.js` → `addDoc` to the `workouts` Firestore collection → new workout prepended to `savedWorkouts` locally → session cleared. Reloading the page re-fetches `savedWorkouts` from Firestore via the mount `useEffect` (scoped to `user.uid`), so this persists across devices/browsers, same as the food log now does.
+User picks a muscle group → adds exercises to `selectedExercises` (client-only state) → optionally starts the timer → clicks "Save Workout" → `handleSaveWorkout` builds a trimmed `workoutData` object (including `userId: user.uid`) → `addWorkout(workoutData)` in `firestoreService.js` → `addDoc` to the `workouts` Firestore collection → `savedWorkoutSummary` is set, showing the post-save popup card (date, exercise/set/duration stats, exercise breakdown) → session cleared. Clicking "Back to Dashboard" clears `savedWorkoutSummary` and navigates to `/home`. Reloading `/workouts` (or coming back to it later) re-fetches `savedWorkouts` from Firestore via the mount `useEffect` (scoped to `user.uid`), so the saved workout persists across devices/browsers, same as the food log now does — and the summary popup itself never lingers past the confirm click or a fresh mount.
 
 **Log body weight from the dashboard**
 User types a number into `Home.jsx`'s "Log weight" input, clicks the log button → `handleLogWeight` validates it's a positive number → `addWeightLog({ userId, weight, date })` → on success, re-fetches `getWeightLogs(user.uid)` so the card's "latest weight" and month-over-month comparison update immediately, without waiting for a remount. The next time `Calories.jsx` is opened, its weight field prefills from this same updated list.
