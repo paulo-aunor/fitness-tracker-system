@@ -5,12 +5,11 @@ import {
 } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase.jsx";
+import Sidebar from "../components/Sidebar";
 
 import {
     FaArrowDown,
-    FaChartLine,
+    FaCheckCircle,
     FaChevronUp,
     FaClock,
     FaDumbbell,
@@ -19,19 +18,15 @@ import {
     FaFire,
     FaGripHorizontal,
     FaHandRock,
-    FaHome,
     FaPause,
     FaPlay,
     FaPlus,
     FaRedoAlt,
     FaRunning,
     FaSave,
-    FaSignOutAlt,
     FaStopwatch,
     FaTimes,
-    FaTrash,
-    FaUserCircle,
-    FaUtensils
+    FaTrash
 } from "react-icons/fa";
 
 import "../workout.css";
@@ -499,7 +494,11 @@ function Workout({ user }) {
     // Allows navigation between application pages.
     const navigate = useNavigate();
 
-    // Stores the currently selected muscle group.
+    //the just-saved workout, shown in a confirmation popup -- null when
+    //nothing's been saved yet (or the popup's been dismissed)
+    const [savedWorkoutSummary, setSavedWorkoutSummary] = useState(null);
+
+    //which muscle group tab is currently shown
     const [
         selectedGroup,
         setSelectedGroup
@@ -597,15 +596,7 @@ function Workout({ user }) {
         setNoteDraft
     ] = useState("");
 
-    // Gets the user display name or uses a demo name.
-    const memberName =
-        user?.displayName || "Demo User";
-
-    // Gets the user email or uses a demo email.
-    const memberEmail =
-        user?.email || "demo@fitness.com";
-
-    // Finds the currently selected muscle group.
+    //full muscleGroups entry for whichever group is selected
     const activeGroup =
         muscleGroups.find(
             (group) =>
@@ -1049,7 +1040,9 @@ function Workout({ user }) {
                 ...current
             ]);
 
-            setFormMessage("Workout saved to your history.");
+            //show the confirmation popup instead of a plain text message --
+            //takes the same shape savedWorkouts entries have (id + workoutData)
+            setSavedWorkoutSummary({ id, ...workoutData });
             clearSession();
         } catch {
             setFormError("Could not save this workout. Please try again.");
@@ -1058,7 +1051,14 @@ function Workout({ user }) {
         }
     }
 
-    // Deletes a saved workout from Firestore and removes it from the list.
+    //closes the post-save popup and sends the user back to the dashboard,
+    //per the "after confirming it should go back to dashboard" requirement
+    function handleConfirmWorkoutSummary() {
+        setSavedWorkoutSummary(null);
+        navigate("/home");
+    }
+
+    //deletes a saved workout from firestore and removes it from the list
     async function handleDeleteWorkout(id) {
         try {
             await deleteWorkout(id);
@@ -1102,119 +1102,70 @@ function Workout({ user }) {
     // Displays the complete workout builder interface.
     return (
         <main className="dashboard-page">
+            <Sidebar user={user} active="workouts" />
 
-            {/* Displays the sidebar navigation and user profile. */}
-            <aside className="dashboard-sidebar">
-
-                <div className="dashboard-logo">
-
-                    <div className="dashboard-logo-icon">
-                        <FaDumbbell />
-                    </div>
-
-                    <div>
-                        <h2>FITTRACK</h2>
-                        <span>Fitness System</span>
-                    </div>
-
-                </div>
-
-
-                <nav className="sidebar-navigation">
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate("/home")
-                        }
-                    >
-                        <FaHome />
-                        <span>Dashboard</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link active"
-                        onClick={() =>
-                            navigate("/workouts")
-                        }
-                    >
-                        <FaDumbbell />
-                        <span>Workouts</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                    >
-                        <FaUtensils />
-                        <span>Food Log</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                        onClick={() =>
-                            navigate("/calories")
-                        }
-                    >
-                        <FaFire />
-                        <span>Calories</span>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        className="sidebar-link"
-                    >
-                        <FaChartLine />
-                        <span>Progress</span>
-                    </button>
-
-                </nav>
-
-
-                <div className="sidebar-bottom">
-
-                    <div className="sidebar-user">
-
-                        <FaUserCircle />
-
-                        <div>
-
-                            <strong>
-                                {memberName}
-                            </strong>
-
-                            <span>
-                                {memberEmail}
-                            </span>
-
+            {/* confirmation popup shown right after a successful save --
+                replaces the old plain-text "Workout saved" message. clicking
+                the confirm button sends the user back to the dashboard */}
+            {savedWorkoutSummary && (
+                <div className="workout-summary-overlay">
+                    <div className="workout-summary-card">
+                        <div className="workout-summary-icon">
+                            <FaCheckCircle />
                         </div>
 
+                        <h2>Workout Saved!</h2>
+
+                        <p className="workout-summary-subtitle">
+                            {new Date(
+                                savedWorkoutSummary.loggedAt
+                            ).toLocaleDateString(undefined, {
+                                weekday: "long",
+                                month: "long",
+                                day: "numeric",
+                            })}
+                        </p>
+
+                        <div className="workout-summary-stats">
+                            <div className="summary-chip">
+                                <strong>{savedWorkoutSummary.exercises.length}</strong>
+                                <span>Exercises</span>
+                            </div>
+
+                            <div className="summary-chip">
+                                <strong>{savedWorkoutSummary.totalSets}</strong>
+                                <span>Total Sets</span>
+                            </div>
+
+                            <div className="summary-chip">
+                                <strong>
+                                    {formatTime(savedWorkoutSummary.durationSeconds)}
+                                </strong>
+                                <span>Duration</span>
+                            </div>
+                        </div>
+
+                        <ul className="workout-summary-list">
+                            {savedWorkoutSummary.exercises.map((exercise, index) => (
+                                <li key={`${savedWorkoutSummary.id}-${index}`}>
+                                    <span>{exercise.name}</span>
+                                    <span>
+                                        {exercise.sets} x {exercise.reps}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <button
+                            type="button"
+                            className="workout-summary-confirm"
+                            onClick={handleConfirmWorkoutSummary}
+                        >
+                            Back to Dashboard
+                        </button>
                     </div>
-
-
-                    <button
-                        type="button"
-                        className="logout-button"
-                        onClick={() =>
-                            //signOut ends the Firebase session -- without it the
-                            //user was still "logged in" after clicking Log Out
-                            signOut(auth).finally(() => navigate("/"))
-                        }
-                    >
-                        <FaSignOutAlt />
-                        <span>Log Out</span>
-                    </button>
-
                 </div>
-
-            </aside>
+            )}
 
 
             {/* Contains all workout builder content. */}
