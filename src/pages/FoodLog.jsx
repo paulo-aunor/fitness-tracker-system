@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { saveDailyNutrition } from "../services/firestoreService";
+import {
+  addMeal,
+  deleteMeal,
+  getMeals,
+  saveDailyNutrition,
+  updateMeal,
+} from "../services/firestoreService";
 
 import {
   FaAppleAlt,
@@ -469,6 +475,55 @@ function FoodLog({ user }) {
     saveToDatabase();
 }, [dailyTotals, selectedDate, user]);
 
+  //loads this user's previously logged meals from firestore once, when the
+  //page first mounts (or when the user logs in). localStorage is still the
+  //source of truth for what's on screen right away -- this just merges in
+  //anything saved from another device/session that isn't already here,
+  //keyed by each entry's own id so nothing gets duplicated
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    async function loadMealsFromDatabase() {
+      try {
+        const meals = await getMeals(user.uid);
+
+        setFoodDays((currentDays) => {
+          const merged = { ...currentDays };
+
+          meals.forEach((entry) => {
+            //userId rides along inside foodFields unused -- harmless extra
+            //field on the food object, not worth destructuring out by name
+            const { id, date, meal, ...foodFields } = entry;
+
+            //skip anything malformed/missing the fields this merge needs
+            if (!date || !meal) return;
+
+            const day = merged[date] ? { ...merged[date] } : createEmptyDay();
+
+            const mealList = day.meals[meal] ? [...day.meals[meal]] : [];
+
+            const alreadyThere = mealList.some((food) => food.id === id);
+
+            if (!alreadyThere) {
+              mealList.push({ id, meal, ...foodFields });
+
+              merged[date] = {
+                ...day,
+                meals: { ...day.meals, [meal]: mealList },
+              };
+            }
+          });
+
+          return merged;
+        });
+      } catch (error) {
+        console.log("Could not load meals from database:", error);
+      }
+    }
+
+    loadMealsFromDatabase();
+  }, [user?.uid]);
+
   //helper for updating just the selected day's data without touching other days
   function updateDay(updater) {
     setFoodDays((currentDays) => {
@@ -578,6 +633,30 @@ function FoodLog({ user }) {
     setFormMessage("");
   }
 
+  //mirrors one food entry to firestore. tries update first when editing an
+  //existing entry, but falls back to add if that entry was never actually
+  //synced before (e.g. it was logged before this feature existed, or an
+  //earlier save silently failed) -- otherwise it'd stay unsynced forever
+  async function syncMealToDatabase(entryId, mealData, isEdit) {
+    try {
+      if (isEdit) {
+        await updateMeal(entryId, mealData);
+      } else {
+        await addMeal(entryId, mealData);
+      }
+    } catch (error) {
+      if (isEdit) {
+        try {
+          await addMeal(entryId, mealData);
+        } catch (fallbackError) {
+          console.log("Could not save meal to database:", fallbackError);
+        }
+      } else {
+        console.log("Could not save meal to database:", error);
+      }
+    }
+  }
+
   //validates + saves the food form, either as a new entry or replacing the one being edited
   function handleSaveFood(event) {
     event.preventDefault();
@@ -642,6 +721,26 @@ function FoodLog({ user }) {
       };
     });
 
+    //mirror this entry to firestore, same fire-and-forget pattern as the
+    //dailyTotals sync above -- doesn't block the UI, just logs on failure
+    if (user?.uid) {
+      const mealData = {
+        userId: user.uid,
+        date: selectedDate,
+        name: newFood.name,
+        meal: newFood.meal,
+        servingSize: newFood.servingSize,
+        servings: newFood.servings,
+        calories: newFood.calories,
+        protein: newFood.protein,
+        carbs: newFood.carbs,
+        fat: newFood.fat,
+        fiber: newFood.fiber,
+      };
+
+      syncMealToDatabase(newFood.id, mealData, Boolean(editingFood));
+    }
+
     setFormMessage(
       editingFood ? "Food updated successfully." : "Food added successfully.",
     );
@@ -689,6 +788,15 @@ function FoodLog({ user }) {
       },
     }));
 
+    //mirror the delete to firestore -- if this entry was never synced (e.g.
+    //logged before this feature existed), deleteMeal on a nonexistent doc
+    //is a silent no-op in Firestore, so no special-casing needed here
+    if (user?.uid) {
+      deleteMeal(foodId).catch((error) => {
+        console.log("Could not delete meal from database:", error);
+      });
+    }
+
     //if the food being deleted is also the one currently loaded in the edit
     //form, clear the form so it's not left pointing at a deleted entry
     if (editingFood?.id === foodId) {
@@ -732,6 +840,25 @@ function FoodLog({ user }) {
         [quickAdd.meal]: [...currentDay.meals[quickAdd.meal], quickFood],
       },
     }));
+
+    //mirror to firestore, same as a regular add via the food form
+    if (user?.uid) {
+      const mealData = {
+        userId: user.uid,
+        date: selectedDate,
+        name: quickFood.name,
+        meal: quickFood.meal,
+        servingSize: quickFood.servingSize,
+        servings: quickFood.servings,
+        calories: quickFood.calories,
+        protein: quickFood.protein,
+        carbs: quickFood.carbs,
+        fat: quickFood.fat,
+        fiber: quickFood.fiber,
+      };
+
+      syncMealToDatabase(quickFood.id, mealData, false);
+    }
 
     setQuickAdd({
       name: "",

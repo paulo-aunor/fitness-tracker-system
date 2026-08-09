@@ -62,19 +62,25 @@ export async function deleteWorkout(id) {
   return `Deletions are done`;
 }
 
-//function to add Meals to db
-export async function addMeal(data) {
-  if (data == null || Object.keys(data).length === 0) {
+//function to add Meals to db, keyed by an id the caller already has (the
+//food entry's own client-generated id) via setDoc instead of addDoc -- this
+//keeps the local id and the firestore doc id the same, so update/delete can
+//reference it right away without waiting on a generated id first
+export async function addMeal(id, data) {
+  if (!id || data == null || Object.keys(data).length === 0) {
     throw new Error(`Data is null/empty. Please check`);
   }
-  //variable to store collection of meals for addDoc
-  const docRef = await addDoc(collection(db, "meals"), data);
-  return docRef.id;
+  await setDoc(doc(db, "meals", id), data);
 }
 
-//function to get Meals from db
-export async function getMeals() {
-  const snapshot = await getDocs(collection(db, "meals"));
+//function to get Meals from db, scoped to one user (same fix as getWorkouts --
+//without this, every user would see every other user's logged food)
+export async function getMeals(uid) {
+  if (!uid) {
+    throw new Error("uid is required to fetch meals");
+  }
+  const q = query(collection(db, "meals"), where("userId", "==", uid));
+  const snapshot = await getDocs(q);
   const items = snapshot.docs.map((docSnapshot) => ({
     id: docSnapshot.id,
     ...docSnapshot.data(),
