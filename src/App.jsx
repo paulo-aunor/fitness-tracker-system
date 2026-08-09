@@ -13,6 +13,7 @@ import FoodLog from "./pages/FoodLog";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Progress from "./pages/Progress";
 import Signup from "./pages/Signup";
 import Workout from "./pages/Workout";
 
@@ -41,6 +42,7 @@ useEffect(() => {
       Workouts: "/workouts",
       "Food Log": "/food-log",
       Calories: "/calories",
+      Progress: "/progress",
     };
 
     function handleSidebarClick(event) {
@@ -86,7 +88,9 @@ useEffect(() => {
 
       <Route path="/food-log" element={<ProtectedRoute user={user}><FoodLog user={user} /> </ProtectedRoute>}/> 
 
-      <Route path="/calories" element={<ProtectedRoute user={user}><Calories user={user} /> </ProtectedRoute>}/> 
+      <Route path="/calories" element={<ProtectedRoute user={user}><Calories user={user} /> </ProtectedRoute>}/>
+
+      <Route path="/progress" element={<ProtectedRoute user={user}><Progress user={user} /> </ProtectedRoute>}/>
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

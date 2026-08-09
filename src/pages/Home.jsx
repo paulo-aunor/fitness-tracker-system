@@ -253,6 +253,9 @@ function Home({ user }) {
                     <button
                         type="button"
                         className="sidebar-link"
+                        onClick={() =>
+                            navigate("/progress")
+                        }
                     >
                         <FaChartLine />
                         <span>Progress</span>
