@@ -681,9 +681,10 @@ function Workout({ user }) {
     // first mounts. Runs async work inside an inner function since the
     // useEffect callback itself can't be async directly.
     useEffect(() => {
+        if (!user?.uid) return; 
         async function loadHistory() {
             try {
-                const workouts = await getWorkouts();
+                const workouts = await getWorkouts(user.uid);
 
                 // Show the most recently logged workout first.
                 const sortedWorkouts = [...workouts].sort(
@@ -702,7 +703,7 @@ function Workout({ user }) {
         }
 
         loadHistory();
-    }, []);
+    }, [user?.uid]);
 
     // Formats elapsed seconds as hours, minutes and seconds.
     function formatTime(seconds) {
@@ -1024,6 +1025,7 @@ function Workout({ user }) {
         // saved record -- selectedExercises also carries UI-only fields
         // (key, groupId, difficulty, etc.) that don't need to live in Firestore.
         const workoutData = {
+            userId: user.uid,
             exercises: selectedExercises.map((exercise) => ({
                 name: exercise.name,
                 groupName: exercise.groupName,

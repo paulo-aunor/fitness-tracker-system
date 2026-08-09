@@ -37,8 +37,10 @@ import {
 } from "../utils/calculations";
 
 
-//persists the weight field so Home.jsx can show it as the last recorded body weight
-import { loadLastWeight, saveLastWeight } from "../utils/profile";
+//prefills the weight field from the user's logged weight history (the same
+//weightLogs Firestore collection Home.jsx's "Log weight" card reads/writes)
+//instead of a separate localStorage value -- one source of truth for weight
+import { getWeightLogs } from "../services/firestoreService";
 
 // Stores the available activity levels and their calorie multipliers.
 const activityLevels = [
@@ -165,13 +167,12 @@ function Calories({ user }) {
     ] = useState(176);
 
 
-    // Stores the user's weight in kilograms. Loaded from localStorage so it
-    // survives a page refresh/revisit, and so Home.jsx can show it as the
-    // last recorded body weight.
+    // Stores the user's weight in kilograms. Defaults to 77 until the
+    // logged-weight fetch below resolves.
     const [
         weight,
         setWeight
-    ] = useState(loadLastWeight);
+    ] = useState(77);
 
 
     // Stores the selected activity multiplier.
@@ -188,12 +189,30 @@ function Calories({ user }) {
     ] = useState("cutting");
 
 
-    // Saves weight to localStorage every time it changes, so Home.jsx
-    // always has the latest value without this page needing to push it
-    // anywhere directly.
+    // Prefills weight from the user's most recent logged entry. Home.jsx's
+    // "Log weight" card is what actually writes to weightLogs -- this just
+    // reads the latest one so the calculator starts from a real number
+    // instead of the 77 default.
     useEffect(() => {
-        saveLastWeight(weight);
-    }, [weight]);
+        if (!user?.uid) {
+            return;
+        }
+
+        async function loadLatestWeight() {
+            try {
+                const logs = await getWeightLogs(user.uid);
+
+                if (logs.length > 0) {
+                    setWeight(logs[0].weight);
+                }
+            } catch {
+                // No logged weight yet, or the fetch failed -- keep the
+                // 77 default.
+            }
+        }
+
+        loadLatestWeight();
+    }, [user]);
 
 
     // Gets the user's display name or uses a demo name.

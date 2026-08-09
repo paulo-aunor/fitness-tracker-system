@@ -24,6 +24,10 @@ import { searchFoods } from "../services/foodApi";
 import "../foodLog.css";
 import "../gymFoodLibrary.css";
 
+// Persists today's nutrition totals to Firestore, mirrored alongside the
+// localStorage-based food log so Home.jsx's dashboard can read it.
+import { saveDailyNutrition } from "../services/firestoreService";
+
 
 //shared with Home.jsx -- see src/utils/foodLog.js for why these live there
 //instead of being defined locally in this file
@@ -585,6 +589,33 @@ function FoodLog({ user }) {
             JSON.stringify(targets)
         );
     }, [targets]);
+
+
+    // Mirrors today's nutrition totals to Firestore (nutritionLogs
+    // collection) whenever they change, so Home.jsx's dashboard can read
+    // them without duplicating the localStorage-based calculation here.
+    useEffect(() => {
+        if (!user?.uid) {
+            return;
+        }
+
+        async function saveToDatabase() {
+            try {
+                await saveDailyNutrition(
+                    user.uid,
+                    selectedDate,
+                    dailyTotals
+                );
+            } catch (error) {
+                console.log(
+                    "Could not save nutrition totals:",
+                    error
+                );
+            }
+        }
+
+        saveToDatabase();
+    }, [dailyTotals, selectedDate, user]);
 
 
     // Updates the food log for the currently selected date.
