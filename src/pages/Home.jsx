@@ -9,6 +9,8 @@ import { getWorkouts, addWeightLog, getWeightLogs, getDailyNutrition } from "../
 import { loadTargets } from "../utils/foodLog";
 
 import {
+  FaArrowDown,
+  FaArrowUp,
   FaBolt,
   FaCalendarAlt,
   FaChartLine,
@@ -155,15 +157,16 @@ function Home({ user }) {
         }
     }
 
-    // calculate the change, only if we have both numbers
-    let weightChangeText = "No history yet";
+    // calculate the change, only if we have both numbers -- split into a
+    // direction ("down"/"up"/null) and an amount so the JSX can show a
+    // colored arrow icon instead of a plain text character (same pattern
+    // Progress.jsx uses for its own weight-change indicator)
+    let weightChangeDirection = null;
+    let weightChangeAmount = null;
     if (latestWeight !== null && oldWeight !== null) {
         const difference = (latestWeight - oldWeight).toFixed(1);
-        if (difference <= 0) {
-            weightChangeText = "↓ " + Math.abs(difference) + " kg this month";
-        } else {
-            weightChangeText = "↑ " + difference + " kg this month";
-        }
+        weightChangeDirection = difference <= 0 ? "down" : "up";
+        weightChangeAmount = Math.abs(difference);
     }
     // this runs when the user clicks the "Log" button
     async function handleLogWeight() {
@@ -408,20 +411,37 @@ function Home({ user }) {
                             <small> kg</small>
                         </h2>
 
-                        <div className="weight-change">
-                            {weightChangeText}
+                        <div
+                            className={
+                                weightChangeDirection
+                                    ? `weight-change ${weightChangeDirection}`
+                                    : "weight-change"
+                            }
+                        >
+                            {weightChangeDirection === "down" && <FaArrowDown />}
+                            {weightChangeDirection === "up" && <FaArrowUp />}
+                            <span>
+                                {weightChangeDirection
+                                    ? `${weightChangeAmount} kg this month`
+                                    : "No history yet"}
+                            </span>
                         </div>
 
-                        <div style={{ display: "flex", gap: "6px", marginTop: "8px" }}>
+                        <div className="weight-log-form">
                             <input
                                 type="number"
                                 step="0.1"
                                 placeholder="Log weight (kg)"
                                 value={newWeight}
                                 onChange={(e) => setNewWeight(e.target.value)}
-                                style={{ flex: 1, padding: "4px 8px" }}
+                                className="weight-log-input"
                             />
-                            <button type="button" onClick={handleLogWeight} disabled={savingWeight}>
+                            <button
+                                type="button"
+                                className="weight-log-button"
+                                onClick={handleLogWeight}
+                                disabled={savingWeight}
+                            >
                                 {savingWeight ? "..." : "Log"}
                             </button>
                         </div>

@@ -1046,6 +1046,10 @@ input:focus {
     width: fit-content;
     padding: 5px 8px;
 
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
     border-radius: 7px;
 
     color: var(--green);
@@ -1053,6 +1057,69 @@ input:focus {
 
     font-size: 10px;
     font-weight: 800;
+}
+
+/* down = weight loss, up = weight gain -- same color pairing Progress.jsx
+   uses for its own weight-change indicator (.progress-change.decrease/.increase) */
+.weight-change.down {
+    color: #88e6b2;
+    background: rgba(136, 230, 178, 0.08);
+}
+
+.weight-change.up {
+    color: #ffbd73;
+    background: rgba(255, 189, 115, 0.08);
+}
+
+.weight-log-form {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.weight-log-input {
+    flex: 1;
+    height: 34px;
+    padding: 0 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    color: var(--white);
+    background: #101712;
+
+    font-size: 11px;
+}
+
+.weight-log-input:focus {
+    outline: none;
+    border-color: var(--green);
+}
+
+.weight-log-button {
+    height: 34px;
+    padding: 0 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    color: #071004;
+    background: var(--green);
+
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+.weight-log-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.weight-log-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .dashboard-main-grid {

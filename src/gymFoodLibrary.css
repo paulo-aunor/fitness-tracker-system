@@ -98,6 +98,31 @@
     font-size: 11px;
 }
 
+/* the "Search" submit button on the live Open Food Facts search bar --
+   .gym-food-search only styled its container/icon/input, so this button
+   was falling back to the browser's default button style */
+.gym-food-search button[type="submit"] {
+    flex-shrink: 0;
+    height: 30px;
+    padding: 0 12px;
+
+    border: none;
+    border-radius: 7px;
+
+    color: #071004;
+    background: var(--green);
+
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+.gym-food-search button[type="submit"]:hover {
+    transform: translateY(-1px);
+}
+
 .gym-food-categories {
     margin-bottom: 17px;
 
