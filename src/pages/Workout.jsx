@@ -5,6 +5,8 @@ import {
 } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase.jsx";
 
 import {
     FaArrowDown,
@@ -1201,7 +1203,9 @@ function Workout({ user }) {
                         type="button"
                         className="logout-button"
                         onClick={() =>
-                            navigate("/")
+                            //signOut ends the Firebase session -- without it the
+                            //user was still "logged in" after clicking Log Out
+                            signOut(auth).finally(() => navigate("/"))
                         }
                     >
                         <FaSignOutAlt />

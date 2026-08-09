@@ -46,3 +46,9 @@ VITE_FIREBASE_STORAGE_BUCKET="your-storage-bucket"
 VITE_FIREBASE_MESSAGING_SENDER_ID="your-messaging-sender-id"
 VITE_FIREBASE_APP_ID="your-app-id"
 ```
+
+## Documentation
+
+- [`docs/CODEBASE.md`](docs/CODEBASE.md) — what each page, component, and service does, and how data flows through the app.
+- [`docs/USER_FLOWS.md`](docs/USER_FLOWS.md) — diagrams of how a user moves through the app: sign up, log a workout, log food, track weight/calories, sync across devices, log out.
+- [`docs/TEST_CASES.md`](docs/TEST_CASES.md) — the test plan and results from the pre-submission test pass, including one bug that was found and fixed.

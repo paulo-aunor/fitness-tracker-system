@@ -18,7 +18,7 @@ Initializes the Firebase app from env vars (`VITE_FIREBASE_*`, set in `.env.loca
 Owns routing and the app's login state.
 
 - On mount, subscribes to `onAuthStateChanged(auth, ...)`, which fires whenever the user logs in or out (including on page refresh, once Firebase resolves the existing session). This is stored in `user` state; `loading` is true until that first check resolves, showing a "Loading..." screen so protected routes don't flash the login page before Firebase has had a chance to say whether someone's logged in.
-- Defines all routes. `/`, `/signup`, `/forgot-password` are public. `/home`, `/workouts`, `/food-log`, `/calories` are each wrapped in `<ProtectedRoute user={user}>`, which redirects to `/` if `user` is null.
+- Defines all routes. `/`, `/signup`, `/forgot-password` are public. `/home`, `/workouts`, `/food-log`, `/calories`, `/progress` are each wrapped in `<ProtectedRoute user={user}>`, which redirects to `/` if `user` is null.
 - Also runs a `useEffect` that adds a single click listener on `document` for sidebar navigation — every page's sidebar buttons have class `sidebar-link`, and this listener reads the button's text and looks it up in `routeByLabel` to navigate. This is why sidebar nav works identically across every page despite each page defining its own sidebar JSX independently (there's no shared `<Sidebar>` component — it's duplicated per page).
 
 ## Auth pages
@@ -46,16 +46,16 @@ A password `<input>` with a show/hide toggle button (eye icon). Fully controlled
 
 ## Dashboard pages
 
-All four of these share the same sidebar markup (duplicated per file, see `App.jsx` notes above) and the same `.dashboard-page` / `.dashboard-sidebar` / `.dashboard-content` CSS class structure.
+All five of these share the same sidebar markup (duplicated per file, see `App.jsx` notes above) and the same `.dashboard-page` / `.dashboard-sidebar` / `.dashboard-content` CSS class structure.
 
 ### `src/pages/Home.jsx`
 The landing dashboard after login. Reads real data from three places, all on mount:
 
-- **Today's calories/protein/carbs/fat** — reads `foodDays`/`targets` via `loadFoodDays()`/`loadTargets()` from `src/utils/foodLog.js` (the same localStorage-backed data `FoodLog.jsx` writes), then `calculateDailyTotals()` for just today's date (`createLocalDateValue()`).
-- **Body weight** — `loadLastWeight()` from `src/utils/profile.js`, the value last entered on `Calories.jsx`. This is a single "last recorded" number, not a tracked history — there's no month-over-month change or goal weight, since nothing in the app logs weight over time.
-- **Workouts this week / Last Workout** — `getWorkouts()` from `firestoreService.js` (same function `Workout.jsx` uses), loaded in a `useEffect`. `workoutsThisWeek` filters by `loggedAt` falling in the current Sunday–Saturday week; the "Last Workout" panel shows the most recently saved one instead of a fictional *upcoming* session, since nothing in the app represents a scheduled/planned workout.
+- **Today's calories/protein/carbs/fat** — `getDailyNutrition(user.uid, today)` from `firestoreService.js`, reading the `nutritionLogs` document `FoodLog.jsx` writes on every change (see that page's section below). Targets (the "/ 2100 kcal" denominators) come from `loadTargets()` in `src/utils/foodLog.js` — the same editable, localStorage-backed targets `FoodLog.jsx`'s "Nutrition Targets" panel writes, not hardcoded numbers.
+- **Body weight** — `getWeightLogs(user.uid)` from `firestoreService.js`, reading the `weightLogs` Firestore collection. This page also *writes* to it directly: a "Log weight" input on the dashboard calls `addWeightLog({ userId, weight, date })`, then re-fetches the list so the card updates immediately. `Calories.jsx`'s weight field prefills from this same collection (see below) — logging weight here is what makes that prefill show something other than the default.
+- **Workouts this week / Last Workout** — `getWorkouts(user.uid)` from `firestoreService.js` (same function `Workout.jsx` uses), loaded in a `useEffect`. `workoutsThisWeek` filters by `loggedAt` falling in the last 7 days; the "Last Workout" panel shows the most recently saved one instead of a fictional *upcoming* session, since nothing in the app represents a scheduled/planned workout.
 
-None of this is live-updating across tabs/pages — it's read once when `Home.jsx` mounts, so if you log food on `/food-log` and then navigate back to `/home`, the numbers refresh because the component remounts, not because of any shared state or subscription.
+None of this is live-updating across tabs/pages — it's read once when `Home.jsx` mounts (or once per `useEffect` when `user` resolves), so if you log food on `/food-log` and then navigate back to `/home`, the numbers refresh because the component remounts, not because of any shared state or subscription.
 
 ### `src/pages/Calories.jsx`
 BMR/TDEE/target-calorie calculator. This is the page that actually uses `src/utils/calculations.js`.
@@ -64,7 +64,7 @@ BMR/TDEE/target-calorie calculator. This is the page that actually uses `src/uti
 - `results` is a `useMemo` that calls `calculateBMR` → `calculateTDEE` → `calculateTargetCalories` from `calculations.js`, wrapped in `try/catch`. Those functions **throw** on invalid input (age/height/weight ≤ 0, etc.) — the `catch` returns `null` instead of crashing, and the JSX shows an "Enter valid information" message whenever `results` is `null`. This recalculates automatically whenever any form field changes, since they're all in the `useMemo`'s dependency array.
 - `goalProfiles` (this file) holds each goal's *display* info (name, badge text, protein-per-kg, fat %) and the actual *math* (the percentage adjustment) lives in `GOAL_ADJUSTMENTS`, exported from `calculations.js`. They're kept in sync by both using the same goal keys (`maintenance`/`cutting`/`recomp`/`bulking`) — if you add a new goal, you need to add it in **both** places.
 - Macro math (protein/carbs/fat/fiber/water) happens directly in this component, not in `calculations.js` — `calculateTargetCalories` only returns a single calorie number.
-- `weight` is persisted to localStorage via `saveLastWeight()` (`src/utils/profile.js`) in a `useEffect` that runs on every change, and loaded on mount via `loadLastWeight()`. This exists purely so `Home.jsx` can show the last weight entered here — `Calories.jsx` itself doesn't read it back for anything.
+- `weight` defaults to `77` and prefills from `getWeightLogs(user.uid)` in `firestoreService.js` on mount — the same `weightLogs` Firestore collection `Home.jsx`'s "Log weight" card writes to. This page only reads it; logging a new weight happens on `Home.jsx`, not here.
 
 ### `src/pages/FoodLog.jsx`
 The largest page. Two separate food-search mechanisms feed the same add/edit form:
@@ -72,7 +72,15 @@ The largest page. Two separate food-search mechanisms feed the same add/edit for
 1. **Local curated list** (`suggestedFoods`, a hardcoded array in this file) — filtered client-side by `searchTerm` + `selectedCategory` in a `useMemo` (`filteredFoods`). Clicking a result calls `loadSuggestedFood`.
 2. **Live Open Food Facts search** — a separate "Search Online" section, its own `apiSearchTerm`/`apiResults`/`isSearching`/`searchError` state. Submitting the form calls `handleApiSearch`, which is `async` (can't live in a `useMemo` like the local search) and calls `searchFoods()` from `src/services/foodApi.js`. Clicking a result calls `loadApiFood` — same idea as `loadSuggestedFood`, but API results have no `servingSize` (values are per 100g), so it's hardcoded to `"100 g"`.
 
-Both loaders write into the same `foodForm` state, which `handleSaveFood` then pushes into `foodDays` (keyed by date, then by meal) on submit. Everything here persists to **`localStorage`** (`FOOD_STORAGE_KEY`/`TARGET_STORAGE_KEY`), not Firestore — this page doesn't touch `firestoreService.js` at all.
+Both loaders write into the same `foodForm` state, which `handleSaveFood` then pushes into `foodDays` (keyed by date, then by meal) on submit.
+
+**Storage is two-layer.** `localStorage` (`FOOD_STORAGE_KEY`/`TARGET_STORAGE_KEY`) is still the source of truth for what's on screen — every read/calculation runs off it, same as before. On top of that, this page now mirrors to Firestore:
+- Every add, edit, delete, and quick-add calls `addMeal`/`updateMeal`/`deleteMeal` (via the `syncMealToDatabase` helper, which tries `updateMeal` first when editing and falls back to `addMeal` if that entry was never actually synced — e.g. logged before this existed, or an earlier save silently failed).
+- `addMeal(id, data)` uses `setDoc` keyed by the food entry's own client-generated `id` (not Firestore's auto-generated `addDoc` id) — this is what lets a freshly-created entry be edited or deleted immediately without waiting on a round-trip to learn its "real" id.
+- On mount, `getMeals(user.uid)` loads this user's previously-synced meals and merges them into `foodDays` (additively, matched by `id`, so nothing gets duplicated) — this is what makes a food log built on one device show up on another.
+- `dailyTotals` (the whole day's summed nutrition) is separately mirrored to the `nutritionLogs` collection via `saveDailyNutrition(user.uid, selectedDate, dailyTotals)` on every change — this is what `Home.jsx` reads for "today's calories."
+
+All of this Firestore mirroring is fire-and-forget (not awaited by the UI) — a failed sync just logs to the console, it doesn't block adding/editing/deleting locally.
 
 Other pieces: `mealTotals`/`dailyTotals` (derived nutrition sums via `useMemo`), a water tracker (`addWater`/`resetWater`), a "quick add" calories-only form, and editable nutrition targets (`updateTarget`).
 
@@ -88,6 +96,9 @@ Two distinct halves:
    - Each saved workout card can have a note added/edited (`startEditingNote` / `saveNote`, calling `updateWorkout(id, { notes })`) and deleted (`handleDeleteWorkout`, calling `deleteWorkout(id)`).
 
 This is the one page where "session builder" state and "Firestore-backed" state are separate — building a session doesn't touch Firestore until you click "Save Workout".
+
+### `src/pages/Progress.jsx`
+Personal-records and progress-photo tracking. Entirely self-contained — its own `localStorage` keys (`PROGRESS_STORAGE_KEY` for logged entries, `RECORDS_STORAGE_KEY` for personal strength records, plus a settings key), no dependency on `firestoreService.js` or any other page's data. Only reads `user` for the display name/email in the sidebar, same as every other dashboard page. Built by the UI teammate; kept as-is when wired into `main`'s routing.
 
 ## Services (`src/services/`, `src/utils/`)
 
@@ -107,39 +118,56 @@ One function: `searchFoods(query)`. Hits the Open Food Facts **v2** API (`/api/v
 Known quirk: Open Food Facts intermittently returns `503` for real browser requests (their API recommends a custom `User-Agent` header for reliability, which browser `fetch()` can't set). Callers should expect occasional failures and typically retry.
 
 ### `src/services/firestoreService.js`
-Eight CRUD functions, four each for `workouts` and `meals` collections, all using the Firebase v9+ modular SDK (`collection`/`addDoc`/`getDocs`/`doc`/`updateDoc`/`deleteDoc`) against the `db` instance from `firebase.jsx`.
+CRUD functions across four Firestore collections, all using the Firebase v9+ modular SDK (`collection`/`addDoc`/`setDoc`/`getDoc`/`getDocs`/`doc`/`query`/`where`/`updateDoc`/`deleteDoc`) against the `db` instance from `firebase.jsx`.
 
-Pattern is identical for both collections:
-- `add*(data)` — throws if `data` is null/empty, otherwise `addDoc`s it and returns the new doc's `id`.
-- `get*()` — `getDocs` over the whole collection, returns an array of `{ id, ...doc.data() }`.
-- `update*(id, data)` — throws if `id` is missing or `data` is null/empty, otherwise `updateDoc` (merges fields, doesn't replace the whole document).
-- `delete*(id)` — throws if `id` is missing, otherwise `deleteDoc`.
+**`workouts`** — used by `Workout.jsx`:
+- `addWorkout(data)` — throws if `data` is null/empty, otherwise `addDoc`s it and returns the new doc's `id`.
+- `getWorkouts(uid)` — **requires `uid`**, queries `where("userId", "==", uid)`. Without this scoping every user would see every other user's workouts — this was a real bug caught and fixed mid-project.
+- `updateWorkout(id, data)` — `updateDoc` (merges fields, doesn't replace the whole document).
+- `deleteWorkout(id)` — `deleteDoc`.
 
-Only `Workout.jsx` currently calls the `*Workout` functions (see above). Nothing in the codebase currently calls `addMeal`/`getMeals`/`updateMeal`/`deleteMeal` — meal logging (`FoodLog.jsx`) still uses `localStorage`, not Firestore. Wiring `FoodLog.jsx` to these functions (delegated separately) is the natural next step if meal history needs to persist across devices/accounts instead of just one browser.
+**`meals`** — used by `FoodLog.jsx`:
+- `addMeal(id, data)` — takes an explicit `id` (the food entry's own client-generated id) and `setDoc`s it, overwriting rather than generating a new Firestore id. This is different from `addWorkout`'s `addDoc` pattern, deliberately — it keeps the local id and the Firestore doc id identical, so an entry can be edited/deleted right after creation without a round-trip to learn a server-generated id first.
+- `getMeals(uid)` — **requires `uid`**, same scoping fix as `getWorkouts`.
+- `updateMeal(id, data)` — `updateDoc`, throws if the doc doesn't exist (which `FoodLog.jsx`'s `syncMealToDatabase` handles by falling back to `addMeal`).
+- `deleteMeal(id)` — `deleteDoc`.
+
+**`weightLogs`** — used by `Home.jsx` (write + read) and `Calories.jsx` (read-only prefill):
+- `addWeightLog(data)` — expects `{ userId, weight, date }`.
+- `getWeightLogs(uid)` — queries `where("userId", "==", uid)`, returns entries sorted newest-first by `date`.
+
+**`nutritionLogs`** — used by `FoodLog.jsx` (write) and `Home.jsx` (read):
+- `saveDailyNutrition(uid, date, totals)` — `setDoc` keyed by `${uid}_${date}`, so saving the same day twice overwrites rather than duplicating.
+- `getDailyNutrition(uid, date)` — reads that same keyed doc, returns `null` if it doesn't exist yet.
 
 ### `src/utils/foodLog.js`
 Shared food-log data layer, extracted out of `FoodLog.jsx` so `Home.jsx` can read the same localStorage-backed data without duplicating the storage keys or shape. See the `FoodLog.jsx` section above for what moved here.
-
-### `src/utils/profile.js`
-One value: the weight last entered on `Calories.jsx`, persisted to localStorage (`loadLastWeight`/`saveLastWeight`) so `Home.jsx` can show it. Not a weight-history feature — just the single most recent value.
 
 ## Housekeeping notes
 
 `src/components/ExerciseList.jsx` and `src/components/Auth.jsx` — early-prototype components (a Firestore-reading exercise list, and a combined login/signup form) that were never imported anywhere, confirmed unused, and removed.
 
+`src/utils/profile.js` — an earlier localStorage-only weight-tracking module (`loadLastWeight`/`saveLastWeight`), retired once `Home.jsx`/`Calories.jsx` moved to the Firestore-backed `weightLogs` collection instead. Deleted rather than left dead.
+
 ## End-to-end flows
 
 **Sign up → land on dashboard**
-`Signup.jsx` form → `createUserWithEmailAndPassword` + `updateProfile` → `navigate("/home")` → `App.jsx`'s `onAuthStateChanged` fires (already in progress from mount) → `user` state updates → `ProtectedRoute` on `/home` now passes → `Home.jsx` mounts and reads today's food totals (localStorage), last weight (localStorage), and workout history (Firestore) to render real numbers.
+`Signup.jsx` form → `createUserWithEmailAndPassword` + `updateProfile` → `navigate("/home")` → `App.jsx`'s `onAuthStateChanged` fires (already in progress from mount) → `user` state updates → `ProtectedRoute` on `/home` now passes → `Home.jsx` mounts and, once `user.uid` is available, fires three separate `useEffect`s: `getDailyNutrition` (today's totals), `getWeightLogs` (body weight), `getWorkouts` (workout stats). For a brand-new account all three come back empty/`null`, so the dashboard shows honest zero/empty states rather than fabricated numbers.
 
 **Calculate target calories**
-User edits any field in `Calories.jsx` → `results` `useMemo` re-runs → `calculateBMR` → `calculateTDEE` → `calculateTargetCalories` (all in `calculations.js`, pure, synchronous, throw on bad input) → macro math in the component itself → results panel re-renders, or shows the invalid-input state if any function threw.
+User edits any field in `Calories.jsx` → `results` `useMemo` re-runs → `calculateBMR` → `calculateTDEE` → `calculateTargetCalories` (all in `calculations.js`, pure, synchronous, throw on bad input) → macro math in the component itself → results panel re-renders, or shows the invalid-input state if any function threw. Separately, on mount, `getWeightLogs(user.uid)` prefills the weight field with the most recent logged value (from `Home.jsx`'s "Log weight" card), defaulting to `77` if nothing's been logged yet.
 
 **Search & log a food from Open Food Facts**
-User types in the "Search Online" box, submits → `handleApiSearch` → `searchFoods(query)` in `foodApi.js` → `fetch` to Open Food Facts v2 API → mapped results → `apiResults` state → user clicks "Use This Food" → `loadApiFood` fills `foodForm` → user clicks "Add Food" → `handleSaveFood` → `foodDays` state updates → `useEffect` persists it to `localStorage`. No Firestore involved anywhere in this flow.
+User types in the "Search Online" box, submits → `handleApiSearch` → `searchFoods(query)` in `foodApi.js` → `fetch` to Open Food Facts v2 API → mapped results → `apiResults` state → user clicks "Use This Food" → `loadApiFood` fills `foodForm` → user clicks "Add Food" → `handleSaveFood` → `foodDays` state updates immediately (local, synchronous) → `useEffect` persists it to `localStorage` → in parallel, `syncMealToDatabase` fire-and-forgets `addMeal(id, data)` to the `meals` Firestore collection, and a separate `useEffect` fire-and-forgets `saveDailyNutrition` with the day's new totals to `nutritionLogs`. The UI never waits on either Firestore call — the local update is what the user sees instantly.
+
+**Food log surviving a new device/browser**
+User logs food on device A (writes to `localStorage` + mirrors to `meals` in Firestore, as above) → opens the app on device B, logs in as the same account → `FoodLog.jsx` mounts with empty `localStorage` → the mount `useEffect` calls `getMeals(user.uid)`, gets back every entry ever synced for that user, and merges them into `foodDays` (matched by each entry's own id, so nothing duplicates if some entries already happen to be in local storage) → the meals from device A now show up on device B.
 
 **Log and save a workout**
-User picks a muscle group → adds exercises to `selectedExercises` (client-only state) → optionally starts the timer → clicks "Save Workout" → `handleSaveWorkout` builds a trimmed `workoutData` object → `addWorkout(workoutData)` in `firestoreService.js` → `addDoc` to the `workouts` Firestore collection → new workout prepended to `savedWorkouts` locally → session cleared. Reloading the page re-fetches `savedWorkouts` from Firestore via the mount `useEffect`, so this one *does* persist across devices/browsers (unlike `FoodLog.jsx`'s food log).
+User picks a muscle group → adds exercises to `selectedExercises` (client-only state) → optionally starts the timer → clicks "Save Workout" → `handleSaveWorkout` builds a trimmed `workoutData` object (including `userId: user.uid`) → `addWorkout(workoutData)` in `firestoreService.js` → `addDoc` to the `workouts` Firestore collection → new workout prepended to `savedWorkouts` locally → session cleared. Reloading the page re-fetches `savedWorkouts` from Firestore via the mount `useEffect` (scoped to `user.uid`), so this persists across devices/browsers, same as the food log now does.
+
+**Log body weight from the dashboard**
+User types a number into `Home.jsx`'s "Log weight" input, clicks the log button → `handleLogWeight` validates it's a positive number → `addWeightLog({ userId, weight, date })` → on success, re-fetches `getWeightLogs(user.uid)` so the card's "latest weight" and month-over-month comparison update immediately, without waiting for a remount. The next time `Calories.jsx` is opened, its weight field prefills from this same updated list.
 
 **Dashboard reflecting logged data**
-None of `Home.jsx`'s reads are reactive to changes on other pages — everything happens once, on mount. So the actual sequence is: user does something on `Calories.jsx`/`FoodLog.jsx`/`Workout.jsx` (which write to localStorage or Firestore as described above) → user navigates to `/home` → `Home.jsx` mounts fresh → `loadFoodDays()`/`loadTargets()`/`loadLastWeight()` run synchronously as `useState` initializers, `getWorkouts()` runs async in a `useEffect` → dashboard renders with whatever was most recently saved. If you're debugging "the dashboard shows stale data," check whether the user actually left and re-entered the page (remounting `Home.jsx`), not just whether the underlying data changed.
+None of `Home.jsx`'s reads are reactive to changes on other pages — everything happens once, on mount (or once per `user` change). So the actual sequence is: user does something on `Calories.jsx`/`FoodLog.jsx`/`Workout.jsx` (which write to `localStorage` and/or Firestore as described above) → user navigates to `/home` → `Home.jsx` mounts fresh → its three `useEffect`s each fire their own async fetch → dashboard renders with whatever was most recently saved once each fetch resolves. If you're debugging "the dashboard shows stale data," check whether the user actually left and re-entered the page (remounting `Home.jsx`), not just whether the underlying data changed.
