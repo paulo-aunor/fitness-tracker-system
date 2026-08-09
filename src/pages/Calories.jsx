@@ -32,8 +32,10 @@ import {
   GOAL_ADJUSTMENTS,
 } from "../utils/calculations";
 
-//persists the weight field so Home.jsx can show it as the last recorded body weight
-import { loadLastWeight, saveLastWeight } from "../utils/profile";
+//prefills the weight field from the user's logged weight history (the same
+//weightLogs Firestore collection Home.jsx's "Log weight" card reads/writes)
+//instead of a separate localStorage value -- one source of truth for weight
+import { getWeightLogs } from "../services/firestoreService";
 
 //list of activity levels for the dropdown
 //key matches the ACTIVITY_MULTIPLIERS keys in calculations.js, value is only
@@ -126,17 +128,33 @@ function Calories({ user }) {
   const [gender, setGender] = useState("male");
   const [age, setAge] = useState(22);
   const [height, setHeight] = useState(176);
-  //loaded from localStorage so it survives a page refresh/revisit, and so
-  //Home.jsx can show it as the last recorded body weight
-  const [weight, setWeight] = useState(loadLastWeight);
+  const [weight, setWeight] = useState(77);
   const [activity, setActivity] = useState("moderate");
   const [goal, setGoal] = useState("cutting");
 
-  //saves weight to localStorage every time it changes, so Home.jsx always
-  //has the latest value without this page needing to push it anywhere directly
+  //prefills weight from the user's most recent logged entry (Home.jsx's
+  //"Log weight" card is what actually writes to weightLogs -- this just
+  //reads the latest one so the calculator starts from a real number instead
+  //of the 77 default)
   useEffect(() => {
-    saveLastWeight(weight);
-  }, [weight]);
+    if (!user?.uid) {
+      return;
+    }
+
+    async function loadLatestWeight() {
+      try {
+        const logs = await getWeightLogs(user.uid);
+
+        if (logs.length > 0) {
+          setWeight(logs[0].weight);
+        }
+      } catch {
+        //no logged weight yet, or the fetch failed -- keep the 77 default
+      }
+    }
+
+    loadLatestWeight();
+  }, [user]);
 
   const memberName = user?.displayName || "Demo User";
 

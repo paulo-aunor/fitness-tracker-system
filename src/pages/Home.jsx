@@ -1,6 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getWorkouts, addWeightLog, getWeightLogs, getDailyNutrition } from "../services/firestoreService";
+
+//real, editable nutrition targets (same source FoodLog.jsx reads/writes) --
+//replaces the hardcoded goal numbers this page used to have
+import { loadTargets } from "../utils/foodLog";
 
 import {
   FaBolt,
@@ -35,15 +39,19 @@ function Home({ user }) {
     const [savingWeight, setSavingWeight] = useState(false);
     const [nutrition, setNutrition] = useState(null);
 
+    // real targets from the Food Log page (localStorage-backed, editable
+    // there), loaded once on mount -- not hardcoded
+    const [targets] = useState(loadTargets);
+
     const caloriesEaten = nutrition?.calories ?? 0;
     const proteinEaten = nutrition?.protein ?? 0;
     const carbsEaten = nutrition?.carbs ?? 0;
     const fatEaten = nutrition?.fat ?? 0;
 
-    const calorieGoal = 2300;
-    const proteinGoal = 160;
-    const carbsGoal = 260;
-    const fatGoal = 65;
+    const calorieGoal = targets.calories;
+    const proteinGoal = targets.protein;
+    const carbsGoal = targets.carbs;
+    const fatGoal = targets.fat;
 
     const caloriesRemaining = calorieGoal - caloriesEaten;
     const proteinRemaining = proteinGoal - proteinEaten;
@@ -60,7 +68,7 @@ function Home({ user }) {
                 const today = new Date().toISOString().split("T")[0];
                 const data = await getDailyNutrition(user.uid, today);
                 setNutrition(data);
-            } catch (error) {
+            } catch {
                 setNutrition(null);
             }
         }
@@ -78,7 +86,7 @@ function Home({ user }) {
             try {
                 const data = await getWeightLogs(user.uid);
                 setWeightLogs(data);
-            } catch (error) {
+            } catch {
                 // if something goes wrong, just show an empty list
                 setWeightLogs([]);
             }
@@ -363,24 +371,16 @@ function Home({ user }) {
                             <span>WORKOUTS</span>
                         </div>
 
-                        <h2>
-                            {loadingStats ? "…" : workoutsThisWeek}
-                            <small> / 5 this week</small>
-                        </h2>
+                        <h2>{loadingStats ? "…" : workoutsThisWeek}</h2>
 
-                        <div className="progress-track">
-                            <div
-                                className="progress-fill"
-                                style={{ width: `${Math.min((workoutsThisWeek / 5) * 100, 100)}%` }}
-                            />
-                        </div>
-
+                        {/* no weekly workout goal exists anywhere in the app, so this
+                            just reports the count -- no invented "/5" quota */}
                         <p>
                             {loadingStats
                                 ? "Loading..."
-                                : workoutsThisWeek >= 5
-                                ? "Weekly goal reached!"
-                                : `${5 - workoutsThisWeek} workout${5 - workoutsThisWeek === 1 ? "" : "s"} left this week`}
+                                : workoutsThisWeek === 1
+                                  ? "1 workout logged this week"
+                                  : `${workoutsThisWeek} workouts logged this week`}
                         </p>
                     </article>
 
@@ -416,7 +416,13 @@ function Home({ user }) {
                             </button>
                         </div>
 
-                        <p>Goal weight: 72 kg</p>
+                        {/* no goal-weight feature exists, so this shows when the
+                            latest entry was logged instead of an invented target */}
+                        <p>
+                            {weightLogs.length > 0
+                                ? `Last logged ${new Date(weightLogs[0].date).toLocaleDateString()}`
+                                : "Log your weight to start tracking"}
+                        </p>
                     </article>
                 </section>
 

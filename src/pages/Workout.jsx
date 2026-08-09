@@ -695,7 +695,7 @@ function Workout({ user }) {
         }
 
         loadHistory();
-    }, []);
+    }, [user?.uid]);
 
     //formats a seconds count as HH:MM:SS for the timer display
     function formatTime(seconds) {
